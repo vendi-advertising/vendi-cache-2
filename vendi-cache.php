@@ -20,6 +20,17 @@ define( 'VENDI_CACHE_VERSION', '2.0.0' );
 require_once VENDI_CACHE_DIR . '/includes/autoload.php';
 require_once VENDI_CACHE_DIR . '/includes/constants.php';
 
+// if( VENDI_CACHE_LOG_LEVEL )
+// {
+//     //This is used to trace a specific request through the pipeline
+//     define( 'VENDI_CACHE_REQUEST_ID', \Ramsey\Uuid\Uuid::uuid4() );
+// }
+
+
+\Vendi\Cache\Logging::get_instance()->debug( 'Plugin loading', [ 'request_id' => VENDI_CACHE_REQUEST_ID ] );
+
+// \Vendi\Cache\Logging::get_instance()->warning( 'Hello World', ['cheese' => true] );
+
 
 // $url = 'https://www.vendiadvertising.com/work/';
 
