@@ -1,0 +1,18 @@
+{
+    "name": "vendi-advertising/vendi-cache",
+    "type": "library",
+    "description" : "Vendi Cache",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Chris Haas",
+            "email": "chris@vendiadvertising.com"
+        }
+    ],
+    "require": {
+        "webmozart/path-util": "^2.3"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^3.3"
+    }
+}
