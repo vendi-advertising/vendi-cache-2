@@ -7,6 +7,8 @@ use Vendi\Shared\utils;
 class CacheKeyGenerator
 {
 
+    private static $_urls_to_files = [];
+
     public static function sanitize_host_for_cache_filename( $host )
     {
         return preg_replace( '/[^a-zA-Z0-9\-\.]+/', '', $host );
@@ -59,6 +61,12 @@ class CacheKeyGenerator
             $url = self::create_url_from_server_variables();
         }
 
+        //See if we've previously determined the file for this URL
+        if( array_key_exists( $url, self::$_urls_to_files ) )
+        {
+            return self::$_urls_to_files[ $url ];
+        }
+
         $parts = parse_url( $url );
 
         $host = self::sanitize_host_for_cache_filename( $parts[ 'host' ] );
@@ -76,6 +84,9 @@ class CacheKeyGenerator
                             'vendi_cache',
                             $ext
                         );
+
+        //Cache this url and file for future use
+        self::$_urls_to_files[ $url ] = $file;
 
         return $file;
     }

@@ -22,3 +22,48 @@ This version will have a minimum PHP version of probably 5.5. Because of this we
  * Use a [PSR-6](http://www.php-fig.org/psr/psr-6/) or [PSR-16](http://www.php-fig.org/psr/psr-16/) logger
    * The entire point of this plugin is to cache files to disk so at this time I don't see a need to implement one of the common caching interfaces. I worry if I do that I'll get _too_ lost in abstraction and be also promising features that I can't test. Further, this plugin is meant to be used side-by-side with Apache or Nginx rules which are file-based. Although someone could write a PHP router handler to run through Redis/Memcache/whatever we'd still be incurring a PHP hit which we want to avoid.
 
+## API
+Below are the publically available constants, hooks and methods that are explicitly supported. Invoking any other code or disrupting any internal patterns could break things. If there's something missing from the API contract please [submit an issue](https://github.com/vendi-advertising/vendi-cache-2/issues).
+
+### Constants
+These constants may be defined outside of the plugin (for instance in `wp-config.php`) although it is recommended that you don't unless you have a very specific need. Certain constants require specific file system privileges and it is up to you to handle those if you override them.
+
+#### `VENDI_CACHE_FOLDER_ABS`
+String. Absolute path to the cache folder. Default is `WP_CONTENT_DIR/VENDI_CACHE_FOLDER_NAME`.
+
+**WARNING:** If you change this you will need to manually update your Apache/Nginx rules.
+
+#### `VENDI_CACHE_FOLDER_NAME`
+String. If `VENDI_CACHE_FOLDER_ABS` is **not** defined then this is the folder relative to `WP_CONTENT_DIR` to use. Default is `vendi_cache`.
+
+**WARNING:** If you change this you will need to manually update your Apache/Nginx rules.
+
+#### `VENDI_CACHE_LOG_LEVEL`
+Int. The level of logging to output. These values are defined in `Monolog/Logger.php` however their named values won't be available in `wp-config` (since the plugin won't have loaded yet) so you'll probably need to use their literal integer values.
+
+**WARNING:** Setting a log level of `DEBUG` **will** cause a lot of noise to be written to the log file and should only be turned on for a very short amount of time.
+ * `100` === `\Monolog\Logger::DEBUG`
+ * `200` === `\Monolog\Logger::INFO`
+ * `250` === `\Monolog\Logger::NOTICE`
+ * `300` === `\Monolog\Logger::WARNING`
+ * `400` === `\Monolog\Logger::ERROR`
+ * `500` === `\Monolog\Logger::CRITICAL`
+ * `550` === `\Monolog\Logger::ALERT`
+ * `600` === `\Monolog\Logger::EMERGENCY`
+
+#### `VENDI_CACHE_LOG_FILE_ABS`
+String. The absolute path to the log file. Default is `VENDI_CACHE_FOLDER_ABS/vendi_cache.log`. **For security reasons you are encouraged to override this**.
+
+### `VENDI_CACHE_PHP_ERROR`
+Any. Setting this constant will overrise any hooks or filters. This should only ever be used if all other attempts at disabling the cache per request are not working.
+
+### Hooks
+The 2.0 release of this plugin adopts the `company/plugin/hook` pattern, so all hooks are prefaced by `vendi/cache/`.
+
+#### Filters
+##### `vendi/cache/do_not_cache_request`
+If true, do not cache request. Default false.
+
+#### Actions
+##### `vendi/cache/clear`
+TODO

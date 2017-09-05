@@ -59,6 +59,8 @@ if [ "$UPDATE" = true ]; then
     composer install
 fi
 
+vendor/bin/security-checker security:check ./composer.lock
+
 CONFIG_TEMPLATE_FILE='./vendor/WordPress/wordpress-develop/wp-tests-config-sample.php';
 CONFIG_FILE='./vendor/WordPress/wordpress-develop/wp-tests-config.php';
 

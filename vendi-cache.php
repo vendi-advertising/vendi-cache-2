@@ -6,7 +6,7 @@ Plugin URI: https://www.vendiadvertising.com/
 Author: Vendi Advertising (Chris Haas)
 Version: 2.0.0
 Author URI: https://www.vendiadvertising.com/
-Text Domain: vendi-cache
+Text Domain: vendi-cacheb
 Domain Path: /languages
 */
 
@@ -25,9 +25,16 @@ require_once VENDI_CACHE_DIR . '/includes/constants.php';
 //     //This is used to trace a specific request through the pipeline
 //     define( 'VENDI_CACHE_REQUEST_ID', \Ramsey\Uuid\Uuid::uuid4() );
 // }
+//
+
+\Vendi\Cache\Logging::get_instance()->debug( 'Plugin loading' );
+
+require_once VENDI_CACHE_DIR . '/includes/hooks.php';
+
+// \Vendi\Cache\CacheMaster::get_instance()->setup_caching();
 
 
-\Vendi\Cache\Logging::get_instance()->debug( 'Plugin loading', [ 'request_id' => VENDI_CACHE_REQUEST_ID ] );
+
 
 // \Vendi\Cache\Logging::get_instance()->warning( 'Hello World', ['cheese' => true] );
 
