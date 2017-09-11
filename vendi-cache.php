@@ -22,3 +22,10 @@ require_once VENDI_CACHE_DIR . '/includes/autoload.php';
 \Vendi\Cache\Logging::get_instance()->debug( 'Plugin loading' );
 
 require_once VENDI_CACHE_DIR . '/includes/hooks.php';
+
+if( defined( 'WP_CLI' ) )
+{
+    require_once VENDI_CACHE_DIR . '/cli/Vendi_Cache_Command.php';
+
+    WP_CLI::add_command( 'vendi-cache', 'Vendi_Cache_Command' );
+}
