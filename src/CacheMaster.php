@@ -40,16 +40,7 @@ final class CacheMaster
                                 Local::DISALLOW_LINKS,
 
                                 //Special file system permissions
-                                [
-                                    'file' => [
-                                        'public'  => 0664,
-                                        'private' => 0664,
-                                    ],
-                                    'dir' => [
-                                        'public'  => 0755,
-                                        'private' => 0755,
-                                    ]
-                                ]
+                                CacheSettings::get_instance()->get_fs_permissions_for_cache()
                             );
 
         $this->_file_system = new Filesystem(
