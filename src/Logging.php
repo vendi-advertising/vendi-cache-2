@@ -19,7 +19,15 @@ class Logging
         $this->_request_id = \Ramsey\Uuid\Uuid::uuid4()->toString();
 
         //Bind to log file
-        $stream = new StreamHandler( CacheSettings::get_instance()->get_log_file_abs() );
+        $stream = new StreamHandler(
+                                        CacheSettings::get_instance()->get_log_file_abs(),
+                                        CacheSettings::get_instance()->get_logging_level(),
+
+                                        //Bubble
+                                        true,
+
+                                        CacheSettings::get_instance()->get_fs_permission_for_log()
+                                );
 
         //Custom formatter that puts the request ID in the front as the second
         //variable
