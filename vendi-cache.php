@@ -18,7 +18,6 @@ define( 'VENDI_CACHE_URL', plugin_dir_url( __FILE__ ) );
 define( 'VENDI_CACHE_VERSION', '2.0.0' );
 
 require_once VENDI_CACHE_DIR . '/includes/autoload.php';
-// require_once VENDI_CACHE_DIR . '/includes/constants.php';
 
 \Vendi\Cache\Logging::get_instance()->debug( 'Plugin loading' );
 
