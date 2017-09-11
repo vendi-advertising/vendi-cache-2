@@ -31,6 +31,20 @@ class test_CacheKeyGenerator extends \WP_UnitTestCase
     }
 
     /**
+     * @covers Vendi\Cache\CacheKeyGenerator::get_cache_lookup_counts_for_url
+     * @covers Vendi\Cache\CacheKeyGenerator::local_cache_filename_from_url
+     */
+    public function test_get_cache_lookup_counts_for_url()
+    {
+        $url = 'https://www.example.com/test_get_cache_lookup_counts_for_url';
+        $this->assertSame( -1, CacheKeyGenerator::get_cache_lookup_counts_for_url( $url ) );
+        CacheKeyGenerator::local_cache_filename_from_url( $url );
+        $this->assertSame( 0, CacheKeyGenerator::get_cache_lookup_counts_for_url( $url ) );
+        CacheKeyGenerator::local_cache_filename_from_url( $url );
+        $this->assertSame( 1, CacheKeyGenerator::get_cache_lookup_counts_for_url( $url ) );
+    }
+
+    /**
      * @covers Vendi\Cache\CacheKeyGenerator::sanitize_path_for_cache_filename
      * @dataProvider provider_for_sanitize_path
      */
@@ -79,6 +93,14 @@ class test_CacheKeyGenerator extends \WP_UnitTestCase
     {
         utils::$CUSTOM_SERVER = $keys;
         $this->assertSame( $expected, CacheKeyGenerator::create_url_from_server_variables( ) );
+    }
+
+    /**
+     * @covers Vendi\Cache\CacheKeyGenerator::get_mapping_of_urls_to_files
+     */
+    public function test_get_mapping_of_urls_to_files( )
+    {
+        $this->assertInternalType( 'array', CacheKeyGenerator::get_mapping_of_urls_to_files() );
     }
 
     public function provider_for_create_url()

@@ -9,6 +9,23 @@ class CacheKeyGenerator
 
     private static $_urls_to_files = [];
 
+    private static $_urls_to_files_cache_lookups = [];
+
+    public static function get_mapping_of_urls_to_files() : array
+    {
+        return self::$_urls_to_files;
+    }
+
+    public static function get_cache_lookup_counts_for_url( $url )
+    {
+        if( ! array_key_exists( $url, self::$_urls_to_files_cache_lookups ) )
+        {
+            return -1;
+        }
+
+        return self::$_urls_to_files_cache_lookups[ $url ];
+    }
+
     public static function sanitize_host_for_cache_filename( $host )
     {
         return preg_replace( '/[^a-zA-Z0-9\-\.]+/', '', $host );
@@ -64,6 +81,8 @@ class CacheKeyGenerator
         //See if we've previously determined the file for this URL
         if( array_key_exists( $url, self::$_urls_to_files ) )
         {
+            //Increment a shared global counter, used for testing
+            self::$_urls_to_files_cache_lookups[ $url ] += 1;
             return self::$_urls_to_files[ $url ];
         }
 
@@ -87,6 +106,9 @@ class CacheKeyGenerator
 
         //Cache this url and file for future use
         self::$_urls_to_files[ $url ] = $file;
+
+        //Create an entry in the global counters for this URL
+        self::$_urls_to_files_cache_lookups[ $url ] = 0;
 
         return $file;
     }
