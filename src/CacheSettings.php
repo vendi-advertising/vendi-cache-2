@@ -50,4 +50,24 @@ class CacheSettings
 
         return \Webmozart\PathUtil\Path::join( $this->get_cache_folder_abs(), 'vendi_cache.log' );
     }
+
+    public function get_max_file_age()
+    {
+        if( defined( 'VENDI_CACHE_MAX_FILE_AGE' ) )
+        {
+            return (int)VENDI_CACHE_MAX_FILE_AGE;
+        }
+
+        return 10000;
+    }
+
+    public function get_min_page_size()
+    {
+        if( defined( 'VENDI_CACHE_MIN_PAGE_SIZE' ) )
+        {
+            return (int)VENDI_CACHE_MIN_PAGE_SIZE;
+        }
+
+        return 1000;
+    }
 }

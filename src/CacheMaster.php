@@ -23,10 +23,6 @@ final class CacheMaster
 
     const LEGACY_FILTER_NAME__NO_CACHE = 'vendi-cache/do-not-cache';
 
-    const MAX_FILE_AGE = 10000;
-
-    const MIN_PAGE_SIZE = 1000;
-
     private $_is_request_cacheable = null;
 
     private $_local_cache_file_name = null;
@@ -316,7 +312,7 @@ final class CacheMaster
         }
 
         $age = time() - $stat[ 'mtime' ];
-        if( $age >= self::MAX_FILE_AGE )
+        if( $age >= CacheSettings::get_instance()->get_max_file_age() )
         {
             //TODO: Should we delete the file?
 
@@ -325,7 +321,7 @@ final class CacheMaster
                                                             [
                                                                 'cache_file' => $cache_file,
                                                                 'age' => $age,
-                                                                'max_age' => self::MAX_FILE_AGE,
+                                                                'max_age' => CacheSettings::get_instance()->get_max_file_age(),
                                                             ]
                                                         );
             return;
@@ -336,7 +332,7 @@ final class CacheMaster
                                                         [
                                                             'cache_file' => $cache_file,
                                                             'age' => $age,
-                                                            'max_age' => self::MAX_FILE_AGE,
+                                                            'max_age' => CacheSettings::get_instance()->get_max_file_age(),
                                                         ]
                                                     );
 
@@ -389,9 +385,9 @@ final class CacheMaster
 
         //The average web page size is 1246,000 bytes. If web page is less than 1000 bytes, don't cache it.
         //TODO: Move to option
-        if( strlen( $buffer ) < self::MIN_PAGE_SIZE )
+        if( strlen( $buffer ) < CacheSettings::get_instance()->get_min_page_size() )
         {
-            \Vendi\Cache\Logging::get_instance()->info( 'Request not cacheable', [ 'reason' => 'Page too small', 'size' => strlen( $buffer ), 'min_size' => self::MIN_PAGE_SIZE ] );
+            \Vendi\Cache\Logging::get_instance()->info( 'Request not cacheable', [ 'reason' => 'Page too small', 'size' => strlen( $buffer ), 'min_size' => CacheSettings::get_instance()->get_min_page_size() ] );
             return $buffer;
         }
 
