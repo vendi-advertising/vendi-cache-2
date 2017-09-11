@@ -5,7 +5,7 @@ namespace Vendi\Cache;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\{AdapterInterface, Filesystem};
 use Symfony\Component\Finder\Finder;
-use Vendi\Cache\{CacheExclusions, CacheKeyGenerator, ErrorHandler};
+use Vendi\Cache\{CacheExclusions, CacheKeyGenerator, CacheSettings, ErrorHandler};
 use Vendi\Shared\utils;
 
 final class CacheMaster
@@ -35,7 +35,7 @@ final class CacheMaster
     {
         $adapter = new Local(
                                 //The folder to cache to
-                                VENDI_CACHE_FOLDER_ABS,
+                                CacheSettings::get_instance()->get_cache_folder_abs(),
 
                                 //Use locks during write (default)
                                 LOCK_EX,
@@ -532,8 +532,8 @@ final class CacheMaster
         \Vendi\Cache\Logging::get_instance()->info(
                                                     'Clearing entire page cache',
                                                     [
-                                                        'cache_dir' => VENDI_CACHE_FOLDER_ABS,
-                                                        'status' => $this->delete_dir( VENDI_CACHE_FOLDER_ABS ) ? 'success' : 'fail',
+                                                        'cache_dir' => CacheSettings::get_instance()->get_cache_folder_abs(),
+                                                        'status' => $this->delete_dir( CacheSettings::get_instance()->get_cache_folder_abs() ) ? 'success' : 'fail',
                                                     ]
                                                 );
     }

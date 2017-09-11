@@ -5,6 +5,7 @@ namespace Vendi\Cache;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
+use Vendi\Cache\CacheSettings;
 
 class Logging
 {
@@ -18,7 +19,7 @@ class Logging
         $this->_request_id = \Ramsey\Uuid\Uuid::uuid4()->toString();
 
         //Bind to log file
-        $stream = new StreamHandler( VENDI_CACHE_LOG_FILE_ABS );
+        $stream = new StreamHandler( CacheSettings::get_instance()->get_log_file_abs() );
 
         //Custom formatter that puts the request ID in the front as the second
         //variable
