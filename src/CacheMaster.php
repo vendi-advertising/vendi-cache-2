@@ -3,8 +3,8 @@
 namespace Vendi\Cache;
 
 use League\Flysystem\Adapter\Local;
+use League\Flysystem\Plugin\ListPaths;
 use League\Flysystem\{AdapterInterface, Filesystem};
-use Symfony\Component\Finder\Finder;
 use Vendi\Cache\{CacheExclusions, CacheKeyGenerator, CacheSettings, ErrorHandler};
 use Vendi\Shared\utils;
 
@@ -516,13 +516,15 @@ final class CacheMaster
 
     public function clear_entire_page_cache( )
     {
-        \Vendi\Cache\Logging::get_instance()->info(
-                                                    'Clearing entire page cache',
-                                                    [
-                                                        'cache_dir' => CacheSettings::get_instance()->get_cache_folder_abs(),
-                                                        'status' => $this->delete_dir( CacheSettings::get_instance()->get_cache_folder_abs() ) ? 'success' : 'fail',
-                                                    ]
-                                                );
+        \Vendi\Cache\Logging::get_instance()->info( 'Starting clearing of page cache' );
+
+        if( ! $this->delete_cache_dir_contents() )
+        {
+            \Vendi\Cache\Logging::get_instance()->error( 'Unable to clear page cache' );
+            return;
+        }
+
+        \Vendi\Cache\Logging::get_instance()->info( 'Page cache successfully cleared' );
     }
 
     public function schedule_cache_clear()
@@ -569,39 +571,58 @@ final class CacheMaster
         return $this->_file_system->write( $relative_file_path, $contents );
     }
 
-    public function delete_dir( $absolute_path )
+    public function delete_cache_dir_contents( $absolute_path = null )
     {
+        //Allow callers to optionally supply the path
+        if( ! $absolute_path )
+        {
+            $absolute_path = CacheSettings::get_instance()->get_cache_folder_abs();
+        }
+
+        //Log the start of deletion
         \Vendi\Cache\Logging::get_instance()->info( 'Delete directory request', [ 'dir' => $absolute_path ] );
 
-        $finder = new Finder();
-        foreach( $finder->files()->in( $absolute_path )->name( '/\.html(_gzip)?$/' ) as $file )
+        //If we don't have an actual folder, skip it
+        if( ! is_dir( $absolute_path ) )
         {
-            if( ! @unlink( $file->getPathname() ) )
+            \Vendi\Cache\Logging::get_instance()->info( 'Directory empty... skipping', [ 'dir' => $absolute_path ] );
+            return false;
+        }
+
+        //We only want folders, not files, so we'll use the ListPaths plugin
+        //to get only those
+        $this->_file_system->addPlugin( new ListPaths() );
+        $child_paths = $this->_file_system->listPaths( );
+
+        //We don't want to delete
+        $log_file_abs = \Webmozart\PathUtil\Path::canonicalize( CacheSettings::get_instance()->get_log_file_abs() );
+
+        foreach( $child_paths as $dir )
+        {
+            // \Vendi\Cache\Logging::get_instance()->info( 'Path', [ 'path' => $dir ] );
+
+            $test_file_path = \Webmozart\PathUtil\Path::join(
+                                                                $this->_file_system->getAdapter()->applyPathPrefix( $dir ),
+                                                                CacheSettings::get_instance()->get_log_file_name()
+                                                            );
+
+            if( $test_file_path === $log_file_abs )
             {
-                \Vendi\Cache\Logging::get_instance()->warning( 'Delete file request failed', [ 'file' => $file->getPathname() ] );
+                \Vendi\Cache\Logging::get_instance()->info( 'Skipping log directory', [ 'path' => $dir, 'is_dir' => is_dir( $absolute_path ) ] );
+                continue;
+            }
+
+            $result = $this->_file_system->deleteDir( $dir );
+            if( ! $result )
+            {
+                \Vendi\Cache\Logging::get_instance()->error( 'Could not delete directory', [ 'dir' => $dir ] );
                 return false;
             }
 
-            \Vendi\Cache\Logging::get_instance()->info( 'File deleted', [ 'file' => $file->getPathname() ] );
+            \Vendi\Cache\Logging::get_instance()->info( 'Delete directory', [ 'dir' => $dir ] );
         }
-
-        $finder = new Finder();
-        foreach( $finder->directories()->in( $absolute_path ) as $dir )
-        {
-            if( ! @rmdir( $dir->getPathname() ) )
-            {
-                \Vendi\Cache\Logging::get_instance()->warning( 'Delete directory request failed', [ 'dir' => $dir->getPathname() ] );
-                return false;
-            }
-
-            \Vendi\Cache\Logging::get_instance()->info( 'Directory deleted', [ 'dir' => $dir->getPathname() ] );
-        }
-
-
-        // $contents = $this->_file_system->listContents( $relative_dir_path, true );
-        // \Vendi\Cache\Logging::get_instance()->debug( 'Contents', [ 'contents' => $contents ] );
 
         return true;
-        // return $this->_file_system->deleteDir( $relative_dir_path );
+
     }
 }

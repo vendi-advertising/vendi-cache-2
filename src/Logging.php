@@ -18,15 +18,30 @@ class Logging
         //This is used to trace a specific request through the pipeline
         $this->_request_id = \Ramsey\Uuid\Uuid::uuid4()->toString();
 
+        $log_file_abs = CacheSettings::get_instance()->get_log_file_abs();
+        $log_dir_abs = dirname( $log_file_abs );
+
+        if( ! is_dir( $log_dir_abs ) )
+        {
+            $umask = umask( 0 );
+            $status = @mkdir( $log_dir_abs, CacheSettings::get_instance()->get_fs_permission_for_log_dir(), true );
+            umask( $umask );
+
+            if( ! is_dir( $log_dir_abs ) )
+            {
+                throw new \Exception( 'Could not create directory for logging' );
+            }
+        }
+
         //Bind to log file
         $stream = new StreamHandler(
-                                        CacheSettings::get_instance()->get_log_file_abs(),
+                                        $log_file_abs,
                                         CacheSettings::get_instance()->get_logging_level(),
 
                                         //Bubble
                                         true,
 
-                                        CacheSettings::get_instance()->get_fs_permission_for_log()
+                                        CacheSettings::get_instance()->get_fs_permission_for_log_file()
                                 );
 
         //Custom formatter that puts the request ID in the front as the second

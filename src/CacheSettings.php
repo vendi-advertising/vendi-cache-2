@@ -8,6 +8,8 @@ class CacheSettings
 {
     private static $_instance;
 
+    private static $_log_folder_name = '__log__';
+
     private function __construct()
     {
 
@@ -53,7 +55,39 @@ class CacheSettings
             return VENDI_CACHE_LOG_FILE_ABS;
         }
 
-        return \Webmozart\PathUtil\Path::join( $this->get_cache_folder_abs(), 'vendi_cache.log' );
+        return \Webmozart\PathUtil\Path::join( $this->get_log_folder_abs(), $this->get_log_file_name() );
+    }
+
+    public function get_log_folder_abs()
+    {
+        //If the ABS for the file is provided then just return the parent
+        //folder of that.
+        if( defined( 'VENDI_CACHE_LOG_FILE_ABS' ) )
+        {
+            return dirname( VENDI_CACHE_LOG_FILE_ABS );
+        }
+
+        if( defined( 'VENDI_CACHE_LOG_FOLDER_ABS' ) )
+        {
+            return VENDI_CACHE_LOG_FOLDER_ABS;
+        }
+
+        return \Webmozart\PathUtil\Path::join( $this->get_cache_folder_abs(), self::$_log_folder_name );
+    }
+
+    public function get_log_file_name()
+    {
+        if( defined( 'VENDI_CACHE_LOG_FILE_ABS' ) )
+        {
+            return basename( VENDI_CACHE_LOG_FILE_ABS );
+        }
+
+        if( defined( 'VENDI_CACHE_LOG_FILE_NAME' ) )
+        {
+            return VENDI_CACHE_LOG_FILE_NAME;
+        }
+
+        return 'vendi_cache.log';
     }
 
     /**
@@ -94,15 +128,20 @@ class CacheSettings
                             ],
                 'dir' =>
                             [
-                                'public'  => defined( 'VENDI_CACHE_FS_PERM_DIR_PUBLIC')   ? VENDI_CACHE_FS_PERM_DIR_PUBLIC   : 0755,
-                                'private' => defined( 'VENDI_CACHE_FS_PERM_DIR_PRIVATE')  ? VENDI_CACHE_FS_PERM_DIR_PRIVATE  : 0755,
+                                'public'  => defined( 'VENDI_CACHE_FS_PERM_DIR_PUBLIC')   ? VENDI_CACHE_FS_PERM_DIR_PUBLIC   : 0777,
+                                'private' => defined( 'VENDI_CACHE_FS_PERM_DIR_PRIVATE')  ? VENDI_CACHE_FS_PERM_DIR_PRIVATE  : 0777,
                             ]
             ];
     }
 
-    public function get_fs_permission_for_log()
+    public function get_fs_permission_for_log_file()
     {
-        return defined( 'VENDI_CACHE_FS_PERM_LOG') ? VENDI_CACHE_FS_PERM_LOG : 0664;
+        return defined( 'VENDI_CACHE_FS_PERM_LOG_FILE') ? VENDI_CACHE_FS_PERM_LOG : 0664;
+    }
+
+    public function get_fs_permission_for_log_dir()
+    {
+        return defined( 'VENDI_CACHE_FS_PERM_LOG_DIR') ? VENDI_CACHE_FS_PERM_LOG : 0775;
     }
 
     public function get_logging_level()
