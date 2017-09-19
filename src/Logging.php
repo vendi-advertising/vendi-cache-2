@@ -76,6 +76,11 @@ class Logging
 
         return self::$_logger;
     }
+
+    public static function log_request_as_not_cacheable( array $args )
+    {
+        self::get_instance()->info( 'Request not cacheable', $args );
+    }
 }
 
 /*

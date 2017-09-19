@@ -158,15 +158,32 @@ final class CacheMaster
 
         if( $this->file_exists( $cache_file ) )
         {
-            \Vendi\Cache\Logging::get_instance()->debug( 'Non-GET request received, evicting cache file', [ 'cache_file' => $cache_file, 'method' => utils::get_server_value( 'REQUEST_METHOD' ) ] );
+            \Vendi\Cache\Logging::get_instance()->info( 'Non-GET request received, evicting cache file', [ 'cache_file' => $cache_file, 'method' => utils::get_server_value( 'REQUEST_METHOD' ) ] );
         }
+    }
+
+    public function _is_maintenance_mode()
+    {
+        if( file_exists( ABSPATH . '.maintenance' ) )
+        {
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Maintenance mode', 'src' => 'File exists', 'file' => 'ABSPATH + .maintenance' ] );
+            return true;
+        }
+
+        if( function_exists( 'apply_filters' ) && apply_filters( 'enable_maintenance_mode', false, 0 ) )
+        {
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Maintenance mode', 'src' => 'Filter' ] );
+            return true;
+        }
+
+        return false;
     }
 
     public function is_request_cacheable()
     {
         if( $this->is_user_logged_in() )
         {
-            \Vendi\Cache\Logging::get_instance()->info( 'Request not cacheable', [ 'reason' => 'Logged in user' ] );
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Logged in user' ] );
             return false;
         }
 
@@ -180,15 +197,70 @@ final class CacheMaster
         {
             if( defined( $constant ) )
             {
-                \Vendi\Cache\Logging::get_instance()->info( 'Request not cacheable', [ 'reason' => 'Legacy constant found', 'constant' => $constant ] );
+                \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Legacy constant found', 'constant' => $constant ] );
                 return false;
             }
         }
 
         if( defined( 'VENDI_CACHE_PHP_ERROR' ) )
         {
-            \Vendi\Cache\Logging::get_instance()->info( 'Request not cacheable', [ 'reason' => 'Explicit constant found', 'constant' => 'VENDI_CACHE_PHP_ERROR' ] );
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Explicit constant found', 'constant' => 'VENDI_CACHE_PHP_ERROR' ] );
             return false;
+        }
+
+        /**
+         * This should never happen but... just in case.
+         *
+         * https://developer.wordpress.org/reference/functions/wp_installing/
+         */
+        if( function_exists( 'wp_installing' ) && wp_installing() )
+        {
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Install-mode detected' ] );
+            return false;
+        }
+
+        // Don't cache any requests during maintenance mode
+        if( $this->_is_maintenance_mode() )
+        {
+            //Logging handled by function
+            return false;
+        }
+
+        //
+        if( function_exists( 'is_admin' ) && is_admin() )
+        {
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Admin screen detected' ] );
+            return false;
+        }
+
+        if( ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) || ( defined( 'DOING_CRON' ) && DOING_CRON ) )
+        {
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Request in a cron' ] );
+            return false;
+        }
+
+        if( ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) )
+        {
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Request is AJAX' ] );
+            return false;
+        }
+
+        $no_cache_pages = [
+                            '/wp-login.php',
+                            '/wp-signup.php',
+                            '/wp-trackback.php',
+                            '/xmlrpc.php',
+                        ];
+
+        $this_page = utils::get_server_value( 'REQUEST_URI' );
+
+        foreach( $no_cache_pages as $page )
+        {
+            if( $page == $this_page )
+            {
+                \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Special WordPress page detected', 'page' => $page ] );
+                return false;
+            }
         }
 
 
@@ -198,7 +270,7 @@ final class CacheMaster
 
         if( ! utils::is_request_method( 'GET' ) )
         {
-            \Vendi\Cache\Logging::get_instance()->info( 'Request not cacheable', [ 'reason' => 'Non-GET request received', 'method' => utils::get_server_value( 'REQUEST_METHOD' ) ] );
+            \Vendi\Cache\Logging::get_instance()->debug( 'Request not cacheable', [ 'reason' => 'Non-GET request received', 'method' => utils::get_server_value( 'REQUEST_METHOD' ) ] );
             return false;
         }
 
@@ -214,7 +286,7 @@ final class CacheMaster
         $query_string = utils::get_server_value( 'QUERY_STRING', '' );
         if( strlen( $query_string ) > 0 )
         {
-            \Vendi\Cache\Logging::get_instance()->info( 'Request not cacheable', [ 'reason' => 'Query string found', 'query_string' => $query_string ] );
+            \Vendi\Cache\Logging::get_instance()->debug( 'Request not cacheable', [ 'reason' => 'Query string found', 'query_string' => $query_string ] );
             return false;
         }
 
@@ -233,7 +305,7 @@ final class CacheMaster
                     //contains a cookie which indicates user must not be cached
                     if( strpos( $client_cookie, $cookie_to_test ) !== false )
                     {
-                        \Vendi\Cache\Logging::get_instance()->info(
+                        \Vendi\Cache\Logging::get_instance()->debug(
                                                                         'Request not cacheable',
                                                                         [
                                                                             'reason' => 'Found special cookie',
@@ -358,19 +430,19 @@ final class CacheMaster
     {
         if( function_exists( 'is_404' ) && is_404() )
         {
-            \Vendi\Cache\Logging::get_instance()->info( 'Request not cacheable', [ 'reason' => '404 detected' ] );
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => '404 detected' ] );
             return false;
         }
 
         if( defined( 'VENDI_CACHE_PHP_ERROR' ) )
         {
-            \Vendi\Cache\Logging::get_instance()->info( 'Request not cacheable', [ 'reason' => 'Explicit constant detected', 'constant' => 'VENDI_CACHE_PHP_ERROR' ] );
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Explicit constant detected', 'constant' => 'VENDI_CACHE_PHP_ERROR' ] );
             return $buffer;
         }
 
         if( apply_filters( self::LEGACY_FILTER_NAME__NO_CACHE, false, $buffer ) )
         {
-            \Vendi\Cache\Logging::get_instance()->info( 'Request not cacheable', [ 'reason' => 'Legacy filter return no cache', 'filter' => self::LEGACY_FILTER_NAME__NO_CACHE ] );
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Legacy filter return no cache', 'filter' => self::LEGACY_FILTER_NAME__NO_CACHE ] );
             return $buffer;
         }
 
@@ -378,7 +450,7 @@ final class CacheMaster
         //TODO: Move to option
         if( strlen( $buffer ) < CacheSettings::get_instance()->get_min_page_size() )
         {
-            \Vendi\Cache\Logging::get_instance()->info( 'Request not cacheable', [ 'reason' => 'Page too small', 'size' => strlen( $buffer ), 'min_size' => CacheSettings::get_instance()->get_min_page_size() ] );
+            \Vendi\Cache\Logging::log_request_as_not_cacheable( [ 'reason' => 'Page too small', 'size' => strlen( $buffer ), 'min_size' => CacheSettings::get_instance()->get_min_page_size() ] );
             return $buffer;
         }
 
@@ -460,6 +532,15 @@ final class CacheMaster
         }
 
         $this->_setup_main_hooks();
+
+        \Vendi\Cache\Logging::get_instance()->debug(
+                                                        'Request URL is:',
+                                                        [
+                                                            'host'   => utils::get_server_value( 'HTTP_HOST' ),
+                                                            'path'   => utils::get_server_value( 'REQUEST_URI' ),
+                                                            'secure' => $this->is_https_page(),
+                                                        ]
+                                                    );
 
         $this->_maybe_purge_cached_file_on_non_GET_method();
 
@@ -580,12 +661,12 @@ final class CacheMaster
         }
 
         //Log the start of deletion
-        \Vendi\Cache\Logging::get_instance()->info( 'Delete directory request', [ 'dir' => $absolute_path ] );
+        \Vendi\Cache\Logging::get_instance()->debug( 'Delete directory request', [ 'dir' => $absolute_path ] );
 
         //If we don't have an actual folder, skip it
         if( ! is_dir( $absolute_path ) )
         {
-            \Vendi\Cache\Logging::get_instance()->info( 'Directory empty... skipping', [ 'dir' => $absolute_path ] );
+            \Vendi\Cache\Logging::get_instance()->debug( 'Directory empty... skipping', [ 'dir' => $absolute_path ] );
             return false;
         }
 
@@ -599,7 +680,6 @@ final class CacheMaster
 
         foreach( $child_paths as $dir )
         {
-            // \Vendi\Cache\Logging::get_instance()->info( 'Path', [ 'path' => $dir ] );
 
             $test_file_path = \Webmozart\PathUtil\Path::join(
                                                                 $this->_file_system->getAdapter()->applyPathPrefix( $dir ),
@@ -608,7 +688,7 @@ final class CacheMaster
 
             if( $test_file_path === $log_file_abs )
             {
-                \Vendi\Cache\Logging::get_instance()->info( 'Skipping log directory', [ 'path' => $dir, 'is_dir' => is_dir( $absolute_path ) ] );
+                \Vendi\Cache\Logging::get_instance()->debug( 'Skipping log directory', [ 'path' => $dir, 'is_dir' => is_dir( $absolute_path ) ] );
                 continue;
             }
 
@@ -619,7 +699,7 @@ final class CacheMaster
                 return false;
             }
 
-            \Vendi\Cache\Logging::get_instance()->info( 'Delete directory', [ 'dir' => $dir ] );
+            \Vendi\Cache\Logging::get_instance()->debug( 'Delete directory', [ 'dir' => $dir ] );
         }
 
         return true;
