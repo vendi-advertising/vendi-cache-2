@@ -153,4 +153,9 @@ class CacheSettings
 
         return \Monolog\Logger::DEBUG;
     }
+
+    public function get_is_auditing_enabled()
+    {
+        return true;
+    }
 }
