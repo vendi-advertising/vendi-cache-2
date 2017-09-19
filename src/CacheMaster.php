@@ -182,22 +182,24 @@ final class CacheMaster
         $logger = \Vendi\Cache\Logging::get_instance()->get_logger();
 
         $tests = [
-                    new MaintenanceMode(   $req, $logger ),
-                    new LoggedInUser(      $req, $logger ),
-                    new LegacyConstants(   $req, $logger ),
-                    new PhpError(          $req, $logger ),
-                    new WpInstalling(      $req, $logger ),
-                    new CronMode(          $req, $logger ),
-                    new AjaxMode(          $req, $logger ),
-                    new WpCorePage(        $req, $logger ),
-                    new HttpRequestMethod( $req, $logger ),
-                    new QueryString(       $req, $logger ),
-                    new WpCookies(         $req, $logger ),
+                    'MaintenanceMode',
+                    'LoggedInUser',
+                    'LegacyConstants',
+                    'PhpError',
+                    'WpInstalling',
+                    'CronMode',
+                    'AjaxMode',
+                    'WpCorePage',
+                    'HttpRequestMethod',
+                    'QueryString',
+                    'WpCookies',
             ];
 
         foreach( $tests as $test )
         {
-            if( ! $test->is_cacheable() )
+            $class = "\\Vendi\\Cache\\CacheBypasses\\$test";
+            $t = new $class( $req, $logger );
+            if( ! $t->is_cacheable() )
             {
                 return false;
             }
