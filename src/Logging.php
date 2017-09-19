@@ -9,7 +9,9 @@ use Vendi\Cache\CacheSettings;
 
 class Logging
 {
-    private static $_logger;
+    private static $_instance;
+
+    private $_logger;
 
     private $_request_id;
 
@@ -51,14 +53,14 @@ class Logging
         $stream->setFormatter( $formatter );
 
         //
-        self::$_logger = new \Monolog\Logger( 'vendi-cache' );
-        self::$_logger->pushHandler( $stream );
+        $this->_logger = new \Monolog\Logger( 'vendi-cache' );
+        $this->_logger->pushHandler( $stream );
 
         //Copy to local so that we can close over it in the anonymous func
         $request_id = $this->_request_id;
 
         //We want to always append the current request's ID for tracing
-        self::$_logger->pushProcessor(
+        $this->_logger->pushProcessor(
                                             function ($record) use ( $request_id )
                                             {
                                                 $record['context']['request_id'] = $request_id;
@@ -69,17 +71,22 @@ class Logging
 
     public static function get_instance()
     {
-        if( ! self::$_logger )
+        if( ! self::$_instance )
         {
-            new self();
+            self::$_instance = new self();
         }
 
-        return self::$_logger;
+        return self::$_instance;
+    }
+
+    public function get_logger()
+    {
+        return $this->_logger;
     }
 
     public static function log_request_as_not_cacheable( array $args )
     {
-        self::get_instance()->info( 'Request not cacheable', $args );
+        self::get_instance()->get_logger()->info( 'Request not cacheable', $args );
     }
 }
 

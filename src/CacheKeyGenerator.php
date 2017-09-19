@@ -2,7 +2,7 @@
 
 namespace Vendi\Cache;
 
-use Vendi\Shared\utils;
+use Symfony\Component\HttpFoundation\Request;
 
 class CacheKeyGenerator
 {
@@ -34,41 +34,12 @@ class CacheKeyGenerator
     /**
      * [create_url_from_server_variables description]
      *
-     * @see https://stackoverflow.com/a/8389271/231316
-     *
      * @return [type] [description]
      */
     public static function create_url_from_server_variables()
     {
-        $secure = utils::get_server_value( 'HTTPS', '');
-        if( $secure && ! in_array( strtolower( $secure ), array( 'off', 'no' ) ) )
-        {
-            $secure = true;
-        }
-        else
-        {
-            $secure = false;
-        }
-
-        $url = $secure ? 'https' : 'http';
-
-        // Get domain portion
-        $url .= '://'. utils::get_server_value( 'HTTP_HOST', utils::get_server_value( 'SERVER_NAME' ) );
-
-        // Get path to script
-        $url .= utils::get_server_value( 'REQUEST_URI', '' );
-
-        // Add path info, if any
-        $url .= utils::get_server_value( 'PATH_INFO', '' );
-
-        // Add query string, if any (some servers include a ?, some don't)
-        $qs = utils::get_server_value( 'QUERY_STRING' );
-        if( $qs )
-        {
-            $url .= '?' . ltrim( $qs, '?' );
-        }
-
-        return $url;
+        $req = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+        return $req->getUri();
     }
 
     public static function local_cache_filename_from_url( $url = null )

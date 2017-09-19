@@ -19,7 +19,7 @@ define( 'VENDI_CACHE_VERSION', '2.0.0' );
 
 require_once VENDI_CACHE_DIR . '/includes/autoload.php';
 
-\Vendi\Cache\Logging::get_instance()->debug( 'Plugin loading' );
+\Vendi\Cache\Logging::get_instance()->get_logger()->debug( 'Plugin loading' );
 
 require_once VENDI_CACHE_DIR . '/includes/hooks.php';
 
