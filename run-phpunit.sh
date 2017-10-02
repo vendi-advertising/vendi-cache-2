@@ -8,6 +8,8 @@ DB_USER='unit_chris'
 DB_PASS='unit_chris'
 DB_NAME='unit_chris'
 CREATE_DB=false
+RUN_PHAN=false
+RUN_LINT=true
 while [[ $# -gt 0 ]]
 do
     key="$1"
@@ -38,6 +40,14 @@ do
                 CREATE_DB=true
             ;;
 
+            --no-lint)
+                RUN_LINT=false
+            ;;
+
+            --run-phan)
+                RUN_PHAN=true
+            ;;
+
             --update-composer)
                 UPDATE=true
             ;;
@@ -57,6 +67,14 @@ fi
 if [ "$UPDATE" = true ]; then
     composer update
     composer install
+fi
+
+if [ "$RUN_LINT" = true ]; then
+    ./vendor/bin/parallel-lint --exclude vendor/ .
+fi
+
+if [ "$RUN_PHAN" = true ]; then
+    ./vendor/bin/phan .
 fi
 
 vendor/bin/security-checker security:check ./composer.lock
