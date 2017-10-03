@@ -32,6 +32,15 @@ class test_CacheKeyGenerator extends \WP_UnitTestCase
 
     /**
      * @covers Vendi\Cache\CacheKeyGenerator::local_cache_filename_from_url
+     */
+    public function test_local_cache_filename_from_url__naked( )
+    {
+        $expected = CacheKeyGenerator::local_cache_filename_from_url( $this->__get_test_url() );
+        $this->assertSame( $expected, CacheKeyGenerator::local_cache_filename_from_url( ) );
+    }
+
+    /**
+     * @covers Vendi\Cache\CacheKeyGenerator::local_cache_filename_from_url
      * @dataProvider provider_for_local_cache_filename
      */
     public function test_local_cache_filename_from_url( $expected, $value )
@@ -78,6 +87,26 @@ class test_CacheKeyGenerator extends \WP_UnitTestCase
     public function test_create_url_from_server_variables( $expected, $keys )
     {
         $this->assertSame( $expected, CacheKeyGenerator::create_url_from_server_variables( array( 'SERVER' => $keys ) ) );
+    }
+
+    private function __get_test_url()
+    {
+        $this->assertTrue( defined( 'PLUGINDIR' ) );
+        $this->assertTrue( defined( 'WP_PLUGIN_URL' ) );
+
+        //This is kinda hacky but works.
+        //Technically I could get rid of the "-1" and concatenation but I think
+        //this is more proper.
+        return substr( WP_PLUGIN_URL, 0, strpos( WP_PLUGIN_URL, PLUGINDIR ) - 1 ) . '/';
+    }
+
+    /**
+     * @covers Vendi\Cache\CacheKeyGenerator::create_url_from_server_variables
+     */
+    public function test_create_url_from_server_variables__naked( )
+    {
+        $expected = $this->__get_test_url();
+        $this->assertSame( $expected, CacheKeyGenerator::create_url_from_server_variables( ) );
     }
 
     /**
