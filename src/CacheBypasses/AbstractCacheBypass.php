@@ -11,7 +11,7 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
 
     private $_logger;
 
-    public function __construct( Request $request, LoggerInterface $logger )
+    final function __construct( Request $request, LoggerInterface $logger )
     {
         $this->_request = $request;
         $this->_logger  = $logger;

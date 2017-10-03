@@ -6,20 +6,6 @@ use League\Flysystem\Adapter\Local;
 use League\Flysystem\Plugin\ListPaths;
 use League\Flysystem\{AdapterInterface, Filesystem};
 use Vendi\Cache\{Auditing, CacheExclusions, CacheKeyGenerator, CacheSettings, ErrorHandler};
-use Symfony\Component\HttpFoundation\Request;
-use Vendi\Cache\CacheBypasses\{
-                                AjaxMode,
-                                CronMode,
-                                HttpRequestMethod,
-                                LegacyConstants,
-                                LoggedInUser,
-                                MaintenanceMode,
-                                PhpError,
-                                QueryString,
-                                WpCorePage,
-                                WpCookies,
-                                WpInstalling
-                            };
 use Vendi\Shared\utils;
 
 final class CacheMaster
@@ -178,45 +164,10 @@ final class CacheMaster
 
     public function is_request_cacheable()
     {
-        $req = Request::createFromGlobals();
-        $logger = \Vendi\Cache\Logging::get_instance()->get_logger();
-
-        $tests = [
-                    'MaintenanceMode',
-                    'LoggedInUser',
-                    'LegacyConstants',
-                    'PhpError',
-                    'WpInstalling',
-                    'CronMode',
-                    'AjaxMode',
-                    'WpCorePage',
-                    'HttpRequestMethod',
-                    'QueryString',
-                    'WpCookies',
-            ];
-
-        foreach( $tests as $test )
+        if( ! CacheBypassTester::get_instance()->test_request() )
         {
-            $class = "\\Vendi\\Cache\\CacheBypasses\\$test";
-            $t = new $class( $req, $logger );
-            if( ! $t->is_cacheable() )
-            {
-                return false;
-            }
+            return false;
         }
-
-        //TODO: HTTPS Check?
-
-        //TODO: Check for trailing slash?
-
-        //TODO: Not actually built
-        $exclusion_rule = CacheExclusions::get_instance()->get_exclusion_rule_for_request();
-        if( $exclusion_rule )
-        {
-            \Vendi\Cache\Logging::get_instance()->get_logger()->debug( 'Request not cacheable', [ 'reason' => 'Exclusion rule cound', 'exclusion_rule' => $exclusion_rule ] );
-        }
-
-        return true;
     }
 
     public function _flag_request_as_cacheable()
@@ -293,7 +244,7 @@ final class CacheMaster
         readfile( $cache_file );
 
         //Terminate the request
-        exit;
+        exit ;
     }
 
     public function _setup_actual_request_caching()
