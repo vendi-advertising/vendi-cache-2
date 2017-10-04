@@ -389,7 +389,7 @@ final class CacheMaster
         $this->_setup_actual_request_caching();
     }
 
-    public static function handle_action_comment_post( $comment_id )
+    public function handle_action_comment_post( $comment_id )
     {
         \Vendi\Cache\Logging::get_instance()->get_logger()->debug( 'Comment posted, scheduling cache clear', [ 'comment_id' => $comment_id ] );
 
@@ -399,7 +399,7 @@ final class CacheMaster
         $this->schedule_cache_clear();
     }
 
-    public static function handle_filter_redirect_filter( $status )
+    public function handle_filter_redirect_filter( $status )
     {
         \Vendi\Cache\Logging::get_instance()->get_logger()->debug( 'Redirect happend, flagging request as non-cacheable' );
 
@@ -471,7 +471,7 @@ final class CacheMaster
     }
 
     //Can safely call this as many times as we like because it'll only schedule one clear
-    public static function handle_action_clear_page_cache()
+    public function handle_action_clear_page_cache()
     {
         $this->schedule_cache_clear();
     }
