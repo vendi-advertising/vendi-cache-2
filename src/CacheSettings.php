@@ -2,8 +2,6 @@
 
 namespace Vendi\Cache;
 
-use Vendi\Shared\utils;
-
 class CacheSettings
 {
     private static $_instance;
