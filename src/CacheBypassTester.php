@@ -69,31 +69,21 @@ final class CacheBypassTester
         {
             $class = "$root_namespace\\$test_namespace\\$test";
 
+            $t = new $class( $request, $logger );
+            $result = $t->is_cacheable();
+
             $logger->debug(
-                                'Running single test',
+                                'Single test run',
                                 [
-                                    'test' => $test,
+                                    'test'          => $test,
+                                    'is_cacheable'  => $result,
                                 ]
                         );
 
-            $t = new $class( $request, $logger );
-            if( ! $t->is_cacheable() )
+            if( false === $result )
             {
-                $logger->debug(
-                                    'Test returned false',
-                                    [
-                                        'test' => $test,
-                                    ]
-                            );
                 return false;
             }
-
-            $logger->debug(
-                                'Test returned true',
-                                [
-                                    'test' => $test,
-                                ]
-                        );
         }
 
         $logger->debug( 'All tests reported resourece cacheable.' );
