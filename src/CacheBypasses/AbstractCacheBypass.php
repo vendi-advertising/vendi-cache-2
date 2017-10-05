@@ -46,6 +46,6 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
 
     final public function log_request_as_not_cacheable( array $args )
     {
-        $this->_logger->info( 'Request not cacheable', $args );
+        $this->_logger->debug( 'Request not cacheable', $args );
     }
 }
