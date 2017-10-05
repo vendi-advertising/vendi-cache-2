@@ -60,6 +60,8 @@ final class CacheBypassTester
                     'WpCookies',
             ];
 
+        $logger->debug( 'Starting tests' );
+
         $root_namespace = __NAMESPACE__;
         $test_namespace = 'CacheBypasses';
 
