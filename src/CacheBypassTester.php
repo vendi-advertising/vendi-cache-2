@@ -79,8 +79,21 @@ final class CacheBypassTester
             $t = new $class( $request, $logger );
             if( ! $t->is_cacheable() )
             {
+                $logger->debug(
+                                    'Test returned false',
+                                    [
+                                        'test' => $test,
+                                    ]
+                            );
                 return false;
             }
+
+            $logger->debug(
+                                'Test returned true',
+                                [
+                                    'test' => $test,
+                                ]
+                        );
         }
 
 
