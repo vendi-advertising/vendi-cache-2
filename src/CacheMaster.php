@@ -177,7 +177,7 @@ final class CacheMaster
     public function is_request_cacheable()
     {
         $test_runner = new CacheBypassTester( $this->get_maestro() );
-        if( ! $test_runner->test_request() )
+        if( false === $test_runner->test_request() )
         {
             return false;
         }
