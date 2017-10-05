@@ -8,7 +8,7 @@ use League\Flysystem\Adapter\Local;
 use Monolog\Logger;
 use Vendi\Cache\{CacheSettings, CacheMaster, VendiMonoLoggger};
 
-final class Master
+final class Maestro
 {
     private $_logger = null;
 
