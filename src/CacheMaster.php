@@ -21,9 +21,21 @@ final class CacheMaster
 
     private $_maestro = null;
 
+    private $_cache_key_generator = null;
+
     public function __construct( Maestro $maestro )
     {
         $this->_maestro = $maestro;
+    }
+
+    public function get_cache_key_generator()
+    {
+        if( ! $this->_cache_key_generator instanceof CacheKeyGenerator )
+        {
+            $this->_cache_key_generator = new CacheKeyGenerator( $this->get_maestro() );
+        }
+
+        return $this->_cache_key_generator;
     }
 
     public function get_maestro() : Maestro
@@ -148,7 +160,7 @@ final class CacheMaster
             return;
         }
 
-        $cache_file = CacheKeyGenerator::local_cache_filename_from_url();
+        $cache_file = $this->get_cache_key_generator()->local_cache_filename_from_url();
 
         if( $this->file_exists( $cache_file ) )
         {
@@ -198,7 +210,7 @@ final class CacheMaster
         $this->get_logger()->debug( 'Request marked as cacheable' );
         $this->_flag_request_as_cacheable();
 
-        $cache_file = CacheKeyGenerator::local_cache_filename_from_url( );
+        $cache_file = $this->get_cache_key_generator()->local_cache_filename_from_url( );
 
 
         if( ! $this->file_exists( $cache_file ) )
@@ -301,7 +313,7 @@ final class CacheMaster
         // $this->get_logger()->debug( 'Buffer', [ 'buffer' => strlen( $buffer ) ] );
 
 
-        $cache_file = CacheKeyGenerator::local_cache_filename_from_url();
+        $cache_file = $this->get_cache_key_generator()->local_cache_filename_from_url();
 
         $append = "\n";
         // $appendGzip = "";
@@ -418,7 +430,7 @@ final class CacheMaster
     {
         $this->get_logger()->debug( 'Request to delete cache file by permalink', [ 'permalink' => $permalink ] );
 
-        $cache_file = CacheKeyGenerator::local_cache_filename_from_url( $permalink );
+        $cache_file = $this->get_cache_key_generator()->local_cache_filename_from_url( $permalink );
 
         $this->get_logger()->debug( 'Permalink resolved to cache file', [ 'cache_file' => $cache_file ] );
 
