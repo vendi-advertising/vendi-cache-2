@@ -2,6 +2,8 @@
 
 namespace Vendi\Cache;
 
+use League\Flysystem\Filesystem;
+use Monolog\Logger;
 use Vendi\Cache\{Auditing, CacheExclusions, CacheKeyGenerator, CacheSettingsInterface, ErrorHandler};
 
 final class CacheMaster
