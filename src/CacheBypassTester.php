@@ -38,10 +38,12 @@ final class CacheBypassTester
 
     public function test_request( )
     {
+        $maestro  = $this->get_maestro();
         $request  = $this->get_request();
         $logger   = $this->get_logger();
         $settings = $this->get_cache_settings();
 
+        Assertion::isInstanceOf( $maestro, Maestro::class );
         Assertion::isInstanceOf( $request, Request::class );
         Assertion::isInstanceOf( $logger, Logger::class );
         Assertion::isInstanceOf( $settings, CacheSettingsInterface::class );
@@ -69,7 +71,7 @@ final class CacheBypassTester
         {
             $class = "$root_namespace\\$test_namespace\\$test";
 
-            $t = new $class( $request, $logger );
+            $t = new $class( $maestro );
             $result = $t->is_cacheable();
 
             $logger->debug(

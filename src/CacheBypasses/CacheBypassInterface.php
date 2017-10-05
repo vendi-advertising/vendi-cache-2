@@ -2,12 +2,15 @@
 
 namespace Vendi\Cache\CacheBypasses;
 
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Vendi\Cache\{CacheSettingsInterface, Maestro};
 
 interface CacheBypassInterface
 {
-    public function __construct( Request $request, LoggerInterface $logger );
+    public function __construct( Maestro $maestro );
+
+    public function get_maestro() : Maestro;
+
+    public function get_cache_settings() : CacheSettingsInterface;
 
     public function get_url( );
 

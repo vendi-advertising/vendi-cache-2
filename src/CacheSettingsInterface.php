@@ -5,6 +5,14 @@ namespace Vendi\Cache;
 interface CacheSettingsInterface
 {
 
+    public function is_constant_defined( $name );
+
+    public function get_constant_value( $name );
+
+    public function is_function_defined( $name );
+
+    public function get_function_value( $name );
+
     public function get_cache_folder_abs();
 
     /**
