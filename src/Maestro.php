@@ -195,9 +195,9 @@ final class Maestro
         }
 
         //Sanity check that we have things setup
-        Assertion::noNull( $this->get_cache_settings() );
-        Assertion::noNull( $this->get_adapter() );
-        Assertion::noNull( $this->get_logger() );
+        Assertion::notNull( $this->get_cache_settings() );
+        Assertion::notNull( $this->get_adapter() );
+        Assertion::notNull( $this->get_logger() );
 
         Assertion::isInstanceOf( $this->get_cache_settings(), CacheSettingsInterface::class );
         Assertion::isInstanceOf( $this->get_adapter(), '\League\Flysystem\AdapterInterface' );
