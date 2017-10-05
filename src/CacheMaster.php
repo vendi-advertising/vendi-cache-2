@@ -111,14 +111,16 @@ final class CacheMaster
                 add_action( $action, array( $this, 'handle_action_clear_page_cache' ) );
             }
 
-            if( utils::is_post() )
+            $request = $this->get_maestro()->get_request();
+
+            if( $request->isMethod( 'POST' ) )
             {
                 $pages = [
                             '/wp-admin/options.php',
                             '/wp-admin/options-permalink.php',
                         ];
 
-                $current_page = strtolower( utils::get_server_value( 'REQUEST_URI' ) );
+                $current_page = strtolower( $request->getBaseUrl() . $request->getPathInfo() );
 
                 foreach( $pages as $page )
                 {
@@ -139,7 +141,9 @@ final class CacheMaster
 
     public function _maybe_purge_cached_file_on_non_GET_method()
     {
-        if( utils::is_request_method( 'GET' ) )
+        $request = $this->get_maestro()->get_request();
+
+        if( $request->isMethod( 'GET' ) )
         {
             return;
         }
@@ -148,7 +152,13 @@ final class CacheMaster
 
         if( $this->file_exists( $cache_file ) )
         {
-            $this->get_logger()->info( 'Non-GET request received, evicting cache file', [ 'cache_file' => $cache_file, 'method' => utils::get_server_value( 'REQUEST_METHOD' ) ] );
+            $this->get_logger()->info(
+                                        'Non-GET request received, evicting cache file',
+                                        [
+                                            'cache_file' => $cache_file,
+                                            'method' => $request->getMethod()
+                                        ]
+                                    );
         }
     }
 
@@ -286,6 +296,8 @@ final class CacheMaster
             return $buffer;
         }
 
+        $request = $this->get_maestro()->get_request();
+
         // $this->get_logger()->debug( 'Buffer', [ 'buffer' => strlen( $buffer ) ] );
 
 
@@ -309,12 +321,10 @@ final class CacheMaster
             $append .= 'Protocol: ' . ( $this->is_https_page() ? 'HTTPS' : 'HTTP' ) . '. ';
             $append .= 'Page size: ' . strlen( $buffer ) . ' bytes. ';
 
-            $host = wp_kses(
-                                utils::get_server_value( 'HTTP_HOST', utils::get_server_value( 'SERVER_NAME' ) ),
-                                array()
-                        );
+            $host = wp_kses( $request->getHttpHost(), array() );
+
             $append .= 'Host: ' . $host . '. ';
-            $append .= 'Request URI: ' . wp_kses( utils::get_server_value( 'REQUEST_URI' ), array() ) . ' ';
+            $append .= 'Request URI: ' . wp_kses( $request->getBaseUrl() . $request->getPathInfo(), array() ) . ' ';
             $appendGzip = $append . " Encoding: GZEncode -->\n";
             $append .= " Encoding: Uncompressed -->\n";
         // }
@@ -346,13 +356,7 @@ final class CacheMaster
             return true;
         }
 
-        //In case we're behind a proxy and user used HTTPS.
-        if( 'https' === utils::get_server_value( 'HTTP_X_FORWARDED_PROTO' ) )
-        {
-            return true;
-        }
-
-        return false;
+        return $this->get_maestro()->get_request()->isSecure();
     }
 
     public function setup_caching()
@@ -365,11 +369,13 @@ final class CacheMaster
 
         $this->_setup_main_hooks();
 
+        $request = $this->get_maestro()->get_request();
+
         $this->get_logger()->debug(
                                                         'Request URL is:',
                                                         [
-                                                            'host'   => utils::get_server_value( 'HTTP_HOST' ),
-                                                            'path'   => utils::get_server_value( 'REQUEST_URI' ),
+                                                            'host'   => $request->getHttpHost(),
+                                                            'path'   => $request->getBaseUrl() . $request->getPathInfo(),
                                                             'secure' => $this->is_https_page(),
                                                         ]
                                                     );
