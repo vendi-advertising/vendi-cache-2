@@ -201,7 +201,7 @@ final class CacheMaster
 
     public function _maybe_serve_cached_file()
     {
-        if( ! $this->is_request_cacheable() )
+        if( false === $this->is_request_cacheable() )
         {
             $this->_flag_request_as_not_cacheable();
             return;

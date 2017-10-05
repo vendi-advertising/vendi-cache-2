@@ -96,6 +96,8 @@ final class CacheBypassTester
                         );
         }
 
+        $logger->debug( 'All tests reported resourece cacheable.' );
+
 
         //TODO: HTTPS Check?
 
