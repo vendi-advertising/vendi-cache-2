@@ -1190,16 +1190,16 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "5.2.3",
+            "version": "5.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/justinrainbow/json-schema.git",
-                "reference": "9225c967a5395e4643b5124806191c038fb1224b"
+                "reference": "7ccb0e67ea8ace0f84c40900ca3c8a234467628c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/9225c967a5395e4643b5124806191c038fb1224b",
-                "reference": "9225c967a5395e4643b5124806191c038fb1224b",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/7ccb0e67ea8ace0f84c40900ca3c8a234467628c",
+                "reference": "7ccb0e67ea8ace0f84c40900ca3c8a234467628c",
                 "shasum": ""
             },
             "require": {
@@ -1208,7 +1208,6 @@
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.1",
                 "json-schema/json-schema-test-suite": "1.2.0",
-                "phpdocumentor/phpdocumentor": "~2",
                 "phpunit/phpunit": "^4.8.22"
             },
             "bin": [
@@ -1253,7 +1252,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2017-03-23T00:52:32+00:00"
+            "time": "2017-10-04T20:57:36+00:00"
         },
         {
             "name": "mustache/mustache",
