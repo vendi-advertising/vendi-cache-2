@@ -3,41 +3,48 @@
 namespace Vendi\Cache;
 
 use Assert\Assertion;
+use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
+use Vendi\Cache\{Maestro, CacheSettingsInterface, CacheMaster, VendiMonoLoggger};
 
 final class CacheBypassTester
 {
-    private static $_instance;
+    private $_maestro = null;
 
-    private function __construct()
+    public function __construct( Maestro $maestro )
     {
-        //NOOP
+        $this->_maestro = $maestro;
     }
 
-    public static function get_instance()
+    public function get_maestro() : Maestro
     {
-        if( ! self::$_instance )
-        {
-            self::$_instance = new self();
-        }
-
-        return self::$_instance;
+        return $this->_maestro;
     }
 
-    public function test_request( Request $request = null, \Monolog\Logger $logger = null )
+    public function get_logger() : Logger
     {
-        if( null === $request )
-        {
-            $request = Request::createFromGlobals();
-        }
+        return $this->get_maestro()->get_logger();
+    }
 
-        if( null === $logger )
-        {
-            $logger = \Vendi\Cache\Logging::get_instance()->get_logger();
-        }
+    public function get_cache_settings() : CacheSettingsInterface
+    {
+        return $this->get_maestro()->get_cache_settings();
+    }
 
-        Assertion::isInstanceOf( $request, '\Symfony\Component\HttpFoundation\Request' );
-        Assertion::isInstanceOf( $logger, '\Monolog\Logger' );
+    public function get_request() : Request
+    {
+        return $this->get_maestro()->get_request();
+    }
+
+    public function test_request( )
+    {
+        $request  = $this->get_request();
+        $logger   = $this->get_logger();
+        $settings = $this->get_cache_settings();
+
+        Assertion::isInstanceOf( $request, Request::class );
+        Assertion::isInstanceOf( $logger, Logger::class );
+        Assertion::isInstanceOf( $settings, CacheSettingsInterface::class );
 
         $tests = [
                     'MaintenanceMode',
@@ -72,11 +79,11 @@ final class CacheBypassTester
         //TODO: Check for trailing slash?
 
         //TODO: Not actually built
-        $exclusion_rule = CacheExclusions::get_instance()->get_exclusion_rule_for_request();
-        if( $exclusion_rule )
-        {
-            \Vendi\Cache\Logging::get_instance()->get_logger()->debug( 'Request not cacheable', [ 'reason' => 'Exclusion rule cound', 'exclusion_rule' => $exclusion_rule ] );
-        }
+        // $exclusion_rule = $settings->get_exclusion_rule_for_request();
+        // if( $exclusion_rule )
+        // {
+        //     $logger->debug( 'Request not cacheable', [ 'reason' => 'Exclusion rule cound', 'exclusion_rule' => $exclusion_rule ] );
+        // }
 
         return true;
 

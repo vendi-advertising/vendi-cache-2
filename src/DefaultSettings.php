@@ -2,25 +2,13 @@
 
 namespace Vendi\Cache;
 
-class CacheSettings
+class DefaultSettings implements CacheSettingsInterface
 {
-    private static $_instance;
-
     private static $_log_folder_name = '__log__';
 
-    private function __construct()
+    public function __construct()
     {
 
-    }
-
-    public static function get_instance()
-    {
-        if( ! self::$_instance )
-        {
-            self::$_instance = new self();
-        }
-
-        return self::$_instance;
     }
 
     public function get_cache_folder_abs()

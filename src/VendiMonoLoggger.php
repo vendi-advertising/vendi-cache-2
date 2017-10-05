@@ -8,7 +8,7 @@ use Monolog\Formatter\LineFormatter;
 
 use Ramsey\Uuid\Uuid;
 
-use Vendi\Cache\CacheSettings;
+use Vendi\Cache\CacheSettingsInterface;
 
 final class VendiMonoLoggger extends Logger
 {
@@ -18,7 +18,7 @@ final class VendiMonoLoggger extends Logger
      */
     private $_request_id;
 
-    public function __construct( CacheSettings $cache_settings )
+    public function __construct( CacheSettingsInterface $cache_settings )
     {
         //This is used to trace a specific request through the pipeline
         $this->_request_id = Uuid::uuid4()->toString();

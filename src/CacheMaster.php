@@ -2,7 +2,7 @@
 
 namespace Vendi\Cache;
 
-use Vendi\Cache\{Auditing, CacheExclusions, CacheKeyGenerator, CacheSettings, ErrorHandler};
+use Vendi\Cache\{Auditing, CacheExclusions, CacheKeyGenerator, CacheSettingsInterface, ErrorHandler};
 
 final class CacheMaster
 {
@@ -17,31 +17,31 @@ final class CacheMaster
 
     private $_is_request_cacheable = null;
 
-    private $_master = null;
+    private $_maestro = null;
 
-    public function __construct( Master $master )
+    public function __construct( Maestro $maestro )
     {
-        $this->_master = $master;
+        $this->_maestro = $maestro;
     }
 
-    public function get_master() : Master
+    public function get_maestro() : Maestro
     {
-        return $this->_master;
+        return $this->_maestro;
     }
 
     public function get_logger() : Logger
     {
-        return $this->get_master()->get_logger();
+        return $this->get_maestro()->get_logger();
     }
 
-    public function get_cache_settings() : CacheSettings
+    public function get_cache_settings() : CacheSettingsInterface
     {
-        return $this->get_master()->get_cache_settings();
+        return $this->get_maestro()->get_cache_settings();
     }
 
     public function get_file_system() : Filesystem
     {
-        return $this->get_master()->get_file_system();
+        return $this->get_maestro()->get_file_system();
     }
 
     public function log_request_as_not_cacheable( array $args )
@@ -152,7 +152,8 @@ final class CacheMaster
 
     public function is_request_cacheable()
     {
-        if( ! CacheBypassTester::get_instance()->test_request() )
+        $test_runner = new CacheBypassTester( $this->get_maestro() );
+        if( ! $test_runner->test_request() )
         {
             return false;
         }
