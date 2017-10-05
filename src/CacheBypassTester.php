@@ -68,6 +68,14 @@ final class CacheBypassTester
         foreach( $tests as $test )
         {
             $class = "$root_namespace\\$test_namespace\\$test";
+
+            $logger->debug(
+                                'Running single test',
+                                [
+                                    'test' => $test,
+                                ]
+                        );
+
             $t = new $class( $request, $logger );
             if( ! $t->is_cacheable() )
             {
