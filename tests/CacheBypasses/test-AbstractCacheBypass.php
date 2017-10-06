@@ -8,6 +8,74 @@ use Vendi\Cache\CacheBypasses\AbstractCacheBypass;
 use Vendi\Cache\CacheSettingsInterface;
 use Vendi\Cache\Maestro;
 
+class test_1 extends AbstractCacheBypass
+{
+    public function is_cacheable( )
+    {
+        return true;
+    }
+}
+
+class nullhandler_for_test_log_request_as_not_cacheable extends NullHandler
+{
+    //This is what we're searching for
+    private $search_text;
+
+    //The instance of a PHP Unit class to that we can
+    //use assert
+    private $outer_class;
+
+    public function __construct( $search_text, \PHPUnit_Framework_TestCase $outer_class )
+    {
+        $this->search_text = $search_text;
+        $this->outer_class = $outer_class;
+    }
+
+    public function handle( array $record )
+    {
+        //We're calling MonoLog's logger just once and it should match
+        //everything that we expect
+
+        //Check for known keys
+        $this->outer_class->assertArrayHasKey( 'message',    $record );
+        $this->outer_class->assertArrayHasKey( 'level_name', $record );
+        $this->outer_class->assertArrayHasKey( 'level',      $record );
+        $this->outer_class->assertArrayHasKey( 'channel',    $record );
+        $this->outer_class->assertArrayHasKey( 'context',    $record );
+
+        //Check their values
+        $this->outer_class->assertSame( $record[ 'message'    ], 'Request not cacheable' );
+        $this->outer_class->assertSame( $record[ 'level_name' ], 'DEBUG' );
+        $this->outer_class->assertSame( $record[ 'level'      ], 100 );
+        $this->outer_class->assertSame( $record[ 'channel'    ], 'vendi-cache-noop' );
+
+        //The context us the special part and it should be an array with one key
+        //name "reason" and our specified value
+        $this->outer_class->assertTrue( is_array( $record[ 'context' ] ) );
+        $this->outer_class->assertCount( 1, $record[ 'context' ] );
+
+        $this->outer_class->assertArrayHasKey( 'reason',    $record[ 'context' ] );
+        $this->outer_class->assertSame( $record[ 'context' ][ 'reason' ], $this->search_text );
+
+
+    }
+}
+
+class abstractcachebypass_for_test_log_request_as_not_cacheable extends AbstractCacheBypass
+{
+    public $search_text;
+
+    public function is_cacheable( )
+    {
+        //Invoke the logger which will be asserted above
+        $this->log_request_as_not_cacheable(
+                                                [
+                                                    'reason' => $this->search_text,
+                                                ]
+         );
+    }
+}
+
 class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
 {
     private $_url = 'http://www.example.com/cheese?a=b';
@@ -25,14 +93,7 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
                      )
                 ;
 
-        return new  class( $maestro ) extends AbstractCacheBypass
-                    {
-                        public function is_cacheable( )
-                        {
-                            return true;
-                        }
-                    }
-                    ;
+        return new test_1( $maestro );
     }
 
     /**
@@ -156,51 +217,7 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
         //an instance of this class so that it can invoke PHP unit asserts.
         //Re-read the second part of that sentence again to make sure you
         //understand it.
-        $handler = new  class( $search_text, $this ) extends NullHandler
-                        {
-                            //This is what we're searching for
-                            private $search_text;
-
-                            //The instance of a PHP Unit class to that we can
-                            //use assert
-                            private $outer_class;
-
-                            public function __construct( $search_text, \PHPUnit_Framework_TestCase $outer_class )
-                            {
-                                $this->search_text = $search_text;
-                                $this->outer_class = $outer_class;
-                            }
-
-                            public function handle( array $record )
-                            {
-                                //We're calling MonoLog's logger just once and it should match
-                                //everything that we expect
-
-                                //Check for known keys
-                                $this->outer_class->assertArrayHasKey( 'message',    $record );
-                                $this->outer_class->assertArrayHasKey( 'level_name', $record );
-                                $this->outer_class->assertArrayHasKey( 'level',      $record );
-                                $this->outer_class->assertArrayHasKey( 'channel',    $record );
-                                $this->outer_class->assertArrayHasKey( 'context',    $record );
-
-                                //Check their values
-                                $this->outer_class->assertSame( $record[ 'message'    ], 'Request not cacheable' );
-                                $this->outer_class->assertSame( $record[ 'level_name' ], 'DEBUG' );
-                                $this->outer_class->assertSame( $record[ 'level'      ], 100 );
-                                $this->outer_class->assertSame( $record[ 'channel'    ], 'vendi-cache-noop' );
-
-                                //The context us the special part and it should be an array with one key
-                                //name "reason" and our specified value
-                                $this->outer_class->assertTrue( is_array( $record[ 'context' ] ) );
-                                $this->outer_class->assertCount( 1, $record[ 'context' ] );
-
-                                $this->outer_class->assertArrayHasKey( 'reason',    $record[ 'context' ] );
-                                $this->outer_class->assertSame( $record[ 'context' ][ 'reason' ], $this->search_text );
-
-
-                            }
-                        }
-                    ;
+        $handler = new nullhandler_for_test_log_request_as_not_cacheable( $search_text, $this );
 
         //Create a new Maestro with mostly default except for our customer
         //handler from above
@@ -215,21 +232,7 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
                 ;
 
         //Finally, subclass our abstract class and create an instance
-        $tester = new  class( $maestro ) extends AbstractCacheBypass
-                    {
-                        public $search_text;
-
-                        public function is_cacheable( )
-                        {
-                            //Invoke the logger which will be asserted above
-                            $this->log_request_as_not_cacheable(
-                                                                    [
-                                                                        'reason' => $this->search_text,
-                                                                    ]
-                             );
-                        }
-                    }
-                    ;
+        $tester = new abstractcachebypass_for_test_log_request_as_not_cacheable( $maestro );
 
         //Set a public property (we can't change the constructor for
         //AbstractCacheBypass because it is final)

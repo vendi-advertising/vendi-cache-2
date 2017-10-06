@@ -18,12 +18,20 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
         $this->_maestro = $maestro;
     }
 
-    final public function get_maestro() : Maestro
+    /**
+     * [get_maestro description]
+     * @return Maestro
+     */
+    final public function get_maestro()
     {
         return $this->_maestro;
     }
 
-    final public function get_cache_settings() : CacheSettingsInterface
+    /**
+     * [get_cache_settings description]
+     * @return CacheSettingsInterface
+     */
+    final public function get_cache_settings()
     {
         return $this->get_maestro()->get_cache_settings();
     }

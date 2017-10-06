@@ -38,7 +38,7 @@ final class Maestro
      * @param  Request $logger The Symfony Request object to base decisions off of
      * @return Maestro
      */
-    public function with_request( Request $request ) : Maestro
+    public function with_request( Request $request )
     {
         $this->_request = $request;
         return $this;

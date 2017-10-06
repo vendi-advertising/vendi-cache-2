@@ -9,9 +9,17 @@ interface CacheBypassInterface
 {
     public function __construct( Maestro $maestro );
 
-    public function get_maestro() : Maestro;
+    /**
+     * [get_maestro description]
+     * @return Maestro
+     */
+    public function get_maestro();
 
-    public function get_cache_settings() : CacheSettingsInterface;
+    /**
+     * [get_cache_settings description]
+     * @return CacheSettingsInterface
+     */
+    public function get_cache_settings();
 
     public function get_url( );
 
