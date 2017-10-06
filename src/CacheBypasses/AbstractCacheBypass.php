@@ -46,7 +46,8 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
     {
         //TODO: I'm not 100% sure this is right
         //https://github.com/symfony/http-foundation/blob/3.4/Request.php#L982
-        return $this->get_maestro()->get_request()->getBaseUrl();
+        $request = $this->get_maestro()->get_request();
+        return $request->getBaseUrl() . $request->getPathInfo();
     }
 
     final public function get_cookies( )
@@ -59,41 +60,50 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
         $this->get_maestro()->get_logger()->debug( 'Request not cacheable', $args );
     }
 
-    final public function is_function_defined_and_returns_boolean( $name, $boolean, $is_cacheable, $failure_reason )
+    final public function is_function_defined_and_returns_boolean( $name, $boolean, $is_cacheable_if_defined_and_boolean, $failure_reason )
     {
         $settings = $this->get_cache_settings();
 
-        if( $settings->is_function_defined( $name ) )
+        if( ! $settings->is_function_defined( $name ) )
         {
-            if( $is_cacheable !== $settings->get_function_value( $name ) )
-            {
-                $this->log_request_as_not_cacheable(
-                                                        [
-                                                            'reason' => $failure_reason,
-                                                            'extra'  => "Function $name returned $boolean",
-                                                        ]
-                                                );
-                return false;
-            }
+            return ! $is_cacheable_if_defined_and_boolean;
         }
+
+        if( $boolean === $settings->get_function_value( $name ) )
+        {
+            return $is_cacheable_if_defined_and_boolean;
+        }
+
+        $this->log_request_as_not_cacheable(
+                                                [
+                                                    'reason' => $failure_reason,
+                                                    'extra'  => "Function $name returned $boolean",
+                                                ]
+                                        );
+        return ! $is_cacheable_if_defined_and_boolean;
     }
 
-    final public function is_constant_defined_and_set_to_boolean( $name, $boolean, $is_cacheable, $failure_reason )
+    final public function is_constant_defined_and_set_to_boolean( $name, $boolean, $is_cacheable_if_defined_and_boolean, $failure_reason )
     {
         $settings = $this->get_cache_settings();
 
-        if( $settings->is_constant_defined( $name ) )
+        if( ! $settings->is_constant_defined( $name ) )
         {
-            if( $is_cacheable !== $settings->get_constant_value( $name ) )
-            {
-                $this->log_request_as_not_cacheable(
-                                                        [
-                                                            'reason' => $failure_reason,
-                                                            'extra'  => "Function $name returned true",
-                                                        ]
-                                                );
-                return false;
-            }
+            return ! $is_cacheable_if_defined_and_boolean;
         }
+
+        if( $boolean === $settings->get_constant_value( $name ) )
+        {
+            return $is_cacheable_if_defined_and_boolean;
+        }
+
+        $this->log_request_as_not_cacheable(
+                                                [
+                                                    'reason' => $failure_reason,
+                                                    'extra'  => "Constant $name is $boolean",
+                                                ]
+                                        );
+
+        return ! $is_cacheable_if_defined_and_boolean;
     }
 }

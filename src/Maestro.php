@@ -34,7 +34,7 @@ final class Maestro
      * @param  Request $logger The Symfony Request object to base decisions off of
      * @return Maestro
      */
-    public function with_request( Request $request ) : self
+    public function with_request( Request $request ) : Maestro
     {
         $this->_request = $request;
         return $this;
@@ -46,7 +46,7 @@ final class Maestro
      * @param  Logger $logger The Monolog logger to log to
      * @return Maestro
      */
-    public function with_logger( Logger $logger ) : self
+    public function with_logger( Logger $logger ) : Maestro
     {
         $this->_logger = $logger;
         return $this;
@@ -58,7 +58,7 @@ final class Maestro
      * @param  AdapterInterface $adapter The FlySystem Adapter to use.
      * @return Maestro
      */
-    public function with_file_system_adapter( AdapterInterface $adapter ) : self
+    public function with_file_system_adapter( AdapterInterface $adapter ) : Maestro
     {
         $this->_adapter = $adapter;
         return $this;
@@ -70,7 +70,7 @@ final class Maestro
      * @param  CacheSettingsInterface $cache_settings The Cache Settings to use.
      * @return Maestro
      */
-    public function with_cache_settings( CacheSettingsInterface $cache_settings ) : self
+    public function with_cache_settings( CacheSettingsInterface $cache_settings ) : Maestro
     {
         $this->_cache_settings = $cache_settings;
         return $this;
@@ -95,7 +95,7 @@ final class Maestro
     {
         if( ! $this->_logger instanceof Logger )
         {
-            $this->_logger = self::get_default_logger();
+            $this->_logger = self::get_default_logger( $this->get_cache_settings() );
         }
 
         return $this->_logger;
@@ -110,7 +110,7 @@ final class Maestro
     {
         if( ! $this->_adapter instanceof AdapterInterface )
         {
-            $this->_adapter = self::get_default_adapter();
+            $this->_adapter = self::get_default_adapter( $this->get_cache_settings() );
         }
 
         return $this->_adapter;
@@ -163,7 +163,7 @@ final class Maestro
      *
      * @return Maestro
      */
-    public static function get_default_instance( CacheSettingsInterface $cache_settings = null ) : self
+    public static function get_default_instance( CacheSettingsInterface $cache_settings = null ) : Maestro
     {
         if( null === $cache_settings )
         {

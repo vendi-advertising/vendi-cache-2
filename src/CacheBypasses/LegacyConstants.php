@@ -6,6 +6,8 @@ final class LegacyConstants extends AbstractCacheBypass
 {
     public function is_cacheable( )
     {
+        $settings = $this->get_cache_settings();
+
         $legacy_cache_constants = [
                                     'WFDONOTCACHE',
                                     'DONOTCACHEPAGE',
@@ -15,7 +17,7 @@ final class LegacyConstants extends AbstractCacheBypass
 
         foreach( $legacy_cache_constants as $constant )
         {
-            if( defined( $constant ) )
+            if( $settings->is_constant_defined( $constant ) )
             {
                 $this->log_request_as_not_cacheable(
                                                         [
