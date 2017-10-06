@@ -12,8 +12,8 @@ final class non_global_constant_cache_settings extends DefaultSettings
 
     public function reset_all()
     {
-        $this->_CONSTANTS =[];
-        $this->_FUNCTIONS =[];
+        $this->_CONSTANTS = [];
+        $this->_FUNCTIONS = [];
     }
 
     public function set_constant( $name, $value )

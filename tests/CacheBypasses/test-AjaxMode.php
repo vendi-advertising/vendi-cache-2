@@ -12,7 +12,7 @@ class test_CacheBypasses_AjaxMode extends cache_bypass_base
      */
     public function test_is_cacheable__DOING_AJAX__not_defined()
     {
-        $this->_test_constant_not_defined( 'DOING_AJAX' );
+        $this->_test_constant_not_defined( 'AjaxMode', 'DOING_AJAX' );
     }
 
     /**
@@ -20,7 +20,7 @@ class test_CacheBypasses_AjaxMode extends cache_bypass_base
      */
     public function test_is_cacheable__DOING_AJAX__true()
     {
-        $this->_test_constant_defined_set_to_boolean( 'DOING_AJAX', false, true );
+        $this->_test_constant_defined_set_to_boolean( 'AjaxMode', 'DOING_AJAX', true, false );
     }
 
     /**
@@ -28,7 +28,7 @@ class test_CacheBypasses_AjaxMode extends cache_bypass_base
      */
     public function test_is_cacheable__DOING_AJAX__false()
     {
-        $this->_test_constant_defined_set_to_boolean( 'DOING_AJAX', true, false );
+        $this->_test_constant_defined_set_to_boolean( 'AjaxMode', 'DOING_AJAX', false, true );
     }
 
     /**
@@ -36,7 +36,7 @@ class test_CacheBypasses_AjaxMode extends cache_bypass_base
      */
     public function test_is_cacheable__wp_doing_ajax__not_defined()
     {
-        $this->_test_function_not_defined( 'wp_doing_ajax' );
+        $this->_test_function_not_defined( 'AjaxMode', 'wp_doing_ajax' );
     }
 
     /**
@@ -44,7 +44,7 @@ class test_CacheBypasses_AjaxMode extends cache_bypass_base
      */
     public function test_is_cacheable__wp_doing_ajax__false()
     {
-        $this->_test_function_defined_returns_boolean( 'wp_doing_ajax', true, false );
+        $this->_test_function_defined_returns_boolean( 'AjaxMode', 'wp_doing_ajax', true, false );
     }
 
     /**
@@ -52,7 +52,7 @@ class test_CacheBypasses_AjaxMode extends cache_bypass_base
      */
     public function test_is_cacheable__wp_doing_ajax__true()
     {
-        $this->_test_function_defined_returns_boolean( 'wp_doing_ajax', false, true );
+        $this->_test_function_defined_returns_boolean( 'AjaxMode', 'wp_doing_ajax', false, true );
     }
 
 }

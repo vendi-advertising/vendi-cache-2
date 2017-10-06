@@ -58,4 +58,42 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
     {
         $this->get_maestro()->get_logger()->debug( 'Request not cacheable', $args );
     }
+
+    final public function is_function_defined_and_returns_boolean( $name, $boolean, $is_cacheable, $failure_reason )
+    {
+        $settings = $this->get_cache_settings();
+
+        if( $settings->is_function_defined( $name ) )
+        {
+            if( $is_cacheable !== $settings->get_function_value( $name ) )
+            {
+                $this->log_request_as_not_cacheable(
+                                                        [
+                                                            'reason' => $failure_reason,
+                                                            'extra'  => "Function $name returned $boolean",
+                                                        ]
+                                                );
+                return false;
+            }
+        }
+    }
+
+    final public function is_constant_defined_and_set_to_boolean( $name, $boolean, $is_cacheable, $failure_reason )
+    {
+        $settings = $this->get_cache_settings();
+
+        if( $settings->is_constant_defined( $name ) )
+        {
+            if( $is_cacheable !== $settings->get_constant_value( $name ) )
+            {
+                $this->log_request_as_not_cacheable(
+                                                        [
+                                                            'reason' => $failure_reason,
+                                                            'extra'  => "Function $name returned true",
+                                                        ]
+                                                );
+                return false;
+            }
+        }
+    }
 }

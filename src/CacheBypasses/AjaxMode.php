@@ -6,34 +6,14 @@ final class AjaxMode extends AbstractCacheBypass
 {
     public function is_cacheable( )
     {
-        $settings = $this->get_cache_settings();
-
-        if( $settings->is_function_defined( 'wp_doing_ajax' ) )
+        if( false === $this->is_constant_defined_and_set_to_boolean( 'DOING_AJAX', true, false, __( 'Request is AJAX', 'vendi-cache' ) ) )
         {
-            if( $settings->get_function_value( 'wp_doing_ajax' ) )
-            {
-                $this->log_request_as_not_cacheable(
-                                                        [
-                                                            'reason' => 'Request is AJAX',
-                                                            'extra'  => 'Function wp_doing_ajax returned true',
-                                                        ]
-                                                );
-                return false;
-            }
+            return false;
         }
 
-        if( $settings->is_constant_defined( 'DOING_AJAX' ) )
+        if( false === $this->is_function_defined_and_returns_boolean( 'wp_doing_ajax', true, false, __( 'Request is AJAX', 'vendi-cache' ) ) )
         {
-            if( $settings->get_constant_value( 'DOING_AJAX' ) )
-            {
-                $this->log_request_as_not_cacheable(
-                                                        [
-                                                            'reason' => 'Request is AJAX',
-                                                            'extra'  => 'Constant DOING_AJAX defined and true',
-                                                        ]
-                                                );
-                return false;
-            }
+            return false;
         }
 
         return true;
