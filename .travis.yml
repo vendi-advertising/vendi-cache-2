@@ -12,15 +12,6 @@ php:
 env:
   - WP_VERSION=latest WP_MULTISITE=0
 
-before_script:
-  - git clone https://github.com/nikic/php-ast
-  - cd php-ast
-  - phpize
-  - ./configure
-  - make
-  - make install
-  - echo "extension=ast.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-
 script:
   - cd $TRAVIS_BUILD_DIR
   - ./run-phpunit.sh --user travis --database wordpress_test --password ""
