@@ -4,7 +4,9 @@ namespace Vendi\Cache\Tests;
 
 use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
-use Vendi\Cache\{CacheBypassTester, CacheSettingsInterface, Maestro};
+use Vendi\Cache\CacheBypassTester;
+use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\Maestro;
 
 class test_CacheBypassTester extends \WP_UnitTestCase
 {

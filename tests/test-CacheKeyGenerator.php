@@ -3,7 +3,8 @@
 namespace Vendi\Cache\Tests;
 
 use Symfony\Component\HttpFoundation\Request;
-use Vendi\Cache\{CacheKeyGenerator, Maestro};
+use Vendi\Cache\CacheKeyGenerator;
+use Vendi\Cache\Maestro;
 
 class test_CacheKeyGenerator extends \WP_UnitTestCase
 {

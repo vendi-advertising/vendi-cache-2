@@ -2,7 +2,8 @@
 
 namespace Vendi\Cache\CacheBypasses;
 
-use Vendi\Cache\{CacheSettingsInterface, Maestro};
+use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\Maestro;
 
 abstract class AbstractCacheBypass implements CacheBypassInterface
 {

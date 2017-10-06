@@ -5,7 +5,10 @@ namespace Vendi\Cache;
 use Assert\Assertion;
 use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
-use Vendi\Cache\{Maestro, CacheSettingsInterface, CacheMaster, VendiMonoLoggger};
+use Vendi\Cache\CacheMaster;
+use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\Maestro;
+use Vendi\Cache\VendiMonoLoggger;
 
 final class CacheBypassTester
 {
@@ -16,22 +19,38 @@ final class CacheBypassTester
         $this->_maestro = $maestro;
     }
 
-    public function get_maestro() : Maestro
+    /**
+     * [get_maestro description]
+     * @return Maestro
+     */
+    public function get_maestro()
     {
         return $this->_maestro;
     }
 
-    public function get_logger() : Logger
+    /**
+     * [get_logger description]
+     * @return Logger
+     */
+    public function get_logger()
     {
         return $this->get_maestro()->get_logger();
     }
 
-    public function get_cache_settings() : CacheSettingsInterface
+    /**
+     * [get_cache_settings description]
+     * @return CacheSettingsInterface
+     */
+    public function get_cache_settings()
     {
         return $this->get_maestro()->get_cache_settings();
     }
 
-    public function get_request() : Request
+    /**
+     * [get_request description]
+     * @return Request
+     */
+    public function get_request()
     {
         return $this->get_maestro()->get_request();
     }

@@ -19,17 +19,29 @@ class CacheKeyGenerator
         $this->_maestro = $maestro;
     }
 
-    public function get_maestro() : Maestro
+    /**
+     * [get_maestro description]
+     * @return Maestro
+     */
+    public function get_maestro()
     {
         return $this->_maestro;
     }
 
-    public function get_request() : Request
+    /**
+     * [get_request description]
+     * @return Request
+     */
+    public function get_request()
     {
         return $this->get_maestro()->get_request();
     }
 
-    public function get_mapping_of_urls_to_files() : array
+    /**
+     * [get_mapping_of_urls_to_files description]
+     * @return array
+     */
+    public function get_mapping_of_urls_to_files()
     {
         //Prove that our property is always an array
         Assertion::isArray( $this->_urls_to_files );
@@ -37,6 +49,10 @@ class CacheKeyGenerator
         return $this->_urls_to_files;
     }
 
+    /**
+     * [get_url_without_scheme_and_host description]
+     * @return string
+     */
     public function get_url_without_scheme_and_host()
     {
         $request = $this->get_request();
@@ -44,6 +60,10 @@ class CacheKeyGenerator
         return $request->getBaseUrl() . $request->getPathInfo();
     }
 
+    /**
+     * [get_cache_lookup_counts_for_url description]
+     * @return string
+     */
     public function get_cache_lookup_counts_for_url( )
     {
         $url = $this->get_request()->getUri();
@@ -63,6 +83,10 @@ class CacheKeyGenerator
         return $this->_urls_to_files_cache_lookups[ $url ];
     }
 
+    /**
+     * [sanitize_host_for_cache_filename description]
+     * @return string
+     */
     public function sanitize_host_for_cache_filename( )
     {
         $host = $this->get_request()->getHttpHost();
@@ -132,6 +156,10 @@ class CacheKeyGenerator
         return $file;
     }
 
+    /**
+     * [sanitize_path_for_cache_filename description]
+     * @return string
+     */
     public function sanitize_path_for_cache_filename( )
     {
         $path = $this->get_url_without_scheme_and_host();

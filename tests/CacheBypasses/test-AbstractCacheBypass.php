@@ -4,8 +4,9 @@ namespace Vendi\Cache\Tests\CacheBypasses;
 
 use Monolog\Handler\NullHandler;
 use Symfony\Component\HttpFoundation\Request;
-use Vendi\Cache\{CacheSettingsInterface, Maestro};
 use Vendi\Cache\CacheBypasses\AbstractCacheBypass;
+use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\Maestro;
 
 class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
 {

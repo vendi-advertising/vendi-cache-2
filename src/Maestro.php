@@ -3,11 +3,15 @@
 namespace Vendi\Cache;
 
 use Assert\Assertion;
-use League\Flysystem\{AdapterInterface, Filesystem};
 use League\Flysystem\Adapter\Local;
+use League\Flysystem\AdapterInterface;
+use League\Flysystem\Filesystem;
 use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
-use Vendi\Cache\{CacheSettings, CacheSettingsInterface, CacheMaster, VendiMonoLoggger};
+use Vendi\Cache\CacheMaster;
+use Vendi\Cache\CacheSettings;
+use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\VendiMonoLoggger;
 
 final class Maestro
 {
@@ -46,7 +50,7 @@ final class Maestro
      * @param  Logger $logger The Monolog logger to log to
      * @return Maestro
      */
-    public function with_logger( Logger $logger ) : Maestro
+    public function with_logger( Logger $logger )
     {
         $this->_logger = $logger;
         return $this;
@@ -58,7 +62,7 @@ final class Maestro
      * @param  AdapterInterface $adapter The FlySystem Adapter to use.
      * @return Maestro
      */
-    public function with_file_system_adapter( AdapterInterface $adapter ) : Maestro
+    public function with_file_system_adapter( AdapterInterface $adapter )
     {
         $this->_adapter = $adapter;
         return $this;
@@ -70,13 +74,17 @@ final class Maestro
      * @param  CacheSettingsInterface $cache_settings The Cache Settings to use.
      * @return Maestro
      */
-    public function with_cache_settings( CacheSettingsInterface $cache_settings ) : Maestro
+    public function with_cache_settings( CacheSettingsInterface $cache_settings )
     {
         $this->_cache_settings = $cache_settings;
         return $this;
     }
 
-    public function get_request() : Request
+    /**
+     * [get_request description]
+     * @return Request
+     */
+    public function get_request()
     {
         if( ! $this->_request instanceof Request )
         {
@@ -91,7 +99,7 @@ final class Maestro
      *
      * @return Logger
      */
-    public function get_logger() : Logger
+    public function get_logger()
     {
         if( ! $this->_logger instanceof Logger )
         {
@@ -106,7 +114,7 @@ final class Maestro
      *
      * @return AdapterInterface
      */
-    public function get_adapter() : AdapterInterface
+    public function get_adapter()
     {
         if( ! $this->_adapter instanceof AdapterInterface )
         {
@@ -121,7 +129,7 @@ final class Maestro
      *
      * @return CacheSettingsInterface
      */
-    public function get_cache_settings() : CacheSettingsInterface
+    public function get_cache_settings()
     {
         if( ! $this->_cache_settings instanceof CacheSettingsInterface )
         {
@@ -136,7 +144,7 @@ final class Maestro
      *
      * @return Filesystem
      */
-    public function get_file_system() : Filesystem
+    public function get_file_system()
     {
         if( ! $this->_file_system instanceof Filesystem )
         {
@@ -151,7 +159,11 @@ final class Maestro
         return $this->_file_system;
     }
 
-    public static function get_default_request() : Request
+    /**
+     * [get_default_request description]
+     * @return Request
+     */
+    public static function get_default_request()
     {
         return Request::createFromGlobals();
     }
@@ -163,7 +175,7 @@ final class Maestro
      *
      * @return Maestro
      */
-    public static function get_default_instance( CacheSettingsInterface $cache_settings = null ) : Maestro
+    public static function get_default_instance( CacheSettingsInterface $cache_settings = null )
     {
         if( null === $cache_settings )
         {
@@ -186,7 +198,7 @@ final class Maestro
      *
      * @return CacheMaster
      */
-    public function get_cache_master() : CacheMaster
+    public function get_cache_master()
     {
         //Already setup, just return
         if( $this->_cache_master instanceof CacheMaster  )
@@ -214,7 +226,7 @@ final class Maestro
      *
      * @return CacheSettingsInterface
      */
-    public static function get_default_cache_settings() : CacheSettingsInterface
+    public static function get_default_cache_settings()
     {
         return new DefaultSettings();
     }
@@ -225,7 +237,7 @@ final class Maestro
      * @param  CacheSettings $cache_settings The settings to use for the adapter.
      * @return AdapterInterface
      */
-    public static function get_default_adapter( CacheSettingsInterface $cache_settings ) : AdapterInterface
+    public static function get_default_adapter( CacheSettingsInterface $cache_settings )
     {
         return new Local(
                             //The folder to cache to
@@ -248,7 +260,7 @@ final class Maestro
      * @param  CacheSettingsInterface $cache_settings The settings to use for the adapter.
      * @return Logger
      */
-    public static function get_default_logger( CacheSettingsInterface $cache_settings ) : Logger
+    public static function get_default_logger( CacheSettingsInterface $cache_settings )
     {
         return new VendiMonoLoggger( $cache_settings );
     }

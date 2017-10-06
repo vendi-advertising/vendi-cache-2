@@ -4,7 +4,11 @@ namespace Vendi\Cache;
 
 use League\Flysystem\Filesystem;
 use Monolog\Logger;
-use Vendi\Cache\{Auditing, CacheExclusions, CacheKeyGenerator, CacheSettingsInterface, ErrorHandler};
+use Vendi\Cache\Auditing;
+use Vendi\Cache\CacheExclusions;
+use Vendi\Cache\CacheKeyGenerator;
+use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\ErrorHandler;
 
 final class CacheMaster
 {
@@ -38,22 +42,38 @@ final class CacheMaster
         return $this->_cache_key_generator;
     }
 
-    public function get_maestro() : Maestro
+    /**
+     * [get_maestro description]
+     * @return Maestro
+     */
+    public function get_maestro()
     {
         return $this->_maestro;
     }
 
-    public function get_logger() : Logger
+    /**
+     * [get_logger description]
+     * @return Logger
+     */
+    public function get_logger()
     {
         return $this->get_maestro()->get_logger();
     }
 
-    public function get_cache_settings() : CacheSettingsInterface
+    /**
+     * [get_cache_settings description]
+     * @return CacheSettingsInterface
+     */
+    public function get_cache_settings()
     {
         return $this->get_maestro()->get_cache_settings();
     }
 
-    public function get_file_system() : Filesystem
+    /**
+     * [get_file_system description]
+     * @return Filesystem
+     */
+    public function get_file_system()
     {
         return $this->get_maestro()->get_file_system();
     }
