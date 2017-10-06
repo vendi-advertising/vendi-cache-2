@@ -295,7 +295,7 @@ final class CacheMaster
         $vendi_cache_old_error_handler = set_error_handler( array( ErrorHandler::class, 'handle_error' ) );
 
         global $vendi_cache_old_exception_handler;
-        $vendi_cache_old_exception_handler = set_exception_handler( array( ErrorHandler::class, 'handle_exception' ) );
+        $vendi_cache_old_exception_handler = set_exception_handler( array( 'Vendi\Cache\ErrorHandler', 'handle_exception' ) );
 
         ob_start( array( __CLASS__, 'handle_ob_complete' ) ); //Setup routine to store the file
     }

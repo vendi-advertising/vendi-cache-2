@@ -110,13 +110,13 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
     {
         $mock = $this->_get_mock();
 
-        $this->assertInstanceOf( Maestro::class, $mock->get_maestro() );
-        $this->assertInstanceOf( CacheSettingsInterface::class, $mock->get_cache_settings() );
+        $this->assertInstanceOf( 'Vendi\Cache\Maestro', $mock->get_maestro() );
+        $this->assertInstanceOf( 'Vendi\Cache\CacheSettingsInterface', $mock->get_cache_settings() );
         $this->assertSame( $this->_url, $mock->get_url() );
         $this->assertSame( 'a=b', $mock->get_query_string() );
         $this->assertSame( 'GET', $mock->get_method() );
         $this->assertSame( '/cheese', $mock->get_path_url() );
-        $this->assertInstanceOf( \Symfony\Component\HttpFoundation\ParameterBag::class, $mock->get_cookies() );
+        $this->assertInstanceOf( 'Symfony\Component\HttpFoundation\ParameterBag', $mock->get_cookies() );
     }
 
     /**

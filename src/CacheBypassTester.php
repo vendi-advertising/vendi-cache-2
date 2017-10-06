@@ -62,10 +62,10 @@ final class CacheBypassTester
         $logger   = $this->get_logger();
         $settings = $this->get_cache_settings();
 
-        Assertion::isInstanceOf( $maestro, Maestro::class );
-        Assertion::isInstanceOf( $request, Request::class );
-        Assertion::isInstanceOf( $logger, Logger::class );
-        Assertion::isInstanceOf( $settings, CacheSettingsInterface::class );
+        Assertion::isInstanceOf( $maestro,  'Vendi\Cache\Maestro' );
+        Assertion::isInstanceOf( $request,  'Symfony\Component\HttpFoundation\Request' );
+        Assertion::isInstanceOf( $logger,   'Monolog\Logger' );
+        Assertion::isInstanceOf( $settings, 'Vendi\Cache\CacheSettingsInterface' );
 
         $tests = [
                     'MaintenanceMode',

@@ -83,7 +83,7 @@ class test_CacheKeyGenerator extends \WP_UnitTestCase
      */
     public function test_get_maestro()
     {
-        $this->assertInstanceOf( Maestro::class, $this->_get_cache_key_generator( '' )->get_maestro() );
+        $this->assertInstanceOf( 'Vendi\Cache\Maestro', $this->_get_cache_key_generator( '' )->get_maestro() );
     }
 
     /**
@@ -91,7 +91,7 @@ class test_CacheKeyGenerator extends \WP_UnitTestCase
      */
     public function test_get_request()
     {
-        $this->assertInstanceOf( Request::class, $this->_get_cache_key_generator( '' )->get_request() );
+        $this->assertInstanceOf( 'Symfony\Component\HttpFoundation\Request', $this->_get_cache_key_generator( '' )->get_request() );
     }
 
     /**
@@ -119,7 +119,7 @@ class test_CacheKeyGenerator extends \WP_UnitTestCase
     public function test___construct( )
     {
         $cache_key_generator = new CacheKeyGenerator( Maestro::get_default_instance() );
-        $this->assertInstanceOf( Maestro::class, $cache_key_generator->get_maestro() );
+        $this->assertInstanceOf( 'Vendi\Cache\Maestro', $cache_key_generator->get_maestro() );
     }
 
     public function provider_for_get_url_without_scheme_and_host()

@@ -32,10 +32,10 @@ class test_CacheBypassTester extends \WP_UnitTestCase
     {
         $maestro = Maestro::get_default_instance();
         $tester = new CacheBypassTester( $maestro );
-        $this->assertInstanceOf( Maestro::class, $tester->get_maestro() );
-        $this->assertInstanceOf( Request::class, $tester->get_request() );
-        $this->assertInstanceOf( Logger::class, $tester->get_logger() );
-        $this->assertInstanceOf( CacheSettingsInterface::class, $tester->get_cache_settings() );
+        $this->assertInstanceOf( 'Vendi\Cache\Maestro', $tester->get_maestro() );
+        $this->assertInstanceOf( 'Symfony\Component\HttpFoundation\Request', $tester->get_request() );
+        $this->assertInstanceOf( 'Monolog\Logger', $tester->get_logger() );
+        $this->assertInstanceOf( 'Vendi\Cache\CacheSettingsInterface', $tester->get_cache_settings() );
     }
 
 }
