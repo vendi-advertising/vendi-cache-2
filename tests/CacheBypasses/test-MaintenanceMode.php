@@ -2,7 +2,6 @@
 
 namespace Vendi\Cache\Tests\CacheBypasses;
 
-use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\Tests\cache_bypass_base;
 use Vendi\Cache\CacheBypasses\MaintenanceMode;
 use Webmozart\PathUtil\Path;

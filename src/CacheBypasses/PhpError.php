@@ -6,7 +6,9 @@ final class PhpError extends AbstractCacheBypass
 {
     public function is_cacheable( )
     {
-        if( defined( 'VENDI_CACHE_PHP_ERROR' ) )
+        $settings = $this->get_cache_settings();
+
+        if( $settings->is_constant_defined( 'VENDI_CACHE_PHP_ERROR' ) )
         {
             $this->log_request_as_not_cacheable(
                                                     [
