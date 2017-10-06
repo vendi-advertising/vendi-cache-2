@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "97cf5e1bc6ec0288a0c6dae814d77f0e",
+    "content-hash": "99d98b2a6d288278ee0af360de74d42a",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -401,16 +401,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v3.3.9",
+            "version": "v3.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "2cdc7de1921d1a1c805a13dc05e44a2cd58f5ad3"
+                "reference": "22cf9c2b1d9f67cc8e75ae7f4eaa60e4c1eff1f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/2cdc7de1921d1a1c805a13dc05e44a2cd58f5ad3",
-                "reference": "2cdc7de1921d1a1c805a13dc05e44a2cd58f5ad3",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/22cf9c2b1d9f67cc8e75ae7f4eaa60e4c1eff1f8",
+                "reference": "22cf9c2b1d9f67cc8e75ae7f4eaa60e4c1eff1f8",
                 "shasum": ""
             },
             "require": {
@@ -450,7 +450,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-09-06T17:07:39+00:00"
+            "time": "2017-10-05T23:10:23+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
