@@ -24,6 +24,7 @@
         }
     ],
     "require": {
+        "php": ">=5.4.0",
         "webmozart/path-util": "^2.3",
         "league/flysystem": "^1.0",
         "monolog/monolog": "^1.0",
