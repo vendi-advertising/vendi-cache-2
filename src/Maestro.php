@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheMaster;
 use Vendi\Cache\CacheSettings;
 use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\DefaultUpdater;
+use Vendi\Cache\UpdaterInterface;
 use Vendi\Cache\VendiMonoLoggger;
 
 final class Maestro

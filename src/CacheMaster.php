@@ -27,9 +27,25 @@ final class CacheMaster
 
     private $_cache_key_generator = null;
 
+    private $_updater = null;
+
     public function __construct( Maestro $maestro )
     {
         $this->_maestro = $maestro;
+    }
+
+    /**
+     * [get_updater description]
+     * @return UpdaterInterface
+     */
+    public function get_updater()
+    {
+        if( ! $this->_updater instanceof PluginUpdater )
+        {
+            $this->_updater = new PluginUpdater( $this->get_maestro() );
+        }
+
+        return $this->_updater;
     }
 
     public function get_cache_key_generator()

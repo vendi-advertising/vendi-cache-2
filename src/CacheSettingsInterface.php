@@ -5,6 +5,10 @@ namespace Vendi\Cache;
 interface CacheSettingsInterface
 {
 
+    public function get_network_option( $name );
+
+    public function set_network_option( $name, $value );
+
     public function is_constant_defined( $name );
 
     public function get_constant_value( $name );

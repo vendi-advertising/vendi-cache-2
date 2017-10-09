@@ -10,6 +10,18 @@ class DefaultSettings implements CacheSettingsInterface
 
     private $_constant_helper;
 
+    public function get_network_option( $name )
+    {
+        Assertion::isCallable( '\get_site_option' );
+        return get_site_option( $name );
+    }
+
+    public function set_network_option( $name, $value )
+    {
+        Assertion::isCallable( '\update_site_option' );
+        update_site_option( $name, $value );
+    }
+
     public function is_constant_defined( $name )
     {
         return defined( $name );

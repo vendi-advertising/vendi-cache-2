@@ -12,6 +12,17 @@ add_action(
                     ->debug( 'Plugin loading' )
                 ;
 
+                $updater = \Vendi\Cache\Maestro
+                            ::get_default_instance()
+                            ->get_cache_master()
+                            ->get_updater()
+                        ;
+
+                if( $updater->is_update_required() )
+                {
+                    $result = $updater->perform_updates();
+                }
+
                 $maestro
                     ->get_cache_master()
                     ->setup_caching()

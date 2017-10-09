@@ -6,7 +6,7 @@ Plugin URI: https://www.vendiadvertising.com/
 Author: Vendi Advertising (Chris Haas)
 Version: 2.0.0
 Author URI: https://www.vendiadvertising.com/
-Text Domain: vendi-cacheb
+Text Domain: vendi-cache
 Domain Path: /languages
 */
 

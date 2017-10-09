@@ -30,7 +30,9 @@
         "monolog/monolog": "^1.0",
         "ramsey/uuid": "^3.7",
         "symfony/http-foundation": "^2 || ^3",
-        "beberlei/assert": "^2.7"
+        "beberlei/assert": "^2.7",
+        "naneau/semver": "^0.0.7",
+        "sgh/comparable": "^1.1"
     },
     "require-dev": {
         "symfony/var-dumper": "^2 || ^3",
