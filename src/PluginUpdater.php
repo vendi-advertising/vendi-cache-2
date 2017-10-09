@@ -2,6 +2,7 @@
 
 namespace Vendi\Cache;
 
+use Assert\Assertion;
 use Naneau\SemVer\Compare;
 use Naneau\SemVer\Parser;
 use Naneau\SemVer\Version\Versionable;
