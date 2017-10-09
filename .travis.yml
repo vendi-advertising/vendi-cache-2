@@ -17,4 +17,4 @@ env:
 
 script:
   - cd $TRAVIS_BUILD_DIR
-  - ./run-phpunit.sh --user travis --database wordpress_test --password ""
+  - ./run-phpunit.sh --user travis --database wordpress_test --password "" --create-database
