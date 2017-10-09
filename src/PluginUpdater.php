@@ -5,6 +5,7 @@ namespace Vendi\Cache;
 use Naneau\SemVer\Compare;
 use Naneau\SemVer\Parser;
 use Naneau\SemVer\Version\Versionable;
+use SGH\Comparable\SortFunctions;
 
 // use Assert\Assertion;
 // use Monolog\Logger;
