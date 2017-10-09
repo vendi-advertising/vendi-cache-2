@@ -127,7 +127,7 @@ maybe_run_phan()
 
 maybe_run_security_check()
 {
-    echo "Maybe running phan...";
+    echo "Maybe running security check...";
     if [ "$RUN_SEC" = true ]; then
     {
         echo "running...";
@@ -214,9 +214,8 @@ maybe_update_composer;
 maybe_run_linter;
 maybe_run_phan;
 maybe_run_security_check;
+maybe_create_database;
 
 setup_wordpress_config;
-
-maybe_create_database;
 
 run_php_unit;
