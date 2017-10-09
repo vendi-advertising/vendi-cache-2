@@ -12,8 +12,9 @@ php:
   - 7.1
   - nightly
 
-env:
-  - WP_VERSION=latest WP_MULTISITE=0
+before_install:
+  - source .travis/xdebug.sh
+  - xdebug-disable
 
 script:
   - cd $TRAVIS_BUILD_DIR
