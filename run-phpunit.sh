@@ -64,7 +64,10 @@ done
 
 maybe_update_composer()
 {
+    echo "Maybe updating composer...";
     if [ "$UPDATE_COMPOSER" = true ]; then
+    {
+        echo "running...";
         composer update && composer install
         if [ $? -ne 0 ]; then
         {
@@ -72,12 +75,20 @@ maybe_update_composer()
             exit 1;
         }
         fi
+    }
+    else
+        echo "skipping";
     fi
+
+    printf "\n";
 }
 
 maybe_run_linter()
 {
+    echo "Maybe running linter...";
     if [ "$RUN_LINT" = true ]; then
+    {
+        echo "running...";
         ./vendor/bin/parallel-lint --exclude vendor/ .
         if [ $? -ne 0 ]; then
         {
@@ -85,12 +96,20 @@ maybe_run_linter()
             exit 1;
         }
         fi
+    }
+    else
+        echo "skipping";
     fi
+
+    printf "\n";
 }
 
 maybe_run_phan()
 {
+    echo "Maybe running phan...";
     if [ "$RUN_PHAN" = true ]; then
+    {
+        echo "running...";
         ./vendor/bin/phan .
         if [ $? -ne 0 ]; then
         {
@@ -98,12 +117,20 @@ maybe_run_phan()
             exit 1;
         }
         fi
+    }
+    else
+        echo "skipping";
     fi
+
+    printf "\n";
 }
 
 maybe_run_security_check()
 {
+    echo "Maybe running phan...";
     if [ "$RUN_SEC" = true ]; then
+    {
+        echo "running...";
         vendor/bin/security-checker security:check --end-point=http://security.sensiolabs.org/check_lock --timeout=30 ./composer.lock
         if [ $? -ne 0 ]; then
         {
@@ -111,19 +138,26 @@ maybe_run_security_check()
             exit 1;
         }
         fi
+    }
+    else
+        echo "skipping";
     fi
+
+    printf "\n";
 }
 
 setup_wordpress_config()
 {
+    echo "Setting up WordPress...";
+
     CONFIG_TEMPLATE_FILE='./vendor/WordPress/wordpress-develop/wp-tests-config-sample.php';
     CONFIG_FILE='./vendor/WordPress/wordpress-develop/wp-tests-config.php';
 
     if [ ! -f "$CONFIG_TEMPLATE_FILE" ]; then
-        {
-            echo "Cannot find WordPress config template... exiting";
-            exit 1;
-        }
+    {
+        echo "Cannot find WordPress config template... exiting";
+        exit 1;
+    }
     fi
 
     cp $CONFIG_TEMPLATE_FILE $CONFIG_FILE &&
@@ -136,11 +170,16 @@ setup_wordpress_config()
         exit 1;
     }
     fi
+
+    printf "\n";
 }
 
 maybe_create_database()
 {
+    echo "Maybe running phan...";
     if [ "$CREATE_DB" = true ]; then
+    {
+        echo "running...";
         mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"
         if [ $? -ne 0 ]; then
         {
@@ -148,11 +187,18 @@ maybe_create_database()
             exit 1;
         }
         fi
+    }
+    else
+        echo "skipping";
     fi
+
+    printf "\n";
 }
 
 run_php_unit()
 {
+    echo "Running PHPUnit...";
+
     if [ -z "$GROUP" ]; then
         ./vendor/bin/phpunit --coverage-html ./tests/logs/coverage/
     else
