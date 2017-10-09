@@ -6,14 +6,14 @@ use Vendi\Cache\DefaultSettings;
 
 final class non_global_constant_cache_settings extends DefaultSettings
 {
-    private $_CONSTANTS = [];
+    private $_CONSTANTS = array();
 
-    private $_FUNCTIONS = [];
+    private $_FUNCTIONS = array();
 
     public function reset_all()
     {
-        $this->_CONSTANTS = [];
-        $this->_FUNCTIONS = [];
+        $this->_CONSTANTS = array();
+        $this->_FUNCTIONS = array();
     }
 
     public function set_constant( $name, $value )

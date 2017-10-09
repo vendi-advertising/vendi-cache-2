@@ -9,9 +9,9 @@ use Vendi\Cache\Maestro;
 
 class cache_bypass_base extends \PHPUnit_Framework_TestCase
 {
-    private $_dirs = [];
+    private $_dirs = array();
 
-    private $_files = [];
+    private $_files = array();
 
     public function tearDown()
     {
