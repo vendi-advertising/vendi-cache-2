@@ -37,7 +37,6 @@ class UI
     {
         return $this
                 ->get_request()
-                ->request
                 ->query
                 ->get( 'tab' )
             ;
