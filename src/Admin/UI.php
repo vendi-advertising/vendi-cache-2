@@ -16,12 +16,12 @@ final class UI
 
     public static function get_instance()
     {
-        if( ! $this->_instance instanceof self )
+        if( ! self::$_instance instanceof self )
         {
-            $this->_instance = new self;
+            self::$_instance = new self;
         }
 
-        return $this->_instance;
+        return self::$_instance;
     }
 
     public static function route_request()

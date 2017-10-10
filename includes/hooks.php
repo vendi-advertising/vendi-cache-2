@@ -36,8 +36,8 @@ add_action(
             {
                 add_submenu_page(
                                     'options-general.php',
-                                    'Vendi Cache',
-                                    'Vendi Cache',
+                                    'Vendi Cache 2',
+                                    'Vendi Cache 2',
                                     'manage_options',
                                     \Vendi\Cache\Admin\UI::URL_SLUG,
                                     array( '\Vendi\Cache\Admin\UI', 'route_request' )
