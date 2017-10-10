@@ -33,29 +33,85 @@ class UI
         return $request;
     }
 
+    public function get_current_tab()
+    {
+        return $this
+                ->get_request()
+                ->request
+                ->query
+                ->get( 'tab' )
+            ;
+    }
+
+    public function get_tab_url( $tab )
+    {
+        return add_query_arg(
+                                [
+                                    'page' => self::URL_SLUG,
+                                    'tab'  => $tab,
+
+                                ],
+                                admin_url( 'options-general.php' )
+                            );
+    }
+
+    public function get_all_tabs_associative()
+    {
+        return [
+                    'cache-mode'       => 'Cache Mode',
+                    'cache-options'    => 'Cache Options',
+                    'cache-exclusions' => 'Cache Exclusions',
+                    'cache-stats'      => 'Cache Stats',
+            ];
+    }
+
+    public function get_tabs()
+    {
+        $current_tab = $this->get_current_tab();
+
+        $all_tabs = $this->get_all_tabs_associative();
+
+        $ret = '<ul class="vendi-cache-2-admin-tabs">';
+
+        foreach( $all_tabs as $tab_key => $tab_name )
+        {
+            $selected = '';
+
+            if( $tab === $tab_key )
+            {
+                $selected = ' "selected="selected"';
+            }
+
+            $ret .= sprintf(
+                                '<li%3$s><a href="%1$s">%2$s</a></li>',
+                                esc_url( $this->get_tab_url( $tab_key ) ),
+                                esc_html( $tab_name ),
+                                $selected
+                        );
+        }
+
+        $ret .= '</ul>';
+        return $ret;
+    }
+
     public function handle_page_routing()
     {
-        $request = $this->get_request();
+        $current_tab = $this->get_current_tab();
 
-        $tab = $request->query->get( 'tab' );
+        $all_tabs = $this->get_all_tabs_associative();
 
-        switch( $tab )
+        if( ! array_key_exists( $current_tab, $all_tabs ) )
         {
-            case 'cache-mode':
-            case 'cache-options':
-            case 'cache-exclusions':
-            case 'cache-stats':
-                break;
-
-            default:
-                $tab = 'cache-mode';
+            $current_tab = reset( array_keys( $all_tabs ) );
         }
 
         global $template_maestro;
 
         Assertion::null( $template_maestro );
         $template_maestro = $this->get_maestro();
-        require VENDI_CACHE_DIR . "/templates/$tab.php";
+
+        echo $this->get_tabs();
+        require VENDI_CACHE_DIR . "/templates/$current_tab.php";
         $template_maestro = null;
     }
 }
