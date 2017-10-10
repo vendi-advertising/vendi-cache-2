@@ -11,7 +11,7 @@ class UI
 
     private static $_maestro;
 
-    private function __construct( Maestro $maestro )
+    public function __construct( Maestro $maestro )
     {
         $this->_maestro = $maestro;
     }
