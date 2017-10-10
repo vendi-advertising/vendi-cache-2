@@ -78,7 +78,7 @@ class UI
 
             if( $tab === $tab_key )
             {
-                $selected = ' "selected="selected"';
+                $selected = ' class="selected"';
             }
 
             $ret .= sprintf(

@@ -1,0 +1,25 @@
+.vendi-cache-2-admin-tabs li
+{
+    background-color: #dc0928;
+    border: 1px solid #fff;
+    display: inline-block;
+    list-style-type: none;
+    margin: 0 2px;
+}
+
+.vendi-cache-2-admin-tabs li a
+{
+    color: #fff;
+    padding: 20px;
+    text-decoration: none;
+}
+
+.vendi-cache-2-admin-tabs li.selected
+{
+    background-color: #fff;
+}
+
+.vendi-cache-2-admin-tabs li.selected a
+{
+    color: #dc0928;
+}

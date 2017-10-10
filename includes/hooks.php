@@ -39,6 +39,16 @@ add_action(
                                                     \Vendi\Cache\Admin\UI::URL_SLUG,
                                                     function() use ( $maestro )
                                                     {
+
+                                                        add_action(
+                                                                    'admin_enqueue_scripts',
+                                                                    function()
+                                                                    {
+                                                                        wp_register_style( 'vendi-cache-2-admin-css', VENDI_CACHE_URL . '/css/admin-ui.css', false, '1.0.0' );
+                                                                        wp_enqueue_style( 'vendi-cache-2-admin-css' );
+                                                                    }
+                                                                );
+
                                                         $maestro
                                                             ->get_admin_ui()
                                                             ->handle_page_routing()
