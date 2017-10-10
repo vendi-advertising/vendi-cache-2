@@ -29,3 +29,18 @@ add_action(
                 ;
             }
         );
+
+add_action(
+            'admin_menu',
+            function()
+            {
+                add_submenu_page(
+                                    'options-general.php',
+                                    'Vendi Cache',
+                                    'Vendi Cache',
+                                    'manage_options',
+                                    \Vendi\Cache\Admin\UI::URL_SLUG,
+                                    array( '\Vendi\Cache\Admin\UI', 'route_request' )
+                                );
+            }
+        );
