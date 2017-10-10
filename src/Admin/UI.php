@@ -7,7 +7,7 @@ final class UI
 
     const URL_SLUG = 'vendi-cache-2-settings';
 
-    private $_instance;
+    private static $_instance;
 
     private function __construct()
     {
