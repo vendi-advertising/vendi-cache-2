@@ -37,7 +37,7 @@ class UI
     {
         $request = $this->get_request();
 
-        $tab = $request->query( 'tab' );
+        $tab = $request->query->get( 'tab' );
 
         switch( $tab )
         {
