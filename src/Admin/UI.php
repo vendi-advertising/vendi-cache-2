@@ -2,6 +2,7 @@
 
 namespace Vendi\Cache\Admin;
 
+use Assert\Assertion;
 use Vendi\Cache\Maestro;
 
 class UI
@@ -25,8 +26,36 @@ class UI
         return $this->_maestro;
     }
 
+    public function get_request()
+    {
+        $request = $this->get_maestro()->get_request();
+        Assertion::isInstanceOf( $request, 'Symfony\Component\HttpFoundation\Request' );
+        return $request;
+    }
+
     public function handle_page_routing()
     {
-        require VENDI_CACHE_DIR . '/templates/cache-settings.php';
+        $request = $this->get_request();
+
+        $tab = $request->query( 'tab' );
+
+        switch( $tab )
+        {
+            case 'cache-mode':
+            case 'cache-options':
+            case 'cache-exclusions':
+            case 'cache-stats':
+                break;
+
+            default:
+                $tab = 'cache-mode';
+        }
+
+        global $template_maestro;
+
+        Assertion::null( $template_maestro );
+        $template_maestro = $this->get_maestro();
+        require VENDI_CACHE_DIR . "/templates/$tab.php";
+        $template_maestro = null;
     }
 }
