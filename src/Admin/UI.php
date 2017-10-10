@@ -5,6 +5,8 @@ namespace Vendi\Cache\Admin;
 final class UI
 {
 
+    const URL_SLUG = 'vendi-cache-2-settings';
+
     private $_instance;
 
     private function __construct()
