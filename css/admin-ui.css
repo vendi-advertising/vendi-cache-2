@@ -1,15 +1,32 @@
+.vendi-cache-2-admin-tabs
+{
+    margin: 0;
+    margin-top: 25px;
+}
+
 .vendi-cache-2-admin-tabs li
 {
     background-color: #dc0928;
     border: 1px solid #fff;
+    border-bottom: 0;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
     display: inline-block;
     list-style-type: none;
     margin: 0 2px;
+    position: relative;
+}
+
+.vendi-cache-2-admin-tabs li:first-child
+{
+    margin-left: 50px;
 }
 
 .vendi-cache-2-admin-tabs li a
 {
     color: #fff;
+    display: block;
+    font-size: 13px;
     padding: 20px;
     text-decoration: none;
 }
@@ -17,9 +34,88 @@
 .vendi-cache-2-admin-tabs li.selected
 {
     background-color: #fff;
+    border-color: #dc0928;
+    top: 1px;
 }
 
 .vendi-cache-2-admin-tabs li.selected a
 {
     color: #dc0928;
+}
+
+.vendi-cache-2-admin-wrap
+{
+    background-color: #fff;
+    border: 1px solid #dc0928;
+    border-radius: 0.25em;
+    padding: 10px 50px;
+}
+
+.vendi-cache-2-admin-wrap
+{
+    max-width: 680px;
+}
+
+.vendi-cache-2-admin-wrap .legacy-note
+{
+    border-left: 5px solid #dc0928;
+    font-style: italic;
+    padding-left: 25px;
+}
+
+
+@media screen and (max-width: 600px)
+{
+    .vendi-cache-2-admin-tabs li:first-child
+    {
+        margin-left: 0;
+    }
+
+    .vendi-cache-2-admin-tabs li a
+    {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+@media screen and (max-width: 480px)
+{
+    .vendi-cache-2-admin-tabs
+    {
+        font-size: 0;
+        margin-bottom: 25px;
+    }
+
+    .vendi-cache-2-admin-tabs li
+    {
+        box-sizing: border-box;
+        display: inline-block;
+        margin: 0;
+        width: 50%;
+    }
+
+    .vendi-cache-2-admin-tabs li,
+    .vendi-cache-2-admin-tabs li.selected
+    {
+        border: 1px solid #000;
+        top: 0;
+    }
+
+    .vendi-cache-2-admin-tabs li a
+    {
+        display: block;
+        line-height: 2;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .vendi-cache-2-admin-tabs li.selected a
+    {
+
+    }
+
+    .vendi-cache-2-admin-wrap
+    {
+        padding: 10px 20px;
+    }
 }

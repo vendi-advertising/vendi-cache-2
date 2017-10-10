@@ -10,7 +10,7 @@ class UI
 
     const URL_SLUG = 'vendi-cache-2-settings';
 
-    private static $_maestro;
+    private $_maestro;
 
     public function __construct( Maestro $maestro )
     {
@@ -76,7 +76,7 @@ class UI
         {
             $selected = '';
 
-            if( $tab === $tab_key )
+            if( $current_tab === $tab_key )
             {
                 $selected = ' class="selected"';
             }
@@ -104,13 +104,26 @@ class UI
             $current_tab = reset( array_keys( $all_tabs ) );
         }
 
+        //Temporarily store our local Maestro in a global variable
         global $template_maestro;
-
         Assertion::null( $template_maestro );
         $template_maestro = $this->get_maestro();
 
+        echo '<div class="wrap">';
+        echo sprintf(
+                        '<h1>%1$s</h1>',
+                        esc_html( __( 'Vendi Cache Settings', 'vendi-cache' ) )
+                );
+
         echo $this->get_tabs();
+
+        echo '<div class="vendi-cache-2-admin-wrap">';
         require VENDI_CACHE_DIR . "/templates/$current_tab.php";
+        echo '</div>';
+
+        //Reset our global
         $template_maestro = null;
+
+        echo '</div>';
     }
 }
