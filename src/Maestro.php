@@ -14,6 +14,7 @@ use Vendi\Cache\CacheSettingsInterface;
 use Vendi\Cache\DefaultUpdater;
 use Vendi\Cache\UpdaterInterface;
 use Vendi\Cache\VendiMonoLoggger;
+use Vendi\Cache\Admin\UI;
 
 final class Maestro
 {
@@ -29,9 +30,23 @@ final class Maestro
 
     private $_request = null;
 
+    private $_admin_ui = null;
+
     public function __construct( )
     {
         //NOOP
+    }
+
+    /**
+     * Use the supplied Vendi Admin UI..
+     *
+     * @param  Admin\UI $admin_ui The Vendi Admin UI to route admin requests
+     * @return Maestro
+     */
+    public function with_admin_ui( UI $admin_ui  )
+    {
+        $this->_admin_ui = $admin_ui;
+        return $this;
     }
 
     /**
@@ -80,6 +95,16 @@ final class Maestro
     {
         $this->_cache_settings = $cache_settings;
         return $this;
+    }
+
+    public function get_admin_ui()
+    {
+        if( ! $this->_admin_ui instanceof UI )
+        {
+            $this->_admin_ui = self::get_default_admin_ui( $this );
+        }
+
+        return $this->_admin_ui;
     }
 
     /**
@@ -159,6 +184,11 @@ final class Maestro
         }
 
         return $this->_file_system;
+    }
+
+    public static function get_default_admin_ui( Maestro $maestro )
+    {
+        return new UI( $maestro );
     }
 
     /**

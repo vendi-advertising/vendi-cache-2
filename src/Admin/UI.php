@@ -2,34 +2,30 @@
 
 namespace Vendi\Cache\Admin;
 
-final class UI
+use Vendi\Cache\Maestro;
+
+class UI
 {
 
     const URL_SLUG = 'vendi-cache-2-settings';
 
-    private static $_instance;
+    private static $_maestro;
 
-    private function __construct()
+    private function __construct( Maestro $maestro )
     {
-
+        $this->_maestro = $maestro;
     }
 
-    public static function get_instance()
+    /**
+     * [get_maestro description]
+     * @return Maestro
+     */
+    public function get_maestro()
     {
-        if( ! self::$_instance instanceof self )
-        {
-            self::$_instance = new self;
-        }
-
-        return self::$_instance;
+        return $this->_maestro;
     }
 
-    public static function route_request()
-    {
-        self::get_instance()->show_page();
-    }
-
-    public function show_page()
+    public function handle_page_routing()
     {
         require VENDI_CACHE_DIR . '/templates/cache-settings.php';
     }
