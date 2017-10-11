@@ -101,7 +101,8 @@ class UI
 
         if( ! array_key_exists( $current_tab, $all_tabs ) )
         {
-            $current_tab = reset( array_keys( $all_tabs ) );
+            $keys = array_keys( $all_tabs );
+            $current_tab = reset( $keys );
         }
 
         //Temporarily store our local Maestro in a global variable
