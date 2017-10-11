@@ -38,7 +38,7 @@ class UI
         return $this
                 ->get_request()
                 ->query
-                ->get( 'tab' )
+                ->get( 'tab', '' )
             ;
     }
 
@@ -93,7 +93,7 @@ class UI
         return $ret;
     }
 
-    public function handle_page_routing()
+    public function handle_page_routing( $echo = true )
     {
         $current_tab = $this->get_current_tab();
 
@@ -104,6 +104,19 @@ class UI
             $keys = array_keys( $all_tabs );
             $current_tab = reset( $keys );
         }
+
+        $ret = $this->get_html_for_tab( $current_tab );
+        if( $echo )
+        {
+            echo $ret;
+        }
+
+        return $ret;
+    }
+
+    public function get_html_for_tab( $current_tab )
+    {
+        ob_start();
 
         //Temporarily store our local Maestro in a global variable
         global $template_maestro;
@@ -126,5 +139,7 @@ class UI
         $template_maestro = null;
 
         echo '</div>';
+
+        return ob_get_clean();
     }
 }
