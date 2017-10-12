@@ -120,9 +120,9 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::is_function_defined_and_returns_boolean
+     * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::is_cacheable_because_required_function_defined_and_returned_false
      */
-    public function test_is_function_defined_and_returns_boolean()
+    public function test_is_cacheable_because_required_function_defined_and_returned_false()
     {
         $mock = $this->_get_mock();
 
@@ -132,75 +132,49 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
         //Function should not exist
         $this->assertFalse( $cache_settings->is_function_defined( 'CHEESE' ) );
 
-        //This should return the opposite of the third parameter if the first doesn't exist
-        $this->assertTrue( $mock->is_function_defined_and_returns_boolean( 'CHEESE', false, false, 'n/a' ) );
-        $this->assertFalse( $mock->is_function_defined_and_returns_boolean( 'CHEESE', false, true, 'n/a' ) );
+        //The function is required but doesn't exist, should always return false
+        $this->assertFalse( $mock->is_cacheable_because_required_function_defined_and_returned_false( 'CHEESE', 'n/a' ) );
 
         //Create the function
         $cache_settings->set_function( 'CHEESE', function( ) { return true; } );
 
-        //If the function exists then
-        //  If the first is set to the second then the third should return
-        //  Else the opposite of the third should be returned
-        $this->assertFalse( $mock->is_function_defined_and_returns_boolean( 'CHEESE', true, false, 'n/a' ) );
-        $this->assertTrue( $mock->is_function_defined_and_returns_boolean( 'CHEESE', true, true, 'n/a' ) );
-
-        $this->assertFalse( $mock->is_function_defined_and_returns_boolean( 'CHEESE', false, true, 'n/a' ) );
-        $this->assertTrue( $mock->is_function_defined_and_returns_boolean( 'CHEESE', false, false, 'n/a' ) );
+        //If the function returns true then the resource is not cacheable
+        $this->assertFalse( $mock->is_cacheable_because_required_function_defined_and_returned_false( 'CHEESE', 'n/a' ) );
 
         //Create the function
         $cache_settings->set_function( 'CHEESE', function( ) { return false; } );
 
-        //If the function exists then
-        //  If the first is set to the second then the third should return
-        //  Else the opposite of the third should be returned
-        $this->assertTrue( $mock->is_function_defined_and_returns_boolean( 'CHEESE', false, true, 'n/a' ) );
-        $this->assertFalse( $mock->is_function_defined_and_returns_boolean( 'CHEESE', false, false, 'n/a' ) );
-
-        $this->assertTrue( $mock->is_function_defined_and_returns_boolean( 'CHEESE', true, false, 'n/a' ) );
-        $this->assertFalse( $mock->is_function_defined_and_returns_boolean( 'CHEESE', true, true, 'n/a' ) );
+        //If the function return false then the resource is cacheable
+        $this->assertTrue( $mock->is_cacheable_because_required_function_defined_and_returned_false( 'CHEESE', 'n/a' ) );
     }
 
     /**
-     * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::is_constant_defined_and_set_to_boolean
+     * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::is_cacheable_because_fatal_constant_not_defined_or_set_to_true
      */
-    public function test_is_constant_defined_and_set_to_boolean()
+    public function test_is_cacheable_because_fatal_constant_not_defined_or_set_to_true()
     {
         $mock = $this->_get_mock();
 
         $maestro = $mock->get_maestro();
         $cache_settings = $maestro->get_cache_settings();
 
-        //Function should not exist
+        //Constant should not exist
         $this->assertFalse( $cache_settings->is_constant_defined( 'CHEESE' ) );
 
-        //This should return the opposite of the third parameter if the first doesn't exist
-        $this->assertTrue( $mock->is_constant_defined_and_set_to_boolean( 'CHEESE', false, false, 'n/a' ) );
-        $this->assertFalse( $mock->is_constant_defined_and_set_to_boolean( 'CHEESE', false, true, 'n/a' ) );
+        //Constant not defined, resource is cacheable
+        $this->assertTrue( $mock->is_cacheable_because_fatal_constant_not_defined_or_set_to_true( 'CHEESE', 'n/a' ) );
 
         //Create the constant
         $cache_settings->set_constant( 'CHEESE', true );
 
-        //If the constant exists then
-        //  If the first is set to the second then the third should return
-        //  Else the opposite of the third should be returned
-        $this->assertFalse( $mock->is_constant_defined_and_set_to_boolean( 'CHEESE', true, false, 'n/a' ) );
-        $this->assertTrue( $mock->is_constant_defined_and_set_to_boolean( 'CHEESE', true, true, 'n/a' ) );
-
-        $this->assertFalse( $mock->is_constant_defined_and_set_to_boolean( 'CHEESE', false, true, 'n/a' ) );
-        $this->assertTrue( $mock->is_constant_defined_and_set_to_boolean( 'CHEESE', false, false, 'n/a' ) );
+        //When the constant is set to true, the resource is not cacheable
+        $this->assertFalse( $mock->is_cacheable_because_fatal_constant_not_defined_or_set_to_true( 'CHEESE', 'n/a' ) );
 
         //Create the constant
         $cache_settings->set_constant( 'CHEESE', false  );
 
-        //If the constant exists then
-        //  If the first is set to the second then the third should return
-        //  Else the opposite of the third should be returned
-        $this->assertTrue( $mock->is_constant_defined_and_set_to_boolean( 'CHEESE', false, true, 'n/a' ) );
-        $this->assertFalse( $mock->is_constant_defined_and_set_to_boolean( 'CHEESE', false, false, 'n/a' ) );
-
-        $this->assertTrue( $mock->is_constant_defined_and_set_to_boolean( 'CHEESE', true, false, 'n/a' ) );
-        $this->assertFalse( $mock->is_constant_defined_and_set_to_boolean( 'CHEESE', true, true, 'n/a' ) );
+        //When the constant is set to false (which is weird), the resource is cacheable
+        $this->assertTrue( $mock->is_cacheable_because_fatal_constant_not_defined_or_set_to_true( 'CHEESE', 'n/a' ) );
     }
 
     /**

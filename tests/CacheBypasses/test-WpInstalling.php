@@ -10,23 +10,7 @@ class test_CacheBypasses_WpInstalling extends cache_bypass_base
      */
     public function test_is_cacheable__const_WP_INSTALLING__not_defined()
     {
-        $this->_test_constant_not_defined( 'WpInstalling', 'WP_INSTALLING' );
-    }
-
-    /**
-     * @covers Vendi\Cache\CacheBypasses\WpInstalling::is_cacheable
-     */
-    public function test_is_cacheable__const_WP_INSTALLING__true()
-    {
-        $this->_test_constant_defined_set_to_boolean( 'WpInstalling', 'WP_INSTALLING', true, false );
-    }
-
-    /**
-     * @covers Vendi\Cache\CacheBypasses\WpInstalling::is_cacheable
-     */
-    public function test_is_cacheable__const_WP_INSTALLING__false()
-    {
-        $this->_test_constant_defined_set_to_boolean( 'WpInstalling', 'WP_INSTALLING', false, true );
+        $this->_test_is_cacheable_because_fatal_constant_not_defined_or_set_to_true( 'WpInstalling', 'WP_INSTALLING' );
     }
 
     /**
@@ -34,23 +18,7 @@ class test_CacheBypasses_WpInstalling extends cache_bypass_base
      */
     public function test_is_cacheable__wp_installing__not_defined()
     {
-        $this->_test_function_not_defined( 'WpInstalling', 'wp_installing' );
-    }
-
-    /**
-     * @covers Vendi\Cache\CacheBypasses\WpInstalling::is_cacheable
-     */
-    public function test_is_cacheable__wp_installing__false()
-    {
-        $this->_test_function_defined_returns_boolean( 'WpInstalling', 'wp_installing', true, false );
-    }
-
-    /**
-     * @covers Vendi\Cache\CacheBypasses\WpInstalling::is_cacheable
-     */
-    public function test_is_cacheable__wp_installing__true()
-    {
-        $this->_test_function_defined_returns_boolean( 'WpInstalling', 'wp_installing', false, true );
+        $this->_test_is_cacheable_because_required_function_defined_and_returns_true( 'WpInstalling', 'wp_installing' );
     }
 
 }
