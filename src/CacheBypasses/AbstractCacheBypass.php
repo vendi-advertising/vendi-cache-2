@@ -2,6 +2,7 @@
 
 namespace Vendi\Cache\CacheBypasses;
 
+use Assert\Assertion;
 use Vendi\Cache\CacheSettingsInterface;
 use Vendi\Cache\Maestro;
 
@@ -69,50 +70,82 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
         $this->get_maestro()->get_logger()->debug( 'Request not cacheable', $args );
     }
 
-    final public function is_function_defined_and_returns_boolean( $name, $boolean, $is_cacheable_if_defined_and_boolean, $failure_reason )
+    final public function is_cacheable_because_required_function_defined_and_returned_false( $name, $failure_reason )
     {
+        //Sanity check params
+        Assertion::notEmpty( $name );
+        Assertion::string( $name );
+        Assertion::notEmpty( $failure_reason );
+        Assertion::string( $failure_reason );
+
+        //Get our settings
         $settings = $this->get_cache_settings();
 
+        //This is a required function. If it doesn't exist then we are in a
+        //strange state and caching should be disabled.
         if( ! $settings->is_function_defined( $name ) )
         {
-            return ! $is_cacheable_if_defined_and_boolean;
+            $this->log_request_as_not_cacheable(
+                                                    [
+                                                        'reason' => "Required function $name not defined",
+                                                    ]
+                                            );
+
+            return false;
         }
 
-        if( $boolean === $settings->get_function_value( $name ) )
+        //The function must always return a boolean
+        $result = (bool) $settings->get_function_value( $name );
+
+        if( $result )
         {
-            return $is_cacheable_if_defined_and_boolean;
+            $this->log_request_as_not_cacheable(
+                                                    [
+                                                        'reason' => "Required function $name return true",
+                                                    ]
+                                            );
+
+            return false;
         }
 
-        $this->log_request_as_not_cacheable(
-                                                [
-                                                    'reason' => $failure_reason,
-                                                    'extra'  => "Function $name returned $boolean",
-                                                ]
-                                        );
-        return ! $is_cacheable_if_defined_and_boolean;
+        return true;
     }
 
-    final public function is_constant_defined_and_set_to_boolean( $name, $boolean, $is_cacheable_if_defined_and_boolean, $failure_reason )
+    final public function is_cacheable_because_fatal_constant_not_defined_or_set_to_true( $name, $failure_reason )
     {
+        //Sanity check params
+        Assertion::notEmpty( $name );
+        Assertion::string( $name );
+        Assertion::notEmpty( $failure_reason );
+        Assertion::string( $failure_reason );
+
         $settings = $this->get_cache_settings();
 
+        //We're looking for hard-stop constants. If the constant doesn't exist
+        //then assume that we can cache this resource.
         if( ! $settings->is_constant_defined( $name ) )
         {
-            return ! $is_cacheable_if_defined_and_boolean;
+            return true;
         }
 
-        if( $boolean === $settings->get_constant_value( $name ) )
+        //Constants are assumed to be boolean for arguments sake
+        $result = (bool) $settings->get_constant_value( $name );
+
+        //The constant _IS_ defined but set to a false-like value. Super weird
+        //and I'm pretty sure this should never happen but still technically
+        //valid as far as PHP is concerned.
+        if( false === $result )
         {
-            return $is_cacheable_if_defined_and_boolean;
+            return true;
         }
 
         $this->log_request_as_not_cacheable(
                                                 [
                                                     'reason' => $failure_reason,
-                                                    'extra'  => "Constant $name is $boolean",
+                                                    'extra'  => "Constant $name is false",
                                                 ]
                                         );
 
-        return ! $is_cacheable_if_defined_and_boolean;
+        return false;
     }
 }

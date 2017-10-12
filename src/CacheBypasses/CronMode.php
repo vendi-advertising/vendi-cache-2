@@ -6,12 +6,12 @@ final class CronMode extends AbstractCacheBypass
 {
     public function is_cacheable( )
     {
-        if( false === $this->is_constant_defined_and_set_to_boolean( 'DOING_CRON', true, false, __( 'Request is cron', 'vendi-cache' ) ) )
+        if( false === $this->is_cacheable_because_fatal_constant_not_defined_or_set_to_true( 'DOING_CRON', __( 'Request is cron', 'vendi-cache' ) ) )
         {
             return false;
         }
 
-        if( false === $this->is_function_defined_and_returns_boolean( 'wp_doing_cron', true, false, __( 'Request is cron', 'vendi-cache' ) ) )
+        if( false === $this->is_cacheable_because_required_function_defined_and_returned_false( 'wp_doing_cron', __( 'Request is cron', 'vendi-cache' ) ) )
         {
             return false;
         }
