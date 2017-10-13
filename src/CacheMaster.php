@@ -77,12 +77,12 @@ final class CacheMaster
     }
 
     /**
-     * [get_cache_settings description]
+     * [get_secretary description]
      * @return Secretary
      */
-    public function get_cache_settings()
+    public function get_secretary()
     {
-        return $this->get_maestro()->get_cache_settings();
+        return $this->get_maestro()->get_secretary();
     }
 
     /**
@@ -265,7 +265,7 @@ final class CacheMaster
         }
 
         $age = time() - $stat[ 'mtime' ];
-        if( $age >= $this->get_cache_settings()->get_max_file_age() )
+        if( $age >= $this->get_secretary()->get_max_file_age() )
         {
             //TODO: Should we delete the file?
 
@@ -274,7 +274,7 @@ final class CacheMaster
                                                             [
                                                                 'cache_file' => $cache_file,
                                                                 'age' => $age,
-                                                                'max_age' => $this->get_cache_settings()->get_max_file_age(),
+                                                                'max_age' => $this->get_secretary()->get_max_file_age(),
                                                             ]
                                                         );
             return;
@@ -285,7 +285,7 @@ final class CacheMaster
                                                         [
                                                             'cache_file' => $cache_file,
                                                             'age' => $age,
-                                                            'max_age' => $this->get_cache_settings()->get_max_file_age(),
+                                                            'max_age' => $this->get_secretary()->get_max_file_age(),
                                                         ]
                                                     );
 
@@ -338,9 +338,9 @@ final class CacheMaster
 
         //The average web page size is 1246,000 bytes. If web page is less than 1000 bytes, don't cache it.
         //TODO: Move to option
-        if( strlen( $buffer ) < $this->get_cache_settings()->get_min_page_size() )
+        if( strlen( $buffer ) < $this->get_secretary()->get_min_page_size() )
         {
-            $this->log_request_as_not_cacheable( [ 'reason' => 'Page too small', 'size' => strlen( $buffer ), 'min_size' => $this->get_cache_settings()->get_min_page_size() ] );
+            $this->log_request_as_not_cacheable( [ 'reason' => 'Page too small', 'size' => strlen( $buffer ), 'min_size' => $this->get_secretary()->get_min_page_size() ] );
             return $buffer;
         }
 
@@ -556,7 +556,7 @@ final class CacheMaster
         //Allow callers to optionally supply the path
         if( ! $absolute_path )
         {
-            $absolute_path = $this->get_cache_settings()->get_cache_folder_abs();
+            $absolute_path = $this->get_secretary()->get_cache_folder_abs();
         }
 
         //Log the start of deletion
@@ -575,14 +575,14 @@ final class CacheMaster
         $child_paths = $this->get_file_system()->listPaths( );
 
         //We don't want to delete
-        $log_file_abs = \Webmozart\PathUtil\Path::canonicalize( $this->get_cache_settings()->get_log_file_abs() );
+        $log_file_abs = \Webmozart\PathUtil\Path::canonicalize( $this->get_secretary()->get_log_file_abs() );
 
         foreach( $child_paths as $dir )
         {
 
             $test_file_path = \Webmozart\PathUtil\Path::join(
                                                                 $this->get_file_system()->getAdapter()->applyPathPrefix( $dir ),
-                                                                $this->get_cache_settings()->get_log_file_name()
+                                                                $this->get_secretary()->get_log_file_name()
                                                             );
 
             if( $test_file_path === $log_file_abs )

@@ -15,7 +15,7 @@ class test_LegacyConstants extends cache_bypass_base
     public function test_is_cacheable( $name )
     {
         $maestro = $this->__get_new_maestro();
-        $cache_settings = $maestro->get_cache_settings();
+        $cache_settings = $maestro->get_secretary();
         $this->assertFalse( $cache_settings->is_constant_defined( $name ) );
 
         $test = new LegacyConstants( $maestro );

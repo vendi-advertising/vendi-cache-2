@@ -38,12 +38,12 @@ final class CacheBypassTester
     }
 
     /**
-     * [get_cache_settings description]
+     * [get_secretary description]
      * @return Secretary
      */
-    public function get_cache_settings()
+    public function get_secretary()
     {
-        return $this->get_maestro()->get_cache_settings();
+        return $this->get_maestro()->get_secretary();
     }
 
     /**
@@ -60,7 +60,7 @@ final class CacheBypassTester
         $maestro  = $this->get_maestro();
         $request  = $this->get_request();
         $logger   = $this->get_logger();
-        $settings = $this->get_cache_settings();
+        $settings = $this->get_secretary();
 
         Assertion::isInstanceOf( $maestro,  'Vendi\Cache\Maestro' );
         Assertion::isInstanceOf( $request,  'Symfony\Component\HttpFoundation\Request' );

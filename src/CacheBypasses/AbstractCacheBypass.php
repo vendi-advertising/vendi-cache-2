@@ -32,9 +32,9 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
      * Get the cache settings associated with the current request.
      * @return Secretary
      */
-    final public function get_cache_settings()
+    final public function get_secretary()
     {
-        return $this->get_maestro()->get_cache_settings();
+        return $this->get_maestro()->get_secretary();
     }
 
     final public function get_url( )
@@ -79,7 +79,7 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
         Assertion::string(   $failure_reason );
 
         //Get our settings
-        $settings = $this->get_cache_settings();
+        $settings = $this->get_secretary();
 
         //This is a required function. If it doesn't exist then we are in a
         //strange state and caching should be disabled.
@@ -123,7 +123,7 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
         Assertion::notEmpty( $failure_reason );
         Assertion::string(   $failure_reason );
 
-        $settings = $this->get_cache_settings();
+        $settings = $this->get_secretary();
 
         //We're looking for hard-stop constants. If the constant doesn't exist
         //then assume that we can cache this resource.

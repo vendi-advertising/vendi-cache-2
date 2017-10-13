@@ -14,7 +14,7 @@ class test_LoggedInUser extends cache_bypass_base
     {
         //Common bootstrap
         $maestro = $this->__get_new_maestro();
-        $cache_settings = $maestro->get_cache_settings();
+        $cache_settings = $maestro->get_secretary();
 
         $test = new LoggedInUser( $maestro );
 

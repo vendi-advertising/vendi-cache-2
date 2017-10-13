@@ -60,7 +60,7 @@ class PluginUpdater
                 {
                     $this
                         ->get_maestro()
-                        ->get_cache_settings()
+                        ->get_secretary()
                         ->set_network_option(
                                                 'VENDI_CACHE_V2_VERSION',
                                                 $update->get_update_version()
@@ -90,7 +90,7 @@ class PluginUpdater
     {
         $value = $this
                     ->get_maestro()
-                    ->get_cache_settings()
+                    ->get_secretary()
                     ->get_function_value( 'get_site_option', 'VENDI_CACHE_V2_VERSION' )
                 ;
 

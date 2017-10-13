@@ -6,7 +6,7 @@ final class LegacyConstants extends AbstractCacheBypass
 {
     public function is_cacheable( )
     {
-        $settings = $this->get_cache_settings();
+        $settings = $this->get_secretary();
 
         $legacy_cache_constants = [
                                     'WFDONOTCACHE',

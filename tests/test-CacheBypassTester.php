@@ -25,7 +25,7 @@ class test_CacheBypassTester extends \WP_UnitTestCase
      * @covers Vendi\Cache\CacheBypassTester::__construct
      * @covers Vendi\Cache\CacheBypassTester::get_maestro
      * @covers Vendi\Cache\CacheBypassTester::get_logger
-     * @covers Vendi\Cache\CacheBypassTester::get_cache_settings
+     * @covers Vendi\Cache\CacheBypassTester::get_secretary
      * @covers Vendi\Cache\CacheBypassTester::get_request
      */
     public function test__various_methods()
@@ -35,7 +35,7 @@ class test_CacheBypassTester extends \WP_UnitTestCase
         $this->assertInstanceOf( 'Vendi\Cache\Maestro', $tester->get_maestro() );
         $this->assertInstanceOf( 'Symfony\Component\HttpFoundation\Request', $tester->get_request() );
         $this->assertInstanceOf( 'Monolog\Logger', $tester->get_logger() );
-        $this->assertInstanceOf( 'Vendi\Cache\Secretary', $tester->get_cache_settings() );
+        $this->assertInstanceOf( 'Vendi\Cache\Secretary', $tester->get_secretary() );
     }
 
 }

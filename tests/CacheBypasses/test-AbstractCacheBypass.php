@@ -83,7 +83,7 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
     private function _get_mock()
     {
         $maestro = ( new Maestro() )
-                    ->with_cache_settings( new \Vendi\Cache\Tests\non_global_constant_cache_settings() )
+                    ->with_secretary( new \Vendi\Cache\Tests\non_global_constant_secretary() )
                     ->with_request( Request::create( $this->_url ) )
                     ->with_logger(
                                     new \Monolog\Logger(
@@ -99,7 +99,7 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
     /**
      * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::__construct
      * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::get_maestro
-     * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::get_cache_settings
+     * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::get_secretary
      * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::get_url
      * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::get_query_string
      * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::get_method
@@ -111,7 +111,7 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
         $mock = $this->_get_mock();
 
         $this->assertInstanceOf( 'Vendi\Cache\Maestro', $mock->get_maestro() );
-        $this->assertInstanceOf( 'Vendi\Cache\Secretary', $mock->get_cache_settings() );
+        $this->assertInstanceOf( 'Vendi\Cache\Secretary', $mock->get_secretary() );
         $this->assertSame( $this->_url, $mock->get_url() );
         $this->assertSame( 'a=b', $mock->get_query_string() );
         $this->assertSame( 'GET', $mock->get_method() );
@@ -127,7 +127,7 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
         $mock = $this->_get_mock();
 
         $maestro = $mock->get_maestro();
-        $cache_settings = $maestro->get_cache_settings();
+        $cache_settings = $maestro->get_secretary();
 
         //Function should not exist
         $this->assertFalse( $cache_settings->is_function_defined( 'CHEESE' ) );
@@ -156,7 +156,7 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
         $mock = $this->_get_mock();
 
         $maestro = $mock->get_maestro();
-        $cache_settings = $maestro->get_cache_settings();
+        $cache_settings = $maestro->get_secretary();
 
         //Constant should not exist
         $this->assertFalse( $cache_settings->is_constant_defined( 'CHEESE' ) );

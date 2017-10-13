@@ -16,10 +16,10 @@ interface CacheBypassInterface
     public function get_maestro();
 
     /**
-     * [get_cache_settings description]
+     * [get_secretary description]
      * @return Secretary
      */
-    public function get_cache_settings();
+    public function get_secretary();
 
     public function get_url( );
 

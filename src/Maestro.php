@@ -22,7 +22,7 @@ final class Maestro
 
     private $_adapter = null;
 
-    private $_cache_settings = null;
+    private $_secretary = null;
 
     private $_cache_master = null;
 
@@ -91,9 +91,9 @@ final class Maestro
      * @param  Secretary $cache_settings The Cache Settings to use.
      * @return Maestro
      */
-    public function with_cache_settings( Secretary $cache_settings )
+    public function with_secretary( Secretary $cache_settings )
     {
-        $this->_cache_settings = $cache_settings;
+        $this->_secretary = $cache_settings;
         return $this;
     }
 
@@ -130,7 +130,7 @@ final class Maestro
     {
         if( ! $this->_logger instanceof Logger )
         {
-            $this->_logger = self::get_default_logger( $this->get_cache_settings() );
+            $this->_logger = self::get_default_logger( $this->get_secretary() );
         }
 
         return $this->_logger;
@@ -145,7 +145,7 @@ final class Maestro
     {
         if( ! $this->_adapter instanceof AdapterInterface )
         {
-            $this->_adapter = self::get_default_adapter( $this->get_cache_settings() );
+            $this->_adapter = self::get_default_adapter( $this->get_secretary() );
         }
 
         return $this->_adapter;
@@ -156,14 +156,14 @@ final class Maestro
      *
      * @return Secretary
      */
-    public function get_cache_settings()
+    public function get_secretary()
     {
-        if( ! $this->_cache_settings instanceof Secretary )
+        if( ! $this->_secretary instanceof Secretary )
         {
-            $this->_cache_settings = self::get_default_cache_settings();
+            $this->_secretary = self::get_default_secretary();
         }
 
-        return $this->_cache_settings;
+        return $this->_secretary;
     }
 
     /**
@@ -211,11 +211,11 @@ final class Maestro
     {
         if( null === $cache_settings )
         {
-            $cache_settings = self::get_default_cache_settings();
+            $cache_settings = self::get_default_secretary();
         }
 
         return ( new self() )
-                ->with_cache_settings( $cache_settings )
+                ->with_secretary( $cache_settings )
                 ->with_file_system_adapter( self::get_default_adapter( $cache_settings ) )
                 ->with_logger( self::get_default_logger( $cache_settings ) )
             ;
@@ -224,7 +224,7 @@ final class Maestro
     /**
      * Get the CacheMaster object bound to all of this object's properties.
      *
-     * NOTE: You must call with_cache_settings(), with_file_system_adapter() and
+     * NOTE: You must call with_secretary(), with_file_system_adapter() and
      * with_logger() before calling this method if you wish to override the
      * defaults.
      *
@@ -239,11 +239,11 @@ final class Maestro
         }
 
         //Sanity check that we have things setup
-        Assertion::notNull( $this->get_cache_settings() );
+        Assertion::notNull( $this->get_secretary() );
         Assertion::notNull( $this->get_adapter() );
         Assertion::notNull( $this->get_logger() );
 
-        Assertion::isInstanceOf( $this->get_cache_settings(), 'Vendi\Cache\Secretary' );
+        Assertion::isInstanceOf( $this->get_secretary(), 'Vendi\Cache\Secretary' );
         Assertion::isInstanceOf( $this->get_adapter(), '\League\Flysystem\AdapterInterface' );
         Assertion::isInstanceOf( $this->get_logger(), 'Monolog\Logger'  );
 
@@ -258,7 +258,7 @@ final class Maestro
      *
      * @return Secretary
      */
-    public static function get_default_cache_settings()
+    public static function get_default_secretary()
     {
         return new Secretary();
     }

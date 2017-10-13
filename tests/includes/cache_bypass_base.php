@@ -36,7 +36,7 @@ class cache_bypass_base extends \PHPUnit_Framework_TestCase
     public function __get_new_maestro( Request $request = null )
     {
         return ( new Maestro() )
-                ->with_cache_settings( new \Vendi\Cache\Tests\non_global_constant_cache_settings() )
+                ->with_secretary( new \Vendi\Cache\Tests\non_global_constant_secretary() )
                 ->with_request( $request ? $request : Maestro::get_default_request() )
                 ->with_logger(
                                 new \Monolog\Logger(
@@ -82,7 +82,7 @@ class cache_bypass_base extends \PHPUnit_Framework_TestCase
     public function _test_is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( $class_to_test, $name, $func_name )
     {
         $maestro = $this->__get_new_maestro();
-        $cache_settings = $maestro->get_cache_settings();
+        $cache_settings = $maestro->get_secretary();
 
         if( $func_name )
         {
@@ -114,7 +114,7 @@ class cache_bypass_base extends \PHPUnit_Framework_TestCase
     public function _test_is_cacheable_because_required_function_defined_and_returns_true( $class_to_test, $name )
     {
         $maestro = $this->__get_new_maestro();
-        $cache_settings = $maestro->get_cache_settings();
+        $cache_settings = $maestro->get_secretary();
 
         //The supplied function should not exist by default
         $this->assertFalse( $cache_settings->is_function_defined( $name ) );
