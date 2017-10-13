@@ -9,7 +9,7 @@ This version will have a minimum PHP version of probably 5.5. Because of this we
  * Unit Tests! Unit Tests! Unit Tests! Unit Tests!
 
 ## Goals
- * Offload code to third-party libraries via composer
+ * Offload code to _well-tested_ third-party libraries via composer
  * Log as much as possible for debugging
  * Only disable caching if a PHP warning/error surfaces a message
  * Explicit MU support
