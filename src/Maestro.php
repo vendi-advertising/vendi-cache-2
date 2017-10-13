@@ -246,8 +246,8 @@ final class Maestro
         Assertion::notNull( $this->get_logger() );
 
         Assertion::isInstanceOf( $this->get_secretary(), 'Vendi\Cache\Secretary' );
-        Assertion::isInstanceOf( $this->get_adapter(), '\League\Flysystem\AdapterInterface' );
-        Assertion::isInstanceOf( $this->get_logger(), '\Psr\Log\LoggerInterface;'  );
+        Assertion::isInstanceOf( $this->get_adapter(),   'League\Flysystem\AdapterInterface' );
+        Assertion::isInstanceOf( $this->get_logger(),    'Psr\Log\LoggerInterface'  );
 
         //Create and return our object bound to this
         $this->_cache_master = new CacheMaster( $this );
