@@ -80,7 +80,7 @@ class cache_bypass_base extends \PHPUnit_Framework_TestCase
         return $tempfile;
     }
 
-    public function _test_is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( $class_to_test, $name, $func_name = null )
+    public function _test_is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( $class_to_test, $name, $func_name )
     {
         $maestro = $this->__get_new_maestro();
         $cache_settings = $maestro->get_cache_settings();
