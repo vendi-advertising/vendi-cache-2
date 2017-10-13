@@ -5,8 +5,37 @@ namespace Vendi\Cache\Tests;
 use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
 
-class test_Secretary extends \WP_UnitTestCase
+class test_Secretary extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * PHPUnit 6+ compatibility shim.
+     *
+     * @see https://github.com/WordPress/wordpress-develop/blob/master/tests/phpunit/includes/testcase.php#L446
+     *
+     * @param mixed      $exception
+     * @param string     $message
+     * @param int|string $code
+     */
+    public function setExpectedException( $exception, $message = '', $code = null )
+    {
+        if ( method_exists( 'PHPUnit_Framework_TestCase', 'setExpectedException' ) )
+        {
+            parent::setExpectedException( $exception, $message, $code );
+        }
+        else
+        {
+            $this->expectException( $exception );
+            if ( '' !== $message )
+            {
+                $this->expectExceptionMessage( $message );
+            }
+            if ( null !== $code )
+            {
+                $this->expectExceptionCode( $code );
+            }
+        }
+    }
+
     /**
      * @covers Vendi\Cache\Secretary::get_network_option
      * @covers Vendi\Cache\Secretary::set_network_option
@@ -137,7 +166,9 @@ class test_Secretary extends \WP_UnitTestCase
      */
     public function test_get_function_value__too_many_arguments()
     {
-        $this->expectException( \Exception::class);
+
+        self::setExpectedException( \Exception::class );
+        // $this->expectException( );
 
         Maestro::get_default_instance()
                 ->get_secretary()
