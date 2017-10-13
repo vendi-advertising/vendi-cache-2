@@ -20,7 +20,7 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
     }
 
     /**
-     * [get_maestro description]
+     * Get the Maestro associated with the current request.
      * @return Maestro
      */
     final public function get_maestro()
@@ -29,7 +29,7 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
     }
 
     /**
-     * [get_cache_settings description]
+     * Get the cache settings associated with the current request.
      * @return CacheSettingsInterface
      */
     final public function get_cache_settings()
@@ -74,9 +74,9 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
     {
         //Sanity check params
         Assertion::notEmpty( $name );
-        Assertion::string( $name );
+        Assertion::string(   $name );
         Assertion::notEmpty( $failure_reason );
-        Assertion::string( $failure_reason );
+        Assertion::string(   $failure_reason );
 
         //Get our settings
         $settings = $this->get_cache_settings();
@@ -97,6 +97,8 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
         //The function must always return a boolean
         $result = (bool) $settings->get_function_value( $name );
 
+        //If the function returns true then someone else in the pipeline
+        //initiated something special and we don't want to cache this request.
         if( $result )
         {
             $this->log_request_as_not_cacheable(
@@ -108,16 +110,18 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
             return false;
         }
 
+        //Nothing special happened, flag the request as cacheable as far as this
+        //method is concerned.
         return true;
     }
 
-    final public function is_cacheable_because_fatal_constant_not_defined_or_set_to_true( $name, $failure_reason )
+    final public function is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( $name, $failure_reason )
     {
         //Sanity check params
         Assertion::notEmpty( $name );
-        Assertion::string( $name );
+        Assertion::string(   $name );
         Assertion::notEmpty( $failure_reason );
-        Assertion::string( $failure_reason );
+        Assertion::string(   $failure_reason );
 
         $settings = $this->get_cache_settings();
 
@@ -128,7 +132,8 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
             return true;
         }
 
-        //Constants are assumed to be boolean for arguments sake
+        //Constants are assumed to be boolean
+        $result = $settings->get_constant_value( $name );
         $result = (bool) $settings->get_constant_value( $name );
 
         //The constant _IS_ defined but set to a false-like value. Super weird
@@ -136,6 +141,15 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
         //valid as far as PHP is concerned.
         if( false === $result )
         {
+            $this
+                ->get_maestro()
+                ->get_logger()
+                ->debug(
+                            'Strange state - constant set to false',
+                            [
+                                'constant' => $name,
+                            ]
+                    );
             return true;
         }
 

@@ -149,9 +149,9 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::is_cacheable_because_fatal_constant_not_defined_or_set_to_true
+     * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false
      */
-    public function test_is_cacheable_because_fatal_constant_not_defined_or_set_to_true()
+    public function test_is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false()
     {
         $mock = $this->_get_mock();
 
@@ -162,19 +162,19 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
         $this->assertFalse( $cache_settings->is_constant_defined( 'CHEESE' ) );
 
         //Constant not defined, resource is cacheable
-        $this->assertTrue( $mock->is_cacheable_because_fatal_constant_not_defined_or_set_to_true( 'CHEESE', 'n/a' ) );
+        $this->assertTrue( $mock->is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( 'CHEESE', 'n/a' ) );
 
         //Create the constant
         $cache_settings->set_constant( 'CHEESE', true );
 
         //When the constant is set to true, the resource is not cacheable
-        $this->assertFalse( $mock->is_cacheable_because_fatal_constant_not_defined_or_set_to_true( 'CHEESE', 'n/a' ) );
+        $this->assertFalse( $mock->is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( 'CHEESE', 'n/a' ) );
 
         //Create the constant
         $cache_settings->set_constant( 'CHEESE', false  );
 
         //When the constant is set to false (which is weird), the resource is cacheable
-        $this->assertTrue( $mock->is_cacheable_because_fatal_constant_not_defined_or_set_to_true( 'CHEESE', 'n/a' ) );
+        $this->assertTrue( $mock->is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( 'CHEESE', 'n/a' ) );
     }
 
     /**

@@ -11,7 +11,7 @@ final class WpInstalling extends AbstractCacheBypass
          */
     public function is_cacheable( )
     {
-        if( false === $this->is_cacheable_because_fatal_constant_not_defined_or_set_to_true( 'WP_INSTALLING', __( 'Request is cron', 'vendi-cache' ) ) )
+        if( false === $this->is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( 'WP_INSTALLING', __( 'Request is cron', 'vendi-cache' ) ) )
         {
             return false;
         }

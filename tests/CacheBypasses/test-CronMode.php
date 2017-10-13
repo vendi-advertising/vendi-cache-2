@@ -10,7 +10,7 @@ class test_CacheBypasses_CronMode extends cache_bypass_base
      */
     public function test_is_cacheable__DOING_CRON__not_defined()
     {
-        $this->_test_is_cacheable_because_fatal_constant_not_defined_or_set_to_true( 'CronMode', 'DOING_CRON' );
+        $this->_test_is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( 'CronMode', 'DOING_CRON', 'wp_doing_cron' );
     }
 
     /**
