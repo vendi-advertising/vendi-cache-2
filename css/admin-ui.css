@@ -48,7 +48,6 @@
     background-color: #fff;
     border: 1px solid #dc0928;
     border-radius: 0.25em;
-    padding: 10px 50px;
 }
 
 .vendi-cache-2-admin-wrap
@@ -56,13 +55,42 @@
     max-width: 680px;
 }
 
-.vendi-cache-2-admin-wrap .legacy-note
+.vendi-cache-2-admin-wrap .outer-box
 {
-    border-left: 5px solid #dc0928;
-    font-style: italic;
-    padding-left: 25px;
+    padding: 10px 50px;
 }
 
+.vendi-cache-2-admin-wrap .information-box,
+.vendi-cache-2-admin-wrap .legacy-box
+{
+    border-top: 1px solid #dc0928;
+}
+
+.vendi-cache-2-admin-wrap .legacy-box
+{
+    font-style: italic;
+}
+
+.vendi-cache-2-admin-wrap h3
+{
+    font-size: 1.1em;
+}
+
+.vendi-cache-2-admin-wrap input[type=submit]
+{
+    background-color: #dc0928;
+    border: 1px solid #dc0928;
+    color: #fff;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: all 0.25s ease-out;
+}
+
+.vendi-cache-2-admin-wrap input[type=submit]:hover
+{
+    background-color: #fff;
+    color: #dc0928;
+}
 
 @media screen and (max-width: 600px)
 {

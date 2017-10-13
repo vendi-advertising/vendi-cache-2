@@ -93,6 +93,11 @@ class UI
         return $ret;
     }
 
+    public function handle_post( $current_tab )
+    {
+        check_admin_referer( "vendi-cache-$current_tab" );
+    }
+
     public function handle_page_routing( $echo = true )
     {
         $current_tab = $this->get_current_tab();
@@ -103,6 +108,11 @@ class UI
         {
             $keys = array_keys( $all_tabs );
             $current_tab = reset( $keys );
+        }
+
+        if( 'POST' === $this->get_request()->getMethod() )
+        {
+            $this->handle_post( $current_tab );
         }
 
         $ret = $this->get_html_for_tab( $current_tab );
@@ -116,30 +126,67 @@ class UI
 
     public function get_html_for_tab( $current_tab )
     {
-        ob_start();
+        $ret = '';
 
-        //Temporarily store our local Maestro in a global variable
-        global $template_maestro;
-        Assertion::null( $template_maestro );
-        $template_maestro = $this->get_maestro();
+        $template_options = [];
 
-        echo '<div class="wrap">';
-        echo sprintf(
+        switch( $current_tab )
+        {
+            case 'cache-mode':
+                $template_options = [
+                                        $this->get_maestro()->get_secretary()->get_named_option( 'CacheMode' ),
+                                    ];
+                break;
+
+            case 'cache-options':
+                $template_options = [
+                                        $this->get_maestro()->get_secretary()->get_named_option( 'DebugComment' ),
+                                        $this->get_maestro()->get_secretary()->get_named_option( 'DebugLogging' ),
+                                    ];
+                break;
+
+            default:
+                $template_options = [ ];
+                break;
+        }
+
+        $ret .= '<div class="wrap">';
+        $ret .= sprintf(
                         '<h1>%1$s</h1>',
                         esc_html( __( 'Vendi Cache Settings', 'vendi-cache' ) )
                 );
 
-        echo $this->get_tabs();
+        $ret .= $this->get_tabs();
 
-        echo '<div class="vendi-cache-2-admin-wrap">';
+        $ret .= '<div class="vendi-cache-2-admin-wrap">';
+        $ret .= '<form method="post">';
+
+        wp_nonce_field( "vendi-cache-$current_tab" );
+
+        if( count( $template_options ) > 0 )
+        {
+            $ret .= '<div class="fields outer-box">';
+
+            foreach( $template_options as $template_option )
+            {
+                $ret .= '<p>';
+                $ret .= $template_option->get_html();
+                $ret .= '</p>';
+            }
+
+            $ret .= '<p><br /><br /><input type="submit" value="Submit" /></p>';
+            $ret .= '</div>';
+        }
+
+        ob_start();
         require VENDI_CACHE_DIR . "/templates/$current_tab.php";
-        echo '</div>';
+        $ret .= ob_get_clean();
 
-        //Reset our global
-        $template_maestro = null;
+        $ret .= '</form>';
+        $ret .= '</div>';
 
-        echo '</div>';
+        $ret .= '</div>';
 
-        return ob_get_clean();
+        return $ret;
     }
 }

@@ -4,6 +4,8 @@ namespace Vendi\Cache;
 
 use Assert\Assertion;
 
+use Vendi\Cache\CacheOptions\CacheOptionInterface;
+
 class Secretary
 {
     private static $_log_folder_name = '__log__';
@@ -204,5 +206,42 @@ class Secretary
     public function get_is_auditing_enabled()
     {
         return true;
+    }
+
+    public function get_option_value( CacheOptionInterface $option )
+    {
+        $value = get_option( $option->get_storage_name(), false );
+
+        if( false === $value )
+        {
+            return $option->get_default_value();
+        }
+
+        if( ! $option->is_value_valid( $value ) )
+        {
+            $name = esc_html( $name );
+            $value = esc_html( $value );
+            throw new \Exception( "Unsupported cache value for $name: $value" );
+        }
+
+        return $value;
+    }
+
+    public function get_named_option( $name )
+    {
+        Assertion::notEmpty( $name );
+        Assertion::string( $name );
+
+        switch( $name )
+        {
+            case 'CacheMode';
+            case 'DebugLogging';
+            case 'DebugComment';
+                $option = "\\Vendi\\Cache\\CacheOptions\\$name";
+                return new $option( $this );
+
+            default:
+                throw new \Exception( 'Unknown cache option: ' . esc_html( $name ) );
+        }
     }
 }
