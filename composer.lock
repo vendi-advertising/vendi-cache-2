@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b838652156441a2eab9445c0d8b01e58",
+    "content-hash": "9e29291819f611fc6a12e3d5bd0f7830",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -603,6 +603,50 @@
                 "shim"
             ],
             "time": "2017-06-14T15:44:48+00:00"
+        },
+        {
+            "name": "wazaari/monolog-mysql",
+            "version": "v1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/waza-ari/monolog-mysql.git",
+                "reference": "fb9e6748e4954dfa8d72794bdd697f6731f77b33"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/waza-ari/monolog-mysql/zipball/fb9e6748e4954dfa8d72794bdd697f6731f77b33",
+                "reference": "fb9e6748e4954dfa8d72794bdd697f6731f77b33",
+                "shasum": ""
+            },
+            "require": {
+                "monolog/monolog": ">1.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MySQLHandler\\": "src/MySQLHandler"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Herrmann",
+                    "email": "daniel.herrmann1@gmail.com"
+                }
+            ],
+            "description": "A handler for Monolog that sends messages to MySQL",
+            "homepage": "https://github.com/waza-ari/monolog-mysql",
+            "keywords": [
+                "database",
+                "log",
+                "logging",
+                "monolog",
+                "mysql"
+            ],
+            "time": "2017-02-13T17:23:18+00:00"
         },
         {
             "name": "webmozart/assert",

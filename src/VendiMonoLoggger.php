@@ -5,6 +5,7 @@ namespace Vendi\Cache;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
+use MySQLHandler\MySQLHandler;
 
 use Ramsey\Uuid\Uuid;
 
@@ -58,6 +59,12 @@ final class VendiMonoLoggger extends Logger
         //
         parent::__construct( 'vendi-cache' );
         $this->pushHandler( $stream );
+
+        global $wpdb;
+
+        $pdo = new \PDO( sprintf( 'mysql:host=%2$s;dbname=%1$s', DB_NAME, DB_HOST ), DB_USER, DB_PASSWORD );
+        $mySQLHandler = new MySQLHandler($pdo, $wpdb->get_blog_prefix() . 'vendi_cache_log', array('request_id'));
+        $this->pushHandler( $mySQLHandler );
 
         //Copy to local so that we can close over it in the anonymous func
         $request_id = $this->_request_id;
