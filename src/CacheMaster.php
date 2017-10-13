@@ -430,21 +430,7 @@ final class CacheMaster
 
         $this->_maybe_purge_cached_file_on_non_GET_method();
 
-        $this->get_logger()->debug(
-                                        'After _maybe_purge_cached_file_on_non_GET_method',
-                                        [
-                                            '_is_request_cacheable' => $this->_is_request_cacheable,
-                                        ]
-                                );
-
         $this->_maybe_serve_cached_file();
-
-        $this->get_logger()->debug(
-                                        'After _maybe_serve_cached_file',
-                                        [
-                                            '_is_request_cacheable' => $this->_is_request_cacheable,
-                                        ]
-                                );
 
         $this->_setup_actual_request_caching();
     }
