@@ -167,8 +167,7 @@ class test_Secretary extends \PHPUnit_Framework_TestCase
     public function test_get_function_value__too_many_arguments()
     {
 
-        self::setExpectedException( \Exception::class );
-        // $this->expectException( );
+        self::setExpectedException( '\Exception' );
 
         Maestro::get_default_instance()
                 ->get_secretary()
