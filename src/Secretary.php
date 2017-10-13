@@ -3,7 +3,7 @@
 namespace Vendi\Cache;
 
 use Assert\Assertion;
-
+use Psr\Log\LogLevel;
 use Vendi\Cache\CacheOptions\CacheOptionInterface;
 
 class Secretary
@@ -193,6 +193,11 @@ class Secretary
         return $this->is_constant_defined( 'VENDI_CACHE_FS_PERM_LOG_DIR') ? $this->get_constant_value( 'VENDI_CACHE_FS_PERM_LOG' ) : 0775;
     }
 
+    /**
+     * [get_logging_level description]
+     * @return int|string Either a string-based Monolog logging level or a
+     *                    numeric-based PSR-3 logging level
+     */
     public function get_logging_level()
     {
         if( $this->is_constant_defined( 'VENDI_CACHE_LOGGING_LEVEL' ) )
@@ -200,7 +205,7 @@ class Secretary
             return (int)$this->get_constant_value( 'VENDI_CACHE_LOGGING_LEVEL' );
         }
 
-        return \Monolog\Logger::DEBUG;
+        return LogLevel::DEBUG;
     }
 
     public function get_is_auditing_enabled()

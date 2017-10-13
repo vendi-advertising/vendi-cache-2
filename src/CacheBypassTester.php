@@ -3,7 +3,7 @@
 namespace Vendi\Cache;
 
 use Assert\Assertion;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheMaster;
 use Vendi\Cache\Secretary;
@@ -30,7 +30,7 @@ final class CacheBypassTester
 
     /**
      * [get_logger description]
-     * @return Logger
+     * @return LoggerInterface
      */
     public function get_logger()
     {
@@ -64,7 +64,7 @@ final class CacheBypassTester
 
         Assertion::isInstanceOf( $maestro,  'Vendi\Cache\Maestro' );
         Assertion::isInstanceOf( $request,  'Symfony\Component\HttpFoundation\Request' );
-        Assertion::isInstanceOf( $logger,   'Monolog\Logger' );
+        Assertion::isInstanceOf( $logger,   'Psr\Log\LoggerInterface' );
         Assertion::isInstanceOf( $settings, 'Vendi\Cache\Secretary' );
 
         $tests = [

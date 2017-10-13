@@ -6,7 +6,7 @@ use Assert\Assertion;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheMaster;
 use Vendi\Cache\CacheSettings;
@@ -18,6 +18,8 @@ use Vendi\Cache\Admin\UI;
 
 final class Maestro
 {
+    private static $_default_instance = null;
+
     private $_logger = null;
 
     private $_adapter = null;
@@ -64,10 +66,10 @@ final class Maestro
     /**
      * Use the supplied logger.
      *
-     * @param  Logger $logger The Monolog logger to log to
+     * @param  LoggerInterface $logger PSR-4 logger to log to
      * @return Maestro
      */
-    public function with_logger( Logger $logger )
+    public function with_logger( LoggerInterface $logger )
     {
         $this->_logger = $logger;
         return $this;
@@ -128,7 +130,7 @@ final class Maestro
      */
     public function get_logger()
     {
-        if( ! $this->_logger instanceof Logger )
+        if( ! $this->_logger instanceof LoggerInterface )
         {
             $this->_logger = self::get_default_logger( $this->get_secretary() );
         }
@@ -245,7 +247,7 @@ final class Maestro
 
         Assertion::isInstanceOf( $this->get_secretary(), 'Vendi\Cache\Secretary' );
         Assertion::isInstanceOf( $this->get_adapter(), '\League\Flysystem\AdapterInterface' );
-        Assertion::isInstanceOf( $this->get_logger(), 'Monolog\Logger'  );
+        Assertion::isInstanceOf( $this->get_logger(), '\Psr\Log\LoggerInterface;'  );
 
         //Create and return our object bound to this
         $this->_cache_master = new CacheMaster( $this );
@@ -287,10 +289,10 @@ final class Maestro
     }
 
     /**
-     * Get the default Monolog Logger using the supplied settings.
+     * Get the default LoggerInterface using the supplied settings.
      *
      * @param  Secretary $cache_settings The settings to use for the adapter.
-     * @return Logger
+     * @return LoggerInterface
      */
     public static function get_default_logger( Secretary $cache_settings )
     {

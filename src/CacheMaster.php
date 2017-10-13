@@ -3,7 +3,7 @@
 namespace Vendi\Cache;
 
 use League\Flysystem\Filesystem;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Vendi\Cache\Auditing;
 use Vendi\Cache\CacheExclusions;
 use Vendi\Cache\CacheKeyGenerator;
@@ -69,7 +69,7 @@ final class CacheMaster
 
     /**
      * [get_logger description]
-     * @return Logger
+     * @return LoggerInterface
      */
     public function get_logger()
     {

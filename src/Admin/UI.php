@@ -161,7 +161,7 @@ class UI
         $ret .= '<div class="vendi-cache-2-admin-wrap">';
         $ret .= '<form method="post">';
 
-        wp_nonce_field( "vendi-cache-$current_tab" );
+        $ret .= wp_nonce_field( "vendi-cache-$current_tab", '_wpnonce', true, false );
 
         if( count( $template_options ) > 0 )
         {

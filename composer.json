@@ -32,7 +32,8 @@
         "symfony/http-foundation": "^2 || ^3",
         "beberlei/assert": "^2.7",
         "naneau/semver": "^0.0.7",
-        "sgh/comparable": "^1.1"
+        "sgh/comparable": "^1.1",
+        "psr/log": "^1.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^2 || ^3",
