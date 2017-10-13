@@ -306,12 +306,26 @@ final class CacheMaster
 
         $this->get_logger()->debug( 'Setting up page caching' );
 
+        $maestro = $this->get_maestro();
+
         //Do not cache fatal errors
         global $vendi_cache_old_error_handler;
-        $vendi_cache_old_error_handler = set_error_handler( array( 'Vendi\Cache\ErrorHandler', 'handle_error' ) );
+        $vendi_cache_old_error_handler = set_error_handler(
+                                                            function( $errno, $errstr, $errfile, $errline ) use ( $maestro )
+                                                            {
+                                                                $eh = new ErrorHandler( $maestro );
+                                                                $eh->handle_error( $errno, $errstr, $errfile, $errline );
+                                                            }
+            );
 
         global $vendi_cache_old_exception_handler;
-        $vendi_cache_old_exception_handler = set_exception_handler( array( 'Vendi\Cache\ErrorHandler', 'handle_exception' ) );
+        $vendi_cache_old_exception_handler = set_exception_handler(
+                                                            function( $exception ) use ( $maestro )
+                                                            {
+                                                                $eh = new ErrorHandler( $maestro );
+                                                                $eh->handle_exception( $exception );
+                                                            }
+         );
 
         ob_start( array( __CLASS__, 'handle_ob_complete' ) ); //Setup routine to store the file
     }

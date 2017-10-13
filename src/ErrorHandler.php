@@ -2,8 +2,22 @@
 
 namespace Vendi\Cache;
 
+use Vendi\Cache\Maestro;
+
 final class ErrorHandler
 {
+    private $_maestro;
+
+    public function __construct( Maestro $maestro )
+    {
+        $this->_maestro = $maestro;
+    }
+
+    public function get_maestro()
+    {
+        return $this->_maestro;
+    }
+
     /**
      * Set a global constant if an exception occurs and return exception handling
      * back to original handler.
@@ -12,9 +26,18 @@ final class ErrorHandler
      *
      * @param  \Exception $exception The exception that occurred.
      */
-    public static function handle_exception( $exception )
+    public function handle_exception( $exception )
     {
-        \Vendi\Cache\Logging::get_instance()->error( 'An exception was detected, disabling caching for this request', [ 'exception' => $exception ] );
+        $this
+            ->get_maestro()
+            ->get_logger()
+            ->error(
+                        __( 'An exception was detected, disabling caching for this request', 'vendi-cache' ),
+                        [
+                            'exception' => $exception,
+                        ]
+                    )
+            ;
 
         if( ! defined( 'VENDI_CACHE_PHP_ERROR' ) )
         {
@@ -37,18 +60,23 @@ final class ErrorHandler
      *
      * @since  1.1.5
      */
-    public static function handle_error( $errno, $errstr, $errfile = null, $errline = null, $errcontext = null )
+    public function handle_error( $errno, $errstr, $errfile = null, $errline = null, $errcontext = null )
     {
-        \Vendi\Cache\Logging::get_instance()->error(
-                                                        'An error was detected, disabling caching for this request',
-                                                        [
-                                                            'errno' => $errno,
-                                                            'errstr' => $errstr,
-                                                            'errfile' => $errfile,
-                                                            'errline' => $errline,
-                                                            'errcontext' => $errcontext,
-                                                        ]
-                                                    );
+        $this
+            ->get_maestro()
+            ->get_logger()
+            ->error(
+                        __( 'An error was detected, disabling caching for this request', 'vendi-cache' ),
+                        [
+                            'errno'      => $errno,
+                            'errstr'     => $errstr,
+                            'errfile'    => $errfile,
+                            'errline'    => $errline,
+                            'errcontext' => $errcontext,
+                        ]
+                    )
+            ;
+
 
         //Maybe?
         // if( E_WARNING === $code )
@@ -66,7 +94,6 @@ final class ErrorHandler
         //     echo $errfile;
         //     echo "<br />\n";
         //     echo $errline;
-        //     die( $errstr );
         // }
         //False means that we're not going to handle the exception here
         return false;
