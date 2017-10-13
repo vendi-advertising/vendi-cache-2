@@ -5,7 +5,7 @@ namespace Vendi\Cache\Tests\CacheBypasses;
 use Monolog\Handler\NullHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheBypasses\AbstractCacheBypass;
-use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
 
 class test_1 extends AbstractCacheBypass
@@ -111,7 +111,7 @@ class test_AbstractCacheBypass extends \PHPUnit_Framework_TestCase
         $mock = $this->_get_mock();
 
         $this->assertInstanceOf( 'Vendi\Cache\Maestro', $mock->get_maestro() );
-        $this->assertInstanceOf( 'Vendi\Cache\CacheSettingsInterface', $mock->get_cache_settings() );
+        $this->assertInstanceOf( 'Vendi\Cache\Secretary', $mock->get_cache_settings() );
         $this->assertSame( $this->_url, $mock->get_url() );
         $this->assertSame( 'a=b', $mock->get_query_string() );
         $this->assertSame( 'GET', $mock->get_method() );

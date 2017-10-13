@@ -5,7 +5,7 @@ namespace Vendi\Cache\Tests;
 use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheBypassTester;
-use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
 
 class test_CacheBypassTester extends \WP_UnitTestCase
@@ -35,7 +35,7 @@ class test_CacheBypassTester extends \WP_UnitTestCase
         $this->assertInstanceOf( 'Vendi\Cache\Maestro', $tester->get_maestro() );
         $this->assertInstanceOf( 'Symfony\Component\HttpFoundation\Request', $tester->get_request() );
         $this->assertInstanceOf( 'Monolog\Logger', $tester->get_logger() );
-        $this->assertInstanceOf( 'Vendi\Cache\CacheSettingsInterface', $tester->get_cache_settings() );
+        $this->assertInstanceOf( 'Vendi\Cache\Secretary', $tester->get_cache_settings() );
     }
 
 }

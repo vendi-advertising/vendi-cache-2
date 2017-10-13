@@ -2,7 +2,7 @@
 
 namespace Vendi\Cache\CacheBypasses;
 
-use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
 
 interface CacheBypassInterface
@@ -17,7 +17,7 @@ interface CacheBypassInterface
 
     /**
      * [get_cache_settings description]
-     * @return CacheSettingsInterface
+     * @return Secretary
      */
     public function get_cache_settings();
 

@@ -7,7 +7,7 @@ use Monolog\Logger;
 use Vendi\Cache\Auditing;
 use Vendi\Cache\CacheExclusions;
 use Vendi\Cache\CacheKeyGenerator;
-use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\Secretary;
 use Vendi\Cache\ErrorHandler;
 
 final class CacheMaster
@@ -78,7 +78,7 @@ final class CacheMaster
 
     /**
      * [get_cache_settings description]
-     * @return CacheSettingsInterface
+     * @return Secretary
      */
     public function get_cache_settings()
     {

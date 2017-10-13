@@ -8,14 +8,6 @@ use Naneau\SemVer\Parser;
 use Naneau\SemVer\Version\Versionable;
 use SGH\Comparable\SortFunctions;
 
-// use Assert\Assertion;
-// use Monolog\Logger;
-// use Symfony\Component\HttpFoundation\Request;
-// use Vendi\Cache\CacheMaster;
-// use Vendi\Cache\CacheSettingsInterface;
-// use Vendi\Cache\Maestro;
-// use Vendi\Cache\VendiMonoLoggger;
-
 class PluginUpdater
 {
     private $_maestro = null;

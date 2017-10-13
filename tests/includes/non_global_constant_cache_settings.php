@@ -2,9 +2,9 @@
 
 namespace Vendi\Cache\Tests;
 
-use Vendi\Cache\DefaultSettings;
+use Vendi\Cache\Secretary;
 
-final class non_global_constant_cache_settings extends DefaultSettings
+final class non_global_constant_cache_settings extends Secretary
 {
     private $_CONSTANTS = array();
 

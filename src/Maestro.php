@@ -10,7 +10,7 @@ use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheMaster;
 use Vendi\Cache\CacheSettings;
-use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\Secretary;
 use Vendi\Cache\DefaultUpdater;
 use Vendi\Cache\UpdaterInterface;
 use Vendi\Cache\VendiMonoLoggger;
@@ -88,10 +88,10 @@ final class Maestro
     /**
      * Use the supplied cache settings.
      *
-     * @param  CacheSettingsInterface $cache_settings The Cache Settings to use.
+     * @param  Secretary $cache_settings The Cache Settings to use.
      * @return Maestro
      */
-    public function with_cache_settings( CacheSettingsInterface $cache_settings )
+    public function with_cache_settings( Secretary $cache_settings )
     {
         $this->_cache_settings = $cache_settings;
         return $this;
@@ -154,11 +154,11 @@ final class Maestro
     /**
      * Get the current or default Cache Settings.
      *
-     * @return CacheSettingsInterface
+     * @return Secretary
      */
     public function get_cache_settings()
     {
-        if( ! $this->_cache_settings instanceof CacheSettingsInterface )
+        if( ! $this->_cache_settings instanceof Secretary )
         {
             $this->_cache_settings = self::get_default_cache_settings();
         }
@@ -203,11 +203,11 @@ final class Maestro
     /**
      * Get an instance of Maestro with all defaults applied.
      *
-     * @param  CacheSettingsInterface|null $cache_settings Optional. Custom CacheSettings.
+     * @param  Secretary|null $cache_settings Optional. Custom CacheSettings.
      *
      * @return Maestro
      */
-    public static function get_default_instance( CacheSettingsInterface $cache_settings = null )
+    public static function get_default_instance( Secretary $cache_settings = null )
     {
         if( null === $cache_settings )
         {
@@ -243,7 +243,7 @@ final class Maestro
         Assertion::notNull( $this->get_adapter() );
         Assertion::notNull( $this->get_logger() );
 
-        Assertion::isInstanceOf( $this->get_cache_settings(), 'Vendi\Cache\CacheSettingsInterface' );
+        Assertion::isInstanceOf( $this->get_cache_settings(), 'Vendi\Cache\Secretary' );
         Assertion::isInstanceOf( $this->get_adapter(), '\League\Flysystem\AdapterInterface' );
         Assertion::isInstanceOf( $this->get_logger(), 'Monolog\Logger'  );
 
@@ -256,11 +256,11 @@ final class Maestro
     /**
      * Get the default cache settings.
      *
-     * @return CacheSettingsInterface
+     * @return Secretary
      */
     public static function get_default_cache_settings()
     {
-        return new DefaultSettings();
+        return new Secretary();
     }
 
     /**
@@ -269,7 +269,7 @@ final class Maestro
      * @param  CacheSettings $cache_settings The settings to use for the adapter.
      * @return AdapterInterface
      */
-    public static function get_default_adapter( CacheSettingsInterface $cache_settings )
+    public static function get_default_adapter( Secretary $cache_settings )
     {
         return new Local(
                             //The folder to cache to
@@ -289,10 +289,10 @@ final class Maestro
     /**
      * Get the default Monolog Logger using the supplied settings.
      *
-     * @param  CacheSettingsInterface $cache_settings The settings to use for the adapter.
+     * @param  Secretary $cache_settings The settings to use for the adapter.
      * @return Logger
      */
-    public static function get_default_logger( CacheSettingsInterface $cache_settings )
+    public static function get_default_logger( Secretary $cache_settings )
     {
         return new VendiMonoLoggger( $cache_settings );
     }

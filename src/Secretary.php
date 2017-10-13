@@ -4,7 +4,7 @@ namespace Vendi\Cache;
 
 use Assert\Assertion;
 
-class DefaultSettings implements CacheSettingsInterface
+class Secretary
 {
     private static $_log_folder_name = '__log__';
 

@@ -6,7 +6,7 @@ use Assert\Assertion;
 use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheMaster;
-use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
 use Vendi\Cache\VendiMonoLoggger;
 
@@ -39,7 +39,7 @@ final class CacheBypassTester
 
     /**
      * [get_cache_settings description]
-     * @return CacheSettingsInterface
+     * @return Secretary
      */
     public function get_cache_settings()
     {
@@ -65,7 +65,7 @@ final class CacheBypassTester
         Assertion::isInstanceOf( $maestro,  'Vendi\Cache\Maestro' );
         Assertion::isInstanceOf( $request,  'Symfony\Component\HttpFoundation\Request' );
         Assertion::isInstanceOf( $logger,   'Monolog\Logger' );
-        Assertion::isInstanceOf( $settings, 'Vendi\Cache\CacheSettingsInterface' );
+        Assertion::isInstanceOf( $settings, 'Vendi\Cache\Secretary' );
 
         $tests = [
                     'MaintenanceMode',

@@ -3,7 +3,7 @@
 namespace Vendi\Cache\CacheBypasses;
 
 use Assert\Assertion;
-use Vendi\Cache\CacheSettingsInterface;
+use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
 
 abstract class AbstractCacheBypass implements CacheBypassInterface
@@ -30,7 +30,7 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
 
     /**
      * Get the cache settings associated with the current request.
-     * @return CacheSettingsInterface
+     * @return Secretary
      */
     final public function get_cache_settings()
     {

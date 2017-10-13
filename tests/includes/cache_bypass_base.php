@@ -4,7 +4,6 @@ namespace Vendi\Cache\Tests;
 
 use Monolog\Handler\NullHandler;
 use Symfony\Component\HttpFoundation\Request;
-use Vendi\Cache\DefaultSettings;
 use Vendi\Cache\Maestro;
 
 class cache_bypass_base extends \PHPUnit_Framework_TestCase
