@@ -12,10 +12,9 @@ php:
   - 7.1
   - nightly
 
-before_install:
-  - source .travis/xdebug.sh
-  - xdebug-disable
-
 script:
   - cd $TRAVIS_BUILD_DIR
   - ./run-phpunit.sh --user travis --database wordpress_test --password "" --create-database
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
