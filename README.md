@@ -1,6 +1,7 @@
 # Vendi Cache - 2.0
 
 [![Build Status](https://travis-ci.org/vendi-advertising/vendi-cache-2.svg?branch=master)](https://travis-ci.org/vendi-advertising/vendi-cache-2)
+[![codecov](https://codecov.io/gh/vendi-advertising/vendi-cache-2/branch/master/graph/badge.svg)](https://codecov.io/gh/vendi-advertising/vendi-cache-2)
 
 A complete rewrite of Vendi Cache (formerly Wordfence Falcon Cache). The goal of this rewrite is to hopefully replace the existing Vendi Cache 1.0 with a feature-matched version that has been rewritten from scratch, includes way more unit tests and can better handle PHP warning and errors that the previous automatically disabled caching for.
 
