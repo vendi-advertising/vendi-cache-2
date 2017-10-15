@@ -8,7 +8,7 @@ use Vendi\Cache\CacheBypassTester;
 use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
 
-class test_CacheBypassTester extends \WP_UnitTestCase
+class test_CacheBypassTester extends vendi_cache_test_base
 {
 
     /**

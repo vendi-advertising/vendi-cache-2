@@ -4,7 +4,7 @@ namespace Vendi\Cache\Tests;
 
 use Vendi\Cache\Maestro;
 
-class test_CacheStats extends \PHPUnit_Framework_TestCase
+class test_CacheStats extends vendi_cache_test_base
 {
     /**
      * @dataProvider provider_get_all_increments

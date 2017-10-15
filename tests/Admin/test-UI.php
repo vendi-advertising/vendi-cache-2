@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\Maestro;
 use Vendi\Cache\Admin\UI;
 
-class test_UI extends \WP_UnitTestCase
+class test_UI extends vendi_cache_test_base
 {
 
     /**

@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheKeyGenerator;
 use Vendi\Cache\Maestro;
 
-class test_CacheKeyGenerator extends \WP_UnitTestCase
+class test_CacheKeyGenerator extends vendi_cache_test_base
 {
 
     private function _get_cache_key_generator_from_server_vars( $server = array() )

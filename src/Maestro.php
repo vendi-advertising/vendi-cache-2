@@ -99,10 +99,14 @@ final class Maestro
         return $this;
     }
 
-    public function get_admin_ui()
+    public function get_admin_ui( $do_not_create_new = false )
     {
         if( ! $this->_admin_ui instanceof UI )
         {
+            if( $do_not_create_new )
+            {
+                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_admin_ui', 'get_admin_ui' ) );
+            }
             $this->_admin_ui = self::get_default_admin_ui( $this );
         }
 
@@ -113,10 +117,14 @@ final class Maestro
      * [get_request description]
      * @return Request
      */
-    public function get_request()
+    public function get_request( $do_not_create_new = false )
     {
         if( ! $this->_request instanceof Request )
         {
+            if( $do_not_create_new )
+            {
+                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_request', 'get_request' ) );
+            }
             $this->_request = self::get_default_request();
         }
 
@@ -128,10 +136,14 @@ final class Maestro
      *
      * @return Logger
      */
-    public function get_logger()
+    public function get_logger( $do_not_create_new = false )
     {
         if( ! $this->_logger instanceof LoggerInterface )
         {
+            if( $do_not_create_new )
+            {
+                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_logger', 'get_logger' ) );
+            }
             $this->_logger = self::get_default_logger( $this->get_secretary() );
         }
 
@@ -143,10 +155,14 @@ final class Maestro
      *
      * @return AdapterInterface
      */
-    public function get_adapter()
+    public function get_adapter( $do_not_create_new = false )
     {
         if( ! $this->_adapter instanceof AdapterInterface )
         {
+            if( $do_not_create_new )
+            {
+                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_adapter', 'get_adapter' ) );
+            }
             $this->_adapter = self::get_default_adapter( $this->get_secretary() );
         }
 
@@ -158,10 +174,14 @@ final class Maestro
      *
      * @return Secretary
      */
-    public function get_secretary()
+    public function get_secretary( $do_not_create_new = false )
     {
         if( ! $this->_secretary instanceof Secretary )
         {
+            if( $do_not_create_new )
+            {
+                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_secretary', 'get_secretary' ) );
+            }
             $this->_secretary = self::get_default_secretary();
         }
 
@@ -173,10 +193,14 @@ final class Maestro
      *
      * @return Filesystem
      */
-    public function get_file_system()
+    public function get_file_system( $do_not_create_new = false )
     {
         if( ! $this->_file_system instanceof Filesystem )
         {
+            if( $do_not_create_new )
+            {
+                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_file_system', 'get_file_system' ) );
+            }
             $this->_file_system = new Filesystem(
                                                     $this->get_adapter(),
                                                     [
@@ -186,6 +210,30 @@ final class Maestro
         }
 
         return $this->_file_system;
+    }
+
+    /**
+     * Get the CacheMaster object bound to all of this object's properties.
+     *
+     * NOTE: You must call with_secretary(), with_file_system_adapter() and
+     * with_logger() before calling this method if you wish to override the
+     * defaults.
+     *
+     * @return CacheMaster
+     */
+    public function get_cache_master( $do_not_create_new = false )
+    {
+        //Already setup, just return
+        if( ! $this->_cache_master instanceof CacheMaster  )
+        {
+            if( $do_not_create_new )
+            {
+                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_cache_master', 'get_cache_master' ) );
+            }
+            $this->_cache_master = new CacheMaster( $this );
+        }
+
+        return $this->_cache_master;
     }
 
     public static function get_default_admin_ui( Maestro $maestro )
@@ -221,38 +269,6 @@ final class Maestro
                 ->with_file_system_adapter( self::get_default_adapter( $cache_settings ) )
                 ->with_logger( self::get_default_logger( $cache_settings ) )
             ;
-    }
-
-    /**
-     * Get the CacheMaster object bound to all of this object's properties.
-     *
-     * NOTE: You must call with_secretary(), with_file_system_adapter() and
-     * with_logger() before calling this method if you wish to override the
-     * defaults.
-     *
-     * @return CacheMaster
-     */
-    public function get_cache_master()
-    {
-        //Already setup, just return
-        if( $this->_cache_master instanceof CacheMaster  )
-        {
-            return $this->_cache_master;
-        }
-
-        //Sanity check that we have things setup
-        Assertion::notNull( $this->get_secretary() );
-        Assertion::notNull( $this->get_adapter() );
-        Assertion::notNull( $this->get_logger() );
-
-        Assertion::isInstanceOf( $this->get_secretary(), 'Vendi\Cache\Secretary' );
-        Assertion::isInstanceOf( $this->get_adapter(),   'League\Flysystem\AdapterInterface' );
-        Assertion::isInstanceOf( $this->get_logger(),    'Psr\Log\LoggerInterface'  );
-
-        //Create and return our object bound to this
-        $this->_cache_master = new CacheMaster( $this );
-
-        return $this->_cache_master;
     }
 
     /**
