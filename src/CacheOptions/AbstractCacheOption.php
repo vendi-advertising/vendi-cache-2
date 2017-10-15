@@ -16,7 +16,7 @@ abstract class AbstractCacheOption implements CacheOptionInterface
 
     public function get_true_value()
     {
-        throw new \Exception( 'Child classes that are checkboxes must implement this method' );
+        throw new \Exception( __( 'Child classes that are checkboxes must implement this method', 'vendi-cache' ) );
     }
 
     public function is_value_valid( $value )
@@ -26,10 +26,10 @@ abstract class AbstractCacheOption implements CacheOptionInterface
 
         if( in_array( $value, array_keys( $this->get_potential_options() ) ) )
         {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public function get_html( )
