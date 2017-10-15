@@ -25,14 +25,14 @@ class test_Secretary extends \PHPUnit_Framework_TestCase
         else
         {
             $this->expectException( $exception );
-            if ( '' !== $message )
-            {
-                $this->expectExceptionMessage( $message );
-            }
-            if ( null !== $code )
-            {
-                $this->expectExceptionCode( $code );
-            }
+            // if ( '' !== $message )
+            // {
+            //     $this->expectExceptionMessage( $message );
+            // }
+            // if ( null !== $code )
+            // {
+            //     $this->expectExceptionCode( $code );
+            // }
         }
     }
 
