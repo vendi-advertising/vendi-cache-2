@@ -25,14 +25,14 @@ class test_Secretary extends \PHPUnit_Framework_TestCase
         else
         {
             $this->expectException( $exception );
-            // if ( '' !== $message )
-            // {
-            //     $this->expectExceptionMessage( $message );
-            // }
-            // if ( null !== $code )
-            // {
-            //     $this->expectExceptionCode( $code );
-            // }
+            if ( '' !== $message )
+            {
+                $this->expectExceptionMessage( $message );
+            }
+            if ( null !== $code )
+            {
+                $this->expectExceptionCode( $code );
+            }
         }
     }
 
@@ -167,7 +167,7 @@ class test_Secretary extends \PHPUnit_Framework_TestCase
     public function test_get_function_value__too_many_arguments()
     {
 
-        $this->setExpectedException( '\Exception' );
+        $this->setExpectedException( '\Exception', 'Custom get_function_value() only support a maximum of 4 arguments' );
 
         Maestro::get_default_instance()
                 ->get_secretary()
