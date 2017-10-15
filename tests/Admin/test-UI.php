@@ -89,6 +89,8 @@ class test_UI extends \WP_UnitTestCase
         $admin_ui = new UI( Maestro::get_default_instance() );
         $admin_ui->handle_page_routing( false );
 
+        $this->assertTrue( true );
+
         // throw new \PHPUnit\Framework\Warning( 'This is not really a test, only a placeholder to run code.' );
     }
 

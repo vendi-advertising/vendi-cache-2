@@ -108,6 +108,7 @@ class test_CacheStats extends \PHPUnit_Framework_TestCase
     {
         $maestro = Maestro::get_default_instance();
         \Vendi\Cache\CacheStats::generate_from_file_system( $maestro );
+        $this->assertTrue( true );
     }
 
     public function provider_get_all_increments()
