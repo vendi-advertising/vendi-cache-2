@@ -38,18 +38,24 @@ final class CacheMaster
      * [get_updater description]
      * @return UpdaterInterface
      */
-    public function get_updater()
+    public function get_updater($do_not_create_new = false)
     {
         if (! $this->_updater instanceof PluginUpdater) {
+            if ($do_not_create_new) {
+                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_updater', 'get_updater'));
+            }
             $this->_updater = new PluginUpdater($this->get_maestro());
         }
 
         return $this->_updater;
     }
 
-    public function get_cache_key_generator()
+    public function get_cache_key_generator($do_not_create_new = false)
     {
         if (! $this->_cache_key_generator instanceof CacheKeyGenerator) {
+            if ($do_not_create_new) {
+                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_cache_key_generator', 'get_cache_key_generator'));
+            }
             $this->_cache_key_generator = new CacheKeyGenerator($this->get_maestro());
         }
 
@@ -94,7 +100,10 @@ final class CacheMaster
 
     public function log_request_as_not_cacheable(array $args)
     {
-        $this->get_logger()->info(__('Request not cacheable', 'vendi-cache'), $args);
+        $this
+            ->get_logger()
+            ->info(__('Request not cacheable', 'vendi-cache'), $args)
+        ;
     }
 
     /**
@@ -107,8 +116,15 @@ final class CacheMaster
      */
     public function is_user_logged_in()
     {
-        $user = \wp_get_current_user();
-        return $user->exists();
+        $secretary = $this->get_secretary();
+        if ($secretary->is_function_defined('wp_get_current_user')) {
+            $user = $secretary->get_function_value('wp_get_current_user');
+            if ($user instanceof \WP_User) {
+                return $user->exists();
+            }
+        }
+
+        return false;
     }
 
     public function _set_ajax_only_hooks()
