@@ -6,12 +6,11 @@ use Webmozart\PathUtil\Path;
 
 final class MaintenanceMode extends AbstractCacheBypass
 {
-    public function is_cacheable( )
+    public function is_cacheable()
     {
         $settings = $this->get_secretary();
 
-        if( ! $settings->is_constant_defined( 'ABSPATH' ) )
-        {
+        if (! $settings->is_constant_defined('ABSPATH')) {
             $this->log_request_as_not_cacheable(
                                                     [
                                                         'reason' => 'Maintenance mode',
@@ -23,11 +22,10 @@ final class MaintenanceMode extends AbstractCacheBypass
             return false;
         }
 
-        $abs = $settings->get_constant_value( 'ABSPATH' );
-        $test_file = Path::join( $abs, '.maintenance' );
+        $abs = $settings->get_constant_value('ABSPATH');
+        $test_file = Path::join($abs, '.maintenance');
 
-        if( file_exists( $test_file ) )
-        {
+        if (file_exists($test_file)) {
             $this->log_request_as_not_cacheable(
                                                     [
                                                         'reason' => 'Maintenance mode',
@@ -38,8 +36,7 @@ final class MaintenanceMode extends AbstractCacheBypass
             return false;
         }
 
-        if( apply_filters( 'enable_maintenance_mode', false, 0 ) )
-        {
+        if (apply_filters('enable_maintenance_mode', false, 0)) {
             $this->log_request_as_not_cacheable(
                                                     [
                                                         'reason' => 'Maintenance mode',

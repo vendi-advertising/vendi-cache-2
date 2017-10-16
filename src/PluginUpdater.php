@@ -12,7 +12,7 @@ class PluginUpdater
 {
     private $_maestro = null;
 
-    public function __construct( Maestro $maestro )
+    public function __construct(Maestro $maestro)
     {
         $this->_maestro = $maestro;
     }
@@ -30,16 +30,13 @@ class PluginUpdater
     {
         $updates = $this->get_all_updates();
 
-        Assertion::isArray( $updates );
+        Assertion::isArray($updates);
 
-        if( count( $updates ) > 0 )
-        {
-            foreach( $updates as $update )
-            {
-                Assertion::isInstanceOf( $update, 'Vendi\Cache\SingleUpdateInterface' );
+        if (count($updates) > 0) {
+            foreach ($updates as $update) {
+                Assertion::isInstanceOf($update, 'Vendi\Cache\SingleUpdateInterface');
 
-                if( Compare::smallerThan( $this->get_current_version(), $update->get_update_version() ) )
-                {
+                if (Compare::smallerThan($this->get_current_version(), $update->get_update_version())) {
                     return true;
                 }
             }
@@ -51,13 +48,10 @@ class PluginUpdater
     public function perform_updates()
     {
         $updates = $this->get_all_updates();
-        foreach( $updates as $update )
-        {
-            if( Compare::smallerThan( $this->get_current_version(), $update->get_update_version() ) )
-            {
+        foreach ($updates as $update) {
+            if (Compare::smallerThan($this->get_current_version(), $update->get_update_version())) {
                 $result = $update->perform_update();
-                if( true === $result )
-                {
+                if (true === $result) {
                     $this
                         ->get_maestro()
                         ->get_secretary()
@@ -66,7 +60,6 @@ class PluginUpdater
                                                 $update->get_update_version()
                                             )
                     ;
-
                 }
             }
         }
@@ -76,14 +69,14 @@ class PluginUpdater
     {
         $ret = [];
 
-        SortFunctions::sort( $ret );
+        SortFunctions::sort($ret);
 
         return $ret;
     }
 
     public function get_first_ever_version()
     {
-        return Parser::parse( '2.0.0' );
+        return Parser::parse('2.0.0');
     }
 
     public function get_current_version()
@@ -91,19 +84,17 @@ class PluginUpdater
         $value = $this
                     ->get_maestro()
                     ->get_secretary()
-                    ->get_function_value( 'get_site_option', 'VENDI_CACHE_V2_VERSION' )
+                    ->get_function_value('get_site_option', 'VENDI_CACHE_V2_VERSION')
                 ;
 
-        if( ! $value )
-        {
+        if (! $value) {
             $value = $this->get_first_ever_version();
         }
 
-        if( $value instanceof Versionable )
-        {
+        if ($value instanceof Versionable) {
             return $value;
         }
 
-        return Parser::parse( $value );
+        return Parser::parse($value);
     }
 }

@@ -7,12 +7,11 @@ use Vendi\Cache\Maestro;
 
 class UI
 {
-
     const URL_SLUG = 'vendi-cache-2-settings';
 
     private $_maestro;
 
-    public function __construct( Maestro $maestro )
+    public function __construct(Maestro $maestro)
     {
         $this->_maestro = $maestro;
     }
@@ -29,7 +28,7 @@ class UI
     public function get_request()
     {
         $request = $this->get_maestro()->get_request();
-        Assertion::isInstanceOf( $request, 'Symfony\Component\HttpFoundation\Request' );
+        Assertion::isInstanceOf($request, 'Symfony\Component\HttpFoundation\Request');
         return $request;
     }
 
@@ -38,11 +37,11 @@ class UI
         return $this
                 ->get_request()
                 ->query
-                ->get( 'tab', '' )
+                ->get('tab', '')
             ;
     }
 
-    public function get_tab_url( $tab )
+    public function get_tab_url($tab)
     {
         return add_query_arg(
                                 [
@@ -50,7 +49,7 @@ class UI
                                     'tab'  => $tab,
 
                                 ],
-                                admin_url( 'options-general.php' )
+                                admin_url('options-general.php')
                             );
     }
 
@@ -72,19 +71,17 @@ class UI
 
         $ret = '<ul class="vendi-cache-2-admin-tabs">';
 
-        foreach( $all_tabs as $tab_key => $tab_name )
-        {
+        foreach ($all_tabs as $tab_key => $tab_name) {
             $selected = '';
 
-            if( $current_tab === $tab_key )
-            {
+            if ($current_tab === $tab_key) {
                 $selected = ' class="selected"';
             }
 
             $ret .= sprintf(
                                 '<li%3$s><a href="%1$s">%2$s</a></li>',
-                                esc_url( $this->get_tab_url( $tab_key ) ),
-                                esc_html( $tab_name ),
+                                esc_url($this->get_tab_url($tab_key)),
+                                esc_html($tab_name),
                                 $selected
                         );
         }
@@ -93,55 +90,51 @@ class UI
         return $ret;
     }
 
-    public function handle_post( $current_tab )
+    public function handle_post($current_tab)
     {
-        check_admin_referer( "vendi-cache-$current_tab" );
+        check_admin_referer("vendi-cache-$current_tab");
     }
 
-    public function handle_page_routing( $echo = true )
+    public function handle_page_routing($echo = true)
     {
         $current_tab = $this->get_current_tab();
 
         $all_tabs = $this->get_all_tabs_associative();
 
-        if( ! array_key_exists( $current_tab, $all_tabs ) )
-        {
-            $keys = array_keys( $all_tabs );
-            $current_tab = reset( $keys );
+        if (! array_key_exists($current_tab, $all_tabs)) {
+            $keys = array_keys($all_tabs);
+            $current_tab = reset($keys);
         }
 
-        if( 'POST' === $this->get_request()->getMethod() )
-        {
-            $this->handle_post( $current_tab );
+        if ('POST' === $this->get_request()->getMethod()) {
+            $this->handle_post($current_tab);
         }
 
-        $ret = $this->get_html_for_tab( $current_tab );
-        if( $echo )
-        {
+        $ret = $this->get_html_for_tab($current_tab);
+        if ($echo) {
             echo $ret;
         }
 
         return $ret;
     }
 
-    public function get_html_for_tab( $current_tab )
+    public function get_html_for_tab($current_tab)
     {
         $ret = '';
 
         $template_options = [];
 
-        switch( $current_tab )
-        {
+        switch ($current_tab) {
             case 'cache-mode':
                 $template_options = [
-                                        $this->get_maestro()->get_secretary()->get_named_option( 'CacheMode' ),
+                                        $this->get_maestro()->get_secretary()->get_named_option('CacheMode'),
                                     ];
                 break;
 
             case 'cache-options':
                 $template_options = [
-                                        $this->get_maestro()->get_secretary()->get_named_option( 'DebugComment' ),
-                                        $this->get_maestro()->get_secretary()->get_named_option( 'DebugLogging' ),
+                                        $this->get_maestro()->get_secretary()->get_named_option('DebugComment'),
+                                        $this->get_maestro()->get_secretary()->get_named_option('DebugLogging'),
                                     ];
                 break;
 
@@ -153,7 +146,7 @@ class UI
         $ret .= '<div class="wrap">';
         $ret .= sprintf(
                         '<h1>%1$s</h1>',
-                        esc_html( __( 'Vendi Cache Settings', 'vendi-cache' ) )
+                        esc_html(__('Vendi Cache Settings', 'vendi-cache'))
                 );
 
         $ret .= $this->get_tabs();
@@ -161,14 +154,12 @@ class UI
         $ret .= '<div class="vendi-cache-2-admin-wrap">';
         $ret .= '<form method="post">';
 
-        $ret .= wp_nonce_field( "vendi-cache-$current_tab", '_wpnonce', true, false );
+        $ret .= wp_nonce_field("vendi-cache-$current_tab", '_wpnonce', true, false);
 
-        if( count( $template_options ) > 0 )
-        {
+        if (count($template_options) > 0) {
             $ret .= '<div class="fields outer-box">';
 
-            foreach( $template_options as $template_option )
-            {
+            foreach ($template_options as $template_option) {
                 $ret .= '<p>';
                 $ret .= $template_option->get_html();
                 $ret .= '</p>';

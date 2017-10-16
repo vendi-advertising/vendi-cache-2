@@ -25,16 +25,16 @@ class DebugLogging extends AbstractCacheOption
     public function get_potential_options()
     {
         return [
-                    self::LOGGING_OFF               => __( 'Debug logging off',         'vendi-cache' ),
-                    self::LOG_TO_DATEBASE           => __( 'Log to database',           'vendi-cache' ),
-                    self::LOG_TO_FILE               => __( 'Log to file',               'vendi-cache' ),
-                    self::LOG_TO_DATEBASE_AND_FILE  => __( 'Log to datebase and file',  'vendi-cache' ),
+                    self::LOGGING_OFF               => __('Debug logging off', 'vendi-cache'),
+                    self::LOG_TO_DATEBASE           => __('Log to database', 'vendi-cache'),
+                    self::LOG_TO_FILE               => __('Log to file', 'vendi-cache'),
+                    self::LOG_TO_DATEBASE_AND_FILE  => __('Log to datebase and file', 'vendi-cache'),
             ];
     }
 
     public function get_description()
     {
-        return __( 'Debug Logging', 'vendi-cache' );
+        return __('Debug Logging', 'vendi-cache');
     }
 
     public function get_storage_name()
