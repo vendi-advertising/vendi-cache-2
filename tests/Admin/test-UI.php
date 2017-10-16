@@ -116,38 +116,4 @@ class test_UI extends vendi_cache_test_base
         //this is more proper.
         return substr( WP_PLUGIN_URL, 0, strpos( WP_PLUGIN_URL, PLUGINDIR ) - 1 ) . '/';
     }
-
-     /**
-     * Determine if two associative arrays are similar
-     *
-     * Both arrays must have the same indexes with identical values
-     * without respect to key ordering.
-     *
-     * @see  https://stackoverflow.com/a/3843768/231316
-     *
-     * @param array $a
-     * @param array $b
-     * @return bool
-     */
-    private function arrays_are_similar( $a, $b )
-    {
-        // if the indexes don't match, return immediately
-        if( count( array_diff_assoc( $a, $b ) ) )
-        {
-            return false;
-        }
-
-        // we know that the indexes, but maybe not values, match.
-        // compare the values between the two arrays
-        foreach( $a as $k => $v )
-        {
-            if( $v !== $b[ $k ] )
-            {
-                return false;
-            }
-        }
-
-        // we have identical indexes, and no unequal values
-        return true;
-    }
 }
