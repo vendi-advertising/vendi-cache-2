@@ -3,12 +3,13 @@
 namespace Vendi\Cache;
 
 use League\Flysystem\Filesystem;
+use League\Flysystem\Plugin\ListPaths;
 use Psr\Log\LoggerInterface;
 use Vendi\Cache\Auditing;
 use Vendi\Cache\CacheExclusions;
 use Vendi\Cache\CacheKeyGenerator;
-use Vendi\Cache\Secretary;
 use Vendi\Cache\ErrorHandler;
+use Vendi\Cache\Secretary;
 
 final class CacheMaster
 {
@@ -116,15 +117,8 @@ final class CacheMaster
      */
     public function is_user_logged_in()
     {
-        $secretary = $this->get_secretary();
-        if ($secretary->is_function_defined('wp_get_current_user')) {
-            $user = $secretary->get_function_value('wp_get_current_user');
-            if ($user instanceof \WP_User) {
-                return $user->exists();
-            }
-        }
-
-        return false;
+        $user = wp_get_current_user();
+        return $user->exists();
     }
 
     public function _set_ajax_only_hooks()
@@ -222,6 +216,8 @@ final class CacheMaster
         if (false === $test_runner->test_request()) {
             return false;
         }
+
+        return true;
     }
 
     public function _flag_request_as_cacheable()
@@ -531,6 +527,11 @@ final class CacheMaster
         return $this->get_file_system()->delete($relative_file_path);
     }
 
+    public function delete_dir($relative_dir_path)
+    {
+        return $this->get_file_system()->deleteDir($relative_dir_path);
+    }
+
     public function write_file($relative_file_path, $contents)
     {
         return $this->get_file_system()->write($relative_file_path, $contents);
@@ -560,15 +561,20 @@ final class CacheMaster
         //We don't want to delete
         $log_file_abs = \Webmozart\PathUtil\Path::canonicalize($this->get_secretary()->get_log_file_abs());
 
-        foreach ($child_paths as $dir) {
-            $test_file_path = \Webmozart\PathUtil\Path::join(
-                                                                $this->get_file_system()->getAdapter()->applyPathPrefix($dir),
-                                                                $this->get_secretary()->get_log_file_name()
-                                                            );
+        $found_log_file = false;
 
-            if ($test_file_path === $log_file_abs) {
-                $this->get_logger()->debug('Skipping log directory', [ 'path' => $dir, 'is_dir' => is_dir($absolute_path) ]);
-                continue;
+        foreach ($child_paths as $dir) {
+            if (! $found_log_file) {
+                $test_file_path = \Webmozart\PathUtil\Path::join(
+                                                                    $this->get_file_system()->getAdapter()->applyPathPrefix($dir),
+                                                                    $this->get_secretary()->get_log_file_name()
+                                                                );
+
+                if ($test_file_path === $log_file_abs) {
+                    $this->get_logger()->debug('Skipping log directory', [ 'path' => $dir, 'is_dir' => is_dir($absolute_path) ]);
+                    $found_log_file = true;
+                    continue;
+                }
             }
 
             $result = $this->get_file_system()->deleteDir($dir);

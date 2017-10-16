@@ -2,14 +2,71 @@
 
 namespace Vendi\Cache\Tests;
 
+use League\Flysystem\Adapter\Local;
+use Monolog\Handler\NullHandler;
 use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheMaster;
 use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
 
-class test_CacheMaster extends vendi_cache_test_base
+/**
+ * We need to extend from \WP_UnitTestCase because we're calling WP core
+ * functions and we need cleanup of stuff.
+ */
+class test_CacheMaster extends \WP_UnitTestCase
 {
+    private $_dirs = array();
+
+    private $_files = array();
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        foreach( $this->_files as $f )
+        {
+            if( is_file( $f ) )
+            {
+                unlink( $f );
+            }
+        }
+
+        foreach( $this->_dirs as $d )
+        {
+            if( is_dir( $d ) )
+            {
+                rmdir( $d );
+            }
+        }
+    }
+
+    //https://stackoverflow.com/a/1707859/231316
+    private function _create_temp_dir()
+    {
+        $tempfile = tempnam( sys_get_temp_dir(), 'VC2' );
+        if( false === $tempfile )
+        {
+            throw new \Exception( 'Could not create file for temporary directory' );
+        }
+
+        if( file_exists( $tempfile ) )
+        {
+            unlink( $tempfile );
+        }
+
+        mkdir( $tempfile );
+
+        if( ! is_dir( $tempfile ) )
+        {
+            throw new \Exception( 'Could not create temporary directory' );
+        }
+
+        $this->_dirs[] = $tempfile;
+
+        return $tempfile;
+    }
+
     private function _get_obj( Maestro $maestro = null )
     {
         if( null === $maestro )
@@ -26,6 +83,45 @@ class test_CacheMaster extends vendi_cache_test_base
                 ;
 
         return new CacheMaster( $maestro );
+    }
+
+    private function _get_obj_with_custom_filesystem( $dir )
+    {
+        $adapter = new Local(
+                                $dir,
+
+                                //Use locks during write (default)
+                                LOCK_EX,
+
+                                //Throw exception on symlinks (default)
+                                Local::DISALLOW_LINKS,
+
+                                //Special file system permissions
+                                [
+                                    'file' =>
+                                                [
+                                                    'public'  => 0664,
+                                                    'private' => 0664,
+                                                ],
+                                    'dir' =>
+                                                [
+                                                    'public'  => 0777,
+                                                    'private' => 0777,
+                                                ]
+                                ]
+                            );
+
+        $maestro =  ( new Maestro() )
+                        ->with_file_system_adapter( $adapter )
+                        ->with_logger(
+                                        new \Monolog\Logger(
+                                                        'vendi-cache-noop',
+                                                        array( new NullHandler( ) )
+                                                    )
+                         )
+                    ;
+
+        return $this->_get_obj( $maestro );
     }
 
     /**
@@ -67,48 +163,84 @@ class test_CacheMaster extends vendi_cache_test_base
     }
 
     /**
+     * @covers Vendi\Cache\CacheMaster::is_request_cacheable()
+     */
+    public function test_is_request_cacheable()
+    {
+        //No one should be logged in by default
+        $cache_master = $this->_get_obj();
+        $this->assertTrue( $cache_master->is_request_cacheable() );
+
+        wp_set_current_user( 1 );
+        $cache_master = $this->_get_obj();
+        $this->assertFalse( $cache_master->is_request_cacheable() );
+    }
+
+    /**
      * @covers Vendi\Cache\CacheMaster::is_user_logged_in()
      */
-    public function test__is_user_logged_in()
+    public function test_is_user_logged_in()
     {
-        $cache_master = $this->_get_obj_with_custom_secretary();
-
-        //This global function should not exist
-        $this->assertFalse( $cache_master->get_secretary()->is_function_defined( 'wp_get_current_user' ) );
+        //No one should be logged in by default
+        $cache_master = $this->_get_obj();
         $this->assertFalse( $cache_master->is_user_logged_in() );
 
-        //Define the function but return an invalid value
-        $cache_master->get_secretary()->set_function(
-                                                        'wp_get_current_user',
-                                                        function()
-                                                        {
-                                                            false;
-                                                        }
-                                                    );
-        $this->assertFalse( $cache_master->is_user_logged_in() );
-
-        //Re-define the function, return a valid value but without an ID
-        $cache_master->get_secretary()->set_function(
-                                                        'wp_get_current_user',
-                                                        function()
-                                                        {
-                                                            return new \WP_User();
-                                                        }
-                                                    );
-        $this->assertFalse( $cache_master->is_user_logged_in() );
-
-        //Finally, return a user with an ID actually set which WP considers to be
-        //a valid user.
-        $cache_master->get_secretary()->set_function(
-                                                        'wp_get_current_user',
-                                                        function()
-                                                        {
-                                                            $ret = new \WP_User();
-                                                            $ret->ID = 1;
-                                                            return $ret;
-                                                        }
-                                                    );
+        //Log a user in
+        wp_set_current_user( 1 );
+        $cache_master = $this->_get_obj();
         $this->assertTrue( $cache_master->is_user_logged_in() );
+    }
+
+    /**
+     * @covers Vendi\Cache\CacheMaster::file_exists()
+     * @covers Vendi\Cache\CacheMaster::write_file()
+     * @covers Vendi\Cache\CacheMaster::delete_file()
+     */
+    public function test__file_io()
+    {
+        $dir = $this->_create_temp_dir();
+        $this->assertTrue( is_dir( $dir ) );
+
+        $obj = $this->_get_obj_with_custom_filesystem( $dir );
+
+        $file = 'test/more-test';
+        $contents = 'cheese';
+
+        $abs_path = \Webmozart\PathUtil\Path::join( $dir, $file );
+
+        $this->assertFalse( $obj->file_exists( $file ) );
+        $this->assertTrue( $obj->write_file( $file, $contents ) );
+        $this->assertTrue( $obj->file_exists( $file ) );
+        $this->assertTrue( file_exists( $abs_path ) );
+        $this->assertTrue( $obj->delete_file( $file ) );
+        $this->assertTrue( $obj->delete_dir( 'test/' ) );
+    }
+
+    /**
+     * @covers Vendi\Cache\CacheMaster::delete_cache_dir_contents()
+     * @covers Vendi\Cache\CacheMaster::write_file()
+     */
+    public function test__delete_cache_dir_contents()
+    {
+        $dir = $this->_create_temp_dir();
+        $this->assertTrue( is_dir( $dir ) );
+
+        $obj = $this->_get_obj_with_custom_filesystem( $dir );
+
+        $files = [
+                    'test/alpha/beta.txt',
+                    'test/cheese/example.txt',
+                ];
+
+        $contents = 'cheese';
+
+        foreach( $files as $file )
+        {
+            $this->assertTrue( $obj->write_file( $file, $contents ) );
+            $this->_files[] = \Webmozart\PathUtil\Path::join( $dir, $file );
+        }
+
+        $this->assertTrue( $obj->delete_cache_dir_contents( $dir ) );
     }
 
     public function provider_for_test__get_XYZ__passthrough()

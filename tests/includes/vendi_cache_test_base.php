@@ -2,10 +2,54 @@
 
 namespace Vendi\Cache\Tests;
 
+use League\Flysystem\Adapter\Local;
+use Monolog\Handler\NullHandler;
 use Vendi\Cache\Maestro;
 
 class vendi_cache_test_base extends \PHPUnit_Framework_TestCase
 {
+    public function _get_new_maestro()
+    {
+        return new Maestro();
+    }
+
+    public function _get_maestro_with_custom_filesystem( $dir )
+    {
+        $adapter = new Local(
+                                $dir,
+
+                                //Use locks during write (default)
+                                LOCK_EX,
+
+                                //Throw exception on symlinks (default)
+                                Local::DISALLOW_LINKS,
+
+                                //Special file system permissions
+                                [
+                                    'file' =>
+                                                [
+                                                    'public'  => 0664,
+                                                    'private' => 0664,
+                                                ],
+                                    'dir' =>
+                                                [
+                                                    'public'  => 0777,
+                                                    'private' => 0777,
+                                                ]
+                                ]
+                            );
+
+        return $this->_get_new_maestro()
+                        ->with_file_system_adapter( $adapter )
+                        ->with_logger(
+                                        new \Monolog\Logger(
+                                                        'vendi-cache-noop',
+                                                        array( new NullHandler( ) )
+                                                    )
+                         )
+                    ;
+    }
+
     /**
      * PHPUnit 6+ compatibility shim.
      *

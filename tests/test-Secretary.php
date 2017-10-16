@@ -7,6 +7,66 @@ use Vendi\Cache\Maestro;
 
 class test_Secretary extends vendi_cache_test_base
 {
+    private $_dirs = array();
+
+    private $_files = array();
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        foreach( $this->_files as $f )
+        {
+            if( is_file( $f ) )
+            {
+                unlink( $f );
+            }
+        }
+
+        foreach( $this->_dirs as $d )
+        {
+            if( is_dir( $d ) )
+            {
+                rmdir( $d );
+            }
+        }
+    }
+
+    //https://stackoverflow.com/a/1707859/231316
+    private function _create_temp_dir()
+    {
+        $tempfile = tempnam( sys_get_temp_dir(), 'VC2' );
+        if( false === $tempfile )
+        {
+            throw new \Exception( 'Could not create file for temporary directory' );
+        }
+
+        if( file_exists( $tempfile ) )
+        {
+            unlink( $tempfile );
+        }
+
+        mkdir( $tempfile );
+
+        if( ! is_dir( $tempfile ) )
+        {
+            throw new \Exception( 'Could not create temporary directory' );
+        }
+
+        $this->_dirs[] = $tempfile;
+
+        return $tempfile;
+    }
+
+    private function _get_obj()
+    {
+        return new non_global_constant_secretary( new Maestro() );
+    }
+
+    private function _get_maestro( $dir )
+    {
+        // _get_new_maestro
+    }
 
     /**
      * @covers Vendi\Cache\Secretary::get_network_option
@@ -151,5 +211,17 @@ class test_Secretary extends vendi_cache_test_base
                             'FOUR',
                             'FIVE'
             );
+    }
+
+    /**
+     * @covers Vendi\Cache\Secretary::get_cache_folder_abs
+     */
+    public function test_get_cache_folder_abs()
+    {
+        $dir = $this->_create_temp_dir();
+
+        $secretary = $this->_get_obj();
+
+        $this->assertFalse( $secretary->is_constant_defined( 'VENDI_CACHE_FOLDER_ABS' ) );
     }
 }
