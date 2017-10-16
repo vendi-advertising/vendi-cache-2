@@ -4,6 +4,8 @@ branches:
   only:
     - master
 
+env: # important!
+
 matrix:
   include:
     - php: 5.4
