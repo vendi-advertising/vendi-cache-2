@@ -28,7 +28,7 @@ class DebugComment extends AbstractCacheOption
 
     public function get_description()
     {
-        return __( 'Add a hidden HTML comment to the bottom of every page.', 'vendi-cache' );
+        return __('Add a hidden HTML comment to the bottom of every page.', 'vendi-cache');
     }
 
     public function get_storage_name()

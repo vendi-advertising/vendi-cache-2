@@ -8,13 +8,11 @@ final class CacheExclusions
 
     private function __construct()
     {
-
     }
 
     public static function get_instance()
     {
-        if( ! self::$_instance )
-        {
+        if (! self::$_instance) {
             self::$_instance = new self();
         }
 
@@ -22,7 +20,7 @@ final class CacheExclusions
     }
 
     //TODO
-    public function get_exclusion_rule_for_request( )
+    public function get_exclusion_rule_for_request()
     {
         return null;
     }

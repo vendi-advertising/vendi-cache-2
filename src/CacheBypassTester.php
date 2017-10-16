@@ -14,7 +14,7 @@ final class CacheBypassTester
 {
     private $_maestro = null;
 
-    public function __construct( Maestro $maestro )
+    public function __construct(Maestro $maestro)
     {
         $this->_maestro = $maestro;
     }
@@ -55,17 +55,17 @@ final class CacheBypassTester
         return $this->get_maestro()->get_request();
     }
 
-    public function test_request( )
+    public function test_request()
     {
         $maestro  = $this->get_maestro();
         $request  = $this->get_request();
         $logger   = $this->get_logger();
         $settings = $this->get_secretary();
 
-        Assertion::isInstanceOf( $maestro,  'Vendi\Cache\Maestro' );
-        Assertion::isInstanceOf( $request,  'Symfony\Component\HttpFoundation\Request' );
-        Assertion::isInstanceOf( $logger,   'Psr\Log\LoggerInterface' );
-        Assertion::isInstanceOf( $settings, 'Vendi\Cache\Secretary' );
+        Assertion::isInstanceOf($maestro, 'Vendi\Cache\Maestro');
+        Assertion::isInstanceOf($request, 'Symfony\Component\HttpFoundation\Request');
+        Assertion::isInstanceOf($logger, 'Psr\Log\LoggerInterface');
+        Assertion::isInstanceOf($settings, 'Vendi\Cache\Secretary');
 
         $tests = [
                     'MaintenanceMode',
@@ -81,16 +81,15 @@ final class CacheBypassTester
                     'WpCookies',
             ];
 
-        $logger->debug( 'Starting tests' );
+        $logger->debug('Starting tests');
 
         $root_namespace = __NAMESPACE__;
         $test_namespace = 'CacheBypasses';
 
-        foreach( $tests as $test )
-        {
+        foreach ($tests as $test) {
             $class = "$root_namespace\\$test_namespace\\$test";
 
-            $t = new $class( $maestro );
+            $t = new $class($maestro);
             $result = $t->is_cacheable();
 
             $logger->debug(
@@ -101,13 +100,12 @@ final class CacheBypassTester
                                 ]
                         );
 
-            if( false === $result )
-            {
+            if (false === $result) {
                 return false;
             }
         }
 
-        $logger->debug( 'All tests reported resource cacheable.' );
+        $logger->debug('All tests reported resource cacheable.');
 
 
         //TODO: HTTPS Check?
@@ -122,6 +120,5 @@ final class CacheBypassTester
         // }
 
         return true;
-
     }
 }

@@ -12,6 +12,7 @@ RUN_PHAN=false
 RUN_LINT=true
 RUN_SEC=true
 UPDATE_COMPOSER=false
+RUN_PHP_CS=true
 while [[ $# -gt 0 ]]
 do
     key="$1"
@@ -42,6 +43,10 @@ do
                 CREATE_DB=true
             ;;
 
+            --no-run-php-cs)
+                RUN_PHP_CS=false
+            ;;
+
             --no-lint)
                 RUN_LINT=false
             ;;
@@ -61,6 +66,28 @@ do
 
     shift # past argument or value
 done
+
+maybe_run_php_cs()
+{
+    echo "Maybe running PHP CS Fixer...";
+    if [ "$RUN_PHP_CS" = true ]; then
+    {
+        echo "running...";
+
+        vendor/bin/php-cs-fixer fix src/ --using-cache=no
+        if [ $? -ne 0 ]; then
+        {
+            echo "Error with composer... exiting";
+            exit 1;
+        }
+        fi
+    }
+    else
+        echo "skipping";
+    fi
+
+    printf "\n";
+}
 
 maybe_update_composer()
 {
@@ -212,6 +239,7 @@ fi
 
 maybe_update_composer;
 maybe_run_linter;
+maybe_run_php_cs;
 maybe_run_phan;
 maybe_run_security_check;
 maybe_create_database;

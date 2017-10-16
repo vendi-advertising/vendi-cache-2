@@ -14,7 +14,7 @@ php:
 
 script:
   - cd $TRAVIS_BUILD_DIR
-  - ./run-phpunit.sh --user travis --database wordpress_test --password "" --create-database
+  - ./run-phpunit.sh --user travis --database wordpress_test --password "" --create-database --no-run-php-cs
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)

@@ -8,7 +8,7 @@ final class ErrorHandler
 {
     private $_maestro;
 
-    public function __construct( Maestro $maestro )
+    public function __construct(Maestro $maestro)
     {
         $this->_maestro = $maestro;
     }
@@ -26,29 +26,27 @@ final class ErrorHandler
      *
      * @param  \Exception $exception The exception that occurred.
      */
-    public function handle_exception( $exception )
+    public function handle_exception($exception)
     {
         $this
             ->get_maestro()
             ->get_logger()
             ->error(
-                        __( 'An exception was detected, disabling caching for this request', 'vendi-cache' ),
+                        __('An exception was detected, disabling caching for this request', 'vendi-cache'),
                         [
                             'exception' => $exception,
                         ]
                     )
             ;
 
-        if( ! defined( 'VENDI_CACHE_PHP_ERROR' ) )
-        {
-            define( 'VENDI_CACHE_PHP_ERROR', true );
+        if (! defined('VENDI_CACHE_PHP_ERROR')) {
+            define('VENDI_CACHE_PHP_ERROR', true);
         }
 
         //Pass this exception back to the default handler
         global $vendi_cache_old_exception_handler;
-        if( $vendi_cache_old_exception_handler && is_callable( $vendi_cache_old_exception_handler ) )
-        {
-            $vendi_cache_old_exception_handler( $exception );
+        if ($vendi_cache_old_exception_handler && is_callable($vendi_cache_old_exception_handler)) {
+            $vendi_cache_old_exception_handler($exception);
         }
     }
 
@@ -60,13 +58,13 @@ final class ErrorHandler
      *
      * @since  1.1.5
      */
-    public function handle_error( $errno, $errstr, $errfile = null, $errline = null, $errcontext = null )
+    public function handle_error($errno, $errstr, $errfile = null, $errline = null, $errcontext = null)
     {
         $this
             ->get_maestro()
             ->get_logger()
             ->error(
-                        __( 'An error was detected, disabling caching for this request', 'vendi-cache' ),
+                        __('An error was detected, disabling caching for this request', 'vendi-cache'),
                         [
                             'errno'      => $errno,
                             'errstr'     => $errstr,
@@ -83,9 +81,8 @@ final class ErrorHandler
         // {
         //     return true;
         // }
-        if( ! defined( 'VENDI_CACHE_PHP_ERROR' ) )
-        {
-            define( 'VENDI_CACHE_PHP_ERROR', true );
+        if (! defined('VENDI_CACHE_PHP_ERROR')) {
+            define('VENDI_CACHE_PHP_ERROR', true);
         }
         // if( false )
         // {

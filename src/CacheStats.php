@@ -82,7 +82,7 @@ class CacheStats
         $this->_files++;
     }
 
-    public function add_size_to_data( $size )
+    public function add_size_to_data($size)
     {
         $this->_data += $size;
     }
@@ -97,43 +97,42 @@ class CacheStats
         $this->_uncompressed_files++;
     }
 
-    public function add_bytes_to_compressed_file_size( $size )
+    public function add_bytes_to_compressed_file_size($size)
     {
         $this->_compressed_bytes += $size;
     }
 
-    public function add_bytes_to_uncompressed_file_size( $size )
+    public function add_bytes_to_uncompressed_file_size($size)
     {
         $this->_uncompressed_bytes += $size;
     }
 
-    public function maybe_set_largest_file_size( $size )
+    public function maybe_set_largest_file_size($size)
     {
-        $this->_largestFile = max( $this->_largestFile, $size );
+        $this->_largestFile = max($this->_largestFile, $size);
     }
 
-    public function maybe_set_oldest_file( $ctime )
+    public function maybe_set_oldest_file($ctime)
     {
-        $this->_oldestFile = min( $this->_oldestFile, $ctime );
+        $this->_oldestFile = min($this->_oldestFile, $ctime);
     }
 
-    public function maybe_set_newest_file( $ctime )
+    public function maybe_set_newest_file($ctime)
     {
-        $this->_newestFile = max( $this->_newestFile, $ctime );
+        $this->_newestFile = max($this->_newestFile, $ctime);
     }
 
-    public function maybe_set_oldest_newest_file( $ctime )
+    public function maybe_set_oldest_newest_file($ctime)
     {
-        $this->maybe_set_oldest_file( $ctime );
-        $this->maybe_set_newest_file( $ctime );
+        $this->maybe_set_oldest_file($ctime);
+        $this->maybe_set_newest_file($ctime);
     }
 
-    public static function generate_from_file_system( Maestro $maestro )
+    public static function generate_from_file_system(Maestro $maestro)
     {
-
         $logger = $maestro->get_logger();
 
-        $logger->info( 'Request received to calculate cache stats' );
+        $logger->info('Request received to calculate cache stats');
 
         //Get our file system
         $fs = $maestro
@@ -142,14 +141,14 @@ class CacheStats
 
         //We need this plugin to get the listWith command to get additional data
         $fs
-            ->addPlugin( new ListWith() )
+            ->addPlugin(new ListWith())
         ;
 
         //Get all items recursively
-        $items = $fs->listWith([ 'mimetype', 'size', 'timestamp'], '', true );
+        $items = $fs->listWith([ 'mimetype', 'size', 'timestamp'], '', true);
 
         //Get the log file so that we can exclude it
-        $log_file_abs = Path::canonicalize( $maestro->get_secretary()->get_log_file_abs() );
+        $log_file_abs = Path::canonicalize($maestro->get_secretary()->get_log_file_abs());
 
         //Get the abs path to the cache folder to that we can prepend it to the
         //individual item to get the full path of the file. Weird, I know, but
@@ -162,22 +161,17 @@ class CacheStats
         $found_log_file = false;
 
         //Loop through all files and dirs
-        foreach( $items as $item )
-        {
+        foreach ($items as $item) {
             //For dirs, we only record their count
-            if( 'dir' === $item[ 'type' ] )
-            {
+            if ('dir' === $item[ 'type' ]) {
                 $obj->increment_dir_count();
                 continue;
             }
 
             //On the off-chance that there's other things (today or in the
             //future) we'll specifically handle only file below
-            if( 'file' === $item[ 'type' ] )
-            {
-
-                if( ! $found_log_file )
-                {
+            if ('file' === $item[ 'type' ]) {
+                if (! $found_log_file) {
                     //This is the ABS path to the file
                     $test_file_path = Path::join(
                                                     $cache_folder,
@@ -185,13 +179,12 @@ class CacheStats
                                                 );
 
                     //If the current file is the log file
-                    if( $test_file_path === $log_file_abs )
-                    {
+                    if ($test_file_path === $log_file_abs) {
                         //Flag that we found it so that subsequent passes don't
                         //need to do this
                         $found_log_file = true;
 
-                        $logger->info( 'Skipping log file' );
+                        $logger->info('Skipping log file');
                         //Skip it
                         continue;
                     }
@@ -199,20 +192,19 @@ class CacheStats
 
                 //General observations on the current file
                 $obj->increment_file_count();
-                $obj->maybe_set_oldest_newest_file( $item[ 'timestamp' ] );
-                $obj->add_size_to_data( (int)$item[ 'size' ] );
-                $obj->maybe_set_largest_file_size( (int)$item[ 'size' ] );
+                $obj->maybe_set_oldest_newest_file($item[ 'timestamp' ]);
+                $obj->add_size_to_data((int)$item[ 'size' ]);
+                $obj->maybe_set_largest_file_size((int)$item[ 'size' ]);
 
                 //
-                switch( $item[ 'mimetype' ] )
-                {
+                switch ($item[ 'mimetype' ]) {
                     case 'application/x-gzip':
-                        $obj->add_bytes_to_compressed_file_size( (int)$item[ 'size' ] );
+                        $obj->add_bytes_to_compressed_file_size((int)$item[ 'size' ]);
                         $obj->increment_compressed_file_count();
                         break;
 
                     case 'text/html':
-                        $obj->add_bytes_to_uncompressed_file_size( (int)$item[ 'size' ] );
+                        $obj->add_bytes_to_uncompressed_file_size((int)$item[ 'size' ]);
                         $obj->increment_uncompressed_file_count();
                         break;
 
@@ -226,7 +218,6 @@ class CacheStats
                 }
 
                 continue;
-
             }
 
             $logger->info(
@@ -257,5 +248,4 @@ class CacheStats
 
         return $obj;
     }
-
 }

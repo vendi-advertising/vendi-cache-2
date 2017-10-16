@@ -4,7 +4,7 @@ namespace Vendi\Cache\CacheBypasses;
 
 final class LegacyConstants extends AbstractCacheBypass
 {
-    public function is_cacheable( )
+    public function is_cacheable()
     {
         $settings = $this->get_secretary();
 
@@ -15,10 +15,8 @@ final class LegacyConstants extends AbstractCacheBypass
                                     'DONOTCACHEOBJECT',
                                 ];
 
-        foreach( $legacy_cache_constants as $constant )
-        {
-            if( $settings->is_constant_defined( $constant ) )
-            {
+        foreach ($legacy_cache_constants as $constant) {
+            if ($settings->is_constant_defined($constant)) {
                 $this->log_request_as_not_cacheable(
                                                         [
                                                             'reason'   => 'Legacy constant found',

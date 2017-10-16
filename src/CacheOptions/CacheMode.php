@@ -21,14 +21,14 @@ class CacheMode extends AbstractCacheOption
     public function get_potential_options()
     {
         return [
-                    self::MODE_OFF => __( 'Disable Vendi Cache', 'vendi-cache' ),
-                    self::MODE_ON  => __( 'Enable Vendi Cache',  'vendi-cache' ),
+                    self::MODE_OFF => __('Disable Vendi Cache', 'vendi-cache'),
+                    self::MODE_ON  => __('Enable Vendi Cache', 'vendi-cache'),
             ];
     }
 
     public function get_description()
     {
-        return __( 'Cache Mode', 'vendi-cache' );
+        return __('Cache Mode', 'vendi-cache');
     }
 
     public function get_storage_name()

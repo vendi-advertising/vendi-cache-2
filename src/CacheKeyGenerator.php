@@ -7,14 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CacheKeyGenerator
 {
-
     private $_urls_to_files = array();
 
     private $_urls_to_files_cache_lookups = array();
 
     private $_maestro;
 
-    public function __construct( Maestro $maestro )
+    public function __construct(Maestro $maestro)
     {
         $this->_maestro = $maestro;
     }
@@ -44,7 +43,7 @@ class CacheKeyGenerator
     public function get_mapping_of_urls_to_files()
     {
         //Prove that our property is always an array
-        Assertion::isArray( $this->_urls_to_files );
+        Assertion::isArray($this->_urls_to_files);
 
         return $this->_urls_to_files;
     }
@@ -64,21 +63,20 @@ class CacheKeyGenerator
      * [get_cache_lookup_counts_for_url description]
      * @return string
      */
-    public function get_cache_lookup_counts_for_url( )
+    public function get_cache_lookup_counts_for_url()
     {
         $url = $this->get_request()->getUri();
 
         //A non-null string is required
-        Assertion::string( $url );
-        Assertion::notEmpty( $url );
+        Assertion::string($url);
+        Assertion::notEmpty($url);
 
-        if( ! array_key_exists( $url, $this->_urls_to_files_cache_lookups ) )
-        {
+        if (! array_key_exists($url, $this->_urls_to_files_cache_lookups)) {
             return -1;
         }
 
         //The cache lookup should always be an int
-        Assertion::integer( $this->_urls_to_files_cache_lookups[ $url ] );
+        Assertion::integer($this->_urls_to_files_cache_lookups[ $url ]);
 
         return $this->_urls_to_files_cache_lookups[ $url ];
     }
@@ -87,17 +85,17 @@ class CacheKeyGenerator
      * [sanitize_host_for_cache_filename description]
      * @return string
      */
-    public function sanitize_host_for_cache_filename( )
+    public function sanitize_host_for_cache_filename()
     {
         $host = $this->get_request()->getHttpHost();
         //A non-null string is required
-        Assertion::string( $host );
-        Assertion::notEmpty( $host );
+        Assertion::string($host);
+        Assertion::notEmpty($host);
 
-        $ret = preg_replace( '/[^a-zA-Z0-9\-\.]+/', '', $host );
+        $ret = preg_replace('/[^a-zA-Z0-9\-\.]+/', '', $host);
 
         //The replacement must give us something to work with
-        Assertion::notEmpty( $host );
+        Assertion::notEmpty($host);
 
         return $ret;
     }
@@ -108,34 +106,32 @@ class CacheKeyGenerator
 
      * @return string                       A path to the local file for the given request.
      */
-    public function local_cache_filename_from_url( )
+    public function local_cache_filename_from_url()
     {
         $url = $this->get_maestro()->get_request()->getUri();
 
-        Assertion::string( $url );
-        Assertion::notEmpty( $url );
+        Assertion::string($url);
+        Assertion::notEmpty($url);
 
         //See if we've previously determined the file for this URL
-        if( array_key_exists( $url, $this->_urls_to_files ) )
-        {
+        if (array_key_exists($url, $this->_urls_to_files)) {
             //Increment a shared global counter, used for testing
             $this->_urls_to_files_cache_lookups[ $url ] += 1;
 
             $ret = $this->_urls_to_files[ $url ];
 
-            Assertion::string( $ret );
-            Assertion::notEmpty( $ret );
+            Assertion::string($ret);
+            Assertion::notEmpty($ret);
 
             return $ret;
         }
 
-        $parts = parse_url( $url );
+        $parts = parse_url($url);
 
-        $host = $this->sanitize_host_for_cache_filename( );
-        $path = $this->sanitize_path_for_cache_filename( );
+        $host = $this->sanitize_host_for_cache_filename();
+        $path = $this->sanitize_path_for_cache_filename();
         $ext = '';
-        if( $this->get_request()->isSecure() )
-        {
+        if ($this->get_request()->isSecure()) {
             $ext = '_https';
         }
 
@@ -160,27 +156,25 @@ class CacheKeyGenerator
      * [sanitize_path_for_cache_filename description]
      * @return string
      */
-    public function sanitize_path_for_cache_filename( )
+    public function sanitize_path_for_cache_filename()
     {
         $path = $this->get_url_without_scheme_and_host();
 
-        Assertion::string( $path );
-        Assertion::notEmpty( $path );
+        Assertion::string($path);
+        Assertion::notEmpty($path);
 
         //Strip out bad chars and multiple dots
-        $path = preg_replace( '/(?:[^a-zA-Z0-9\-\_\.\~\/]+|\.{2,})/', '', $path );
+        $path = preg_replace('/(?:[^a-zA-Z0-9\-\_\.\~\/]+|\.{2,})/', '', $path);
 
-        if( preg_match( '/\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)(.*)$/', $path, $matches ) )
-        {
+        if (preg_match('/\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)(.*)$/', $path, $matches)) {
             $path = $matches[ 1 ] . '/';
-            for( $i = 2; $i <= 6; $i++ )
-            {
-                $path .= strlen( $matches[ $i ] ) > 0 ? $matches[ $i ] : '';
+            for ($i = 2; $i <= 6; $i++) {
+                $path .= strlen($matches[ $i ]) > 0 ? $matches[ $i ] : '';
                 $path .= $i < 6 ? '~' : '';
             }
         }
 
-        Assertion::notEmpty( $path );
+        Assertion::notEmpty($path);
         return $path;
     }
 }

@@ -34,7 +34,7 @@ final class Maestro
 
     private $_admin_ui = null;
 
-    public function __construct( )
+    public function __construct()
     {
         //NOOP
     }
@@ -45,7 +45,7 @@ final class Maestro
      * @param  Admin\UI $admin_ui The Vendi Admin UI to route admin requests
      * @return Maestro
      */
-    public function with_admin_ui( UI $admin_ui  )
+    public function with_admin_ui(UI $admin_ui)
     {
         $this->_admin_ui = $admin_ui;
         return $this;
@@ -57,7 +57,7 @@ final class Maestro
      * @param  Request $logger The Symfony Request object to base decisions off of
      * @return Maestro
      */
-    public function with_request( Request $request )
+    public function with_request(Request $request)
     {
         $this->_request = $request;
         return $this;
@@ -69,7 +69,7 @@ final class Maestro
      * @param  LoggerInterface $logger PSR-4 logger to log to
      * @return Maestro
      */
-    public function with_logger( LoggerInterface $logger )
+    public function with_logger(LoggerInterface $logger)
     {
         $this->_logger = $logger;
         return $this;
@@ -81,7 +81,7 @@ final class Maestro
      * @param  AdapterInterface $adapter The FlySystem Adapter to use.
      * @return Maestro
      */
-    public function with_file_system_adapter( AdapterInterface $adapter )
+    public function with_file_system_adapter(AdapterInterface $adapter)
     {
         $this->_adapter = $adapter;
         return $this;
@@ -93,21 +93,19 @@ final class Maestro
      * @param  Secretary $cache_settings The Cache Settings to use.
      * @return Maestro
      */
-    public function with_secretary( Secretary $cache_settings )
+    public function with_secretary(Secretary $cache_settings)
     {
         $this->_secretary = $cache_settings;
         return $this;
     }
 
-    public function get_admin_ui( $do_not_create_new = false )
+    public function get_admin_ui($do_not_create_new = false)
     {
-        if( ! $this->_admin_ui instanceof UI )
-        {
-            if( $do_not_create_new )
-            {
-                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_admin_ui', 'get_admin_ui' ) );
+        if (! $this->_admin_ui instanceof UI) {
+            if ($do_not_create_new) {
+                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_admin_ui', 'get_admin_ui'));
             }
-            $this->_admin_ui = self::get_default_admin_ui( $this );
+            $this->_admin_ui = self::get_default_admin_ui($this);
         }
 
         return $this->_admin_ui;
@@ -117,13 +115,11 @@ final class Maestro
      * [get_request description]
      * @return Request
      */
-    public function get_request( $do_not_create_new = false )
+    public function get_request($do_not_create_new = false)
     {
-        if( ! $this->_request instanceof Request )
-        {
-            if( $do_not_create_new )
-            {
-                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_request', 'get_request' ) );
+        if (! $this->_request instanceof Request) {
+            if ($do_not_create_new) {
+                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_request', 'get_request'));
             }
             $this->_request = self::get_default_request();
         }
@@ -136,15 +132,13 @@ final class Maestro
      *
      * @return Logger
      */
-    public function get_logger( $do_not_create_new = false )
+    public function get_logger($do_not_create_new = false)
     {
-        if( ! $this->_logger instanceof LoggerInterface )
-        {
-            if( $do_not_create_new )
-            {
-                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_logger', 'get_logger' ) );
+        if (! $this->_logger instanceof LoggerInterface) {
+            if ($do_not_create_new) {
+                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_logger', 'get_logger'));
             }
-            $this->_logger = self::get_default_logger( $this->get_secretary() );
+            $this->_logger = self::get_default_logger($this->get_secretary());
         }
 
         return $this->_logger;
@@ -155,15 +149,13 @@ final class Maestro
      *
      * @return AdapterInterface
      */
-    public function get_adapter( $do_not_create_new = false )
+    public function get_adapter($do_not_create_new = false)
     {
-        if( ! $this->_adapter instanceof AdapterInterface )
-        {
-            if( $do_not_create_new )
-            {
-                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_adapter', 'get_adapter' ) );
+        if (! $this->_adapter instanceof AdapterInterface) {
+            if ($do_not_create_new) {
+                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_adapter', 'get_adapter'));
             }
-            $this->_adapter = self::get_default_adapter( $this->get_secretary() );
+            $this->_adapter = self::get_default_adapter($this->get_secretary());
         }
 
         return $this->_adapter;
@@ -174,13 +166,11 @@ final class Maestro
      *
      * @return Secretary
      */
-    public function get_secretary( $do_not_create_new = false )
+    public function get_secretary($do_not_create_new = false)
     {
-        if( ! $this->_secretary instanceof Secretary )
-        {
-            if( $do_not_create_new )
-            {
-                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_secretary', 'get_secretary' ) );
+        if (! $this->_secretary instanceof Secretary) {
+            if ($do_not_create_new) {
+                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_secretary', 'get_secretary'));
             }
             $this->_secretary = self::get_default_secretary();
         }
@@ -193,13 +183,11 @@ final class Maestro
      *
      * @return Filesystem
      */
-    public function get_file_system( $do_not_create_new = false )
+    public function get_file_system($do_not_create_new = false)
     {
-        if( ! $this->_file_system instanceof Filesystem )
-        {
-            if( $do_not_create_new )
-            {
-                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_file_system', 'get_file_system' ) );
+        if (! $this->_file_system instanceof Filesystem) {
+            if ($do_not_create_new) {
+                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_file_system', 'get_file_system'));
             }
             $this->_file_system = new Filesystem(
                                                     $this->get_adapter(),
@@ -221,24 +209,22 @@ final class Maestro
      *
      * @return CacheMaster
      */
-    public function get_cache_master( $do_not_create_new = false )
+    public function get_cache_master($do_not_create_new = false)
     {
         //Already setup, just return
-        if( ! $this->_cache_master instanceof CacheMaster  )
-        {
-            if( $do_not_create_new )
-            {
-                throw new \Exception( sprintf( __( 'The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache' ), '_cache_master', 'get_cache_master' ) );
+        if (! $this->_cache_master instanceof CacheMaster) {
+            if ($do_not_create_new) {
+                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_cache_master', 'get_cache_master'));
             }
-            $this->_cache_master = new CacheMaster( $this );
+            $this->_cache_master = new CacheMaster($this);
         }
 
         return $this->_cache_master;
     }
 
-    public static function get_default_admin_ui( Maestro $maestro )
+    public static function get_default_admin_ui(Maestro $maestro)
     {
-        return new UI( $maestro );
+        return new UI($maestro);
     }
 
     /**
@@ -257,17 +243,16 @@ final class Maestro
      *
      * @return Maestro
      */
-    public static function get_default_instance( Secretary $cache_settings = null )
+    public static function get_default_instance(Secretary $cache_settings = null)
     {
-        if( null === $cache_settings )
-        {
+        if (null === $cache_settings) {
             $cache_settings = self::get_default_secretary();
         }
 
         return ( new self() )
-                ->with_secretary( $cache_settings )
-                ->with_file_system_adapter( self::get_default_adapter( $cache_settings ) )
-                ->with_logger( self::get_default_logger( $cache_settings ) )
+                ->with_secretary($cache_settings)
+                ->with_file_system_adapter(self::get_default_adapter($cache_settings))
+                ->with_logger(self::get_default_logger($cache_settings))
             ;
     }
 
@@ -287,7 +272,7 @@ final class Maestro
      * @param  CacheSettings $cache_settings The settings to use for the adapter.
      * @return AdapterInterface
      */
-    public static function get_default_adapter( Secretary $cache_settings )
+    public static function get_default_adapter(Secretary $cache_settings)
     {
         return new Local(
                             //The folder to cache to
@@ -310,24 +295,24 @@ final class Maestro
      * @param  Secretary $cache_settings The settings to use for the adapter.
      * @return LoggerInterface
      */
-    public static function get_default_logger( Secretary $cache_settings )
+    public static function get_default_logger(Secretary $cache_settings)
     {
-        return new VendiMonoLoggger( $cache_settings );
+        return new VendiMonoLoggger($cache_settings);
     }
 
     /**
      * Override magic method so that we don't use incorrect property names.
      */
-    public function __set( $name, $value )
+    public function __set($name, $value)
     {
-        throw new \Exception( sprintf( __( 'Attempt at setting undeclared property %1$s.', 'vendi-cache' ), esc_html( $name ) ) );
+        throw new \Exception(sprintf(__('Attempt at setting undeclared property %1$s.', 'vendi-cache'), esc_html($name)));
     }
 
     /**
      * Override magic method so that we don't use incorrect property names.
      */
-    public function __get( $name )
+    public function __get($name)
     {
-        throw new \Exception( sprintf( __( 'Attempt at getting undeclared property %1$s.', 'vendi-cache' ), esc_html( $name ) ) );
+        throw new \Exception(sprintf(__('Attempt at getting undeclared property %1$s.', 'vendi-cache'), esc_html($name)));
     }
 }
