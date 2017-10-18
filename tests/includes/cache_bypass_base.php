@@ -110,37 +110,4 @@ class cache_bypass_base extends \PHPUnit_Framework_TestCase
         $test = new $obj( $maestro );
         $this->assertTrue( $test->is_cacheable() );
     }
-
-    public function _test_is_cacheable_because_required_function_defined_and_returns_true( $class_to_test, $name )
-    {
-        $maestro = $this->__get_new_maestro();
-        $cache_settings = $maestro->get_secretary();
-
-        //The supplied function should not exist by default
-        $this->assertFalse( $cache_settings->is_function_defined( $name ) );
-
-        //The function is required to exist so this pass should always return false
-        $obj = "\\Vendi\\Cache\\CacheBypasses\\$class_to_test";
-        $test = new $obj( $maestro );
-        $result = $test->is_cacheable();
-        $this->assertFalse( $result );
-
-        //Now create the function and have it return true
-        $cache_settings->set_function( $name, function( ) { return true; } );
-
-        //Test the result against what is provided
-        $obj = "\\Vendi\\Cache\\CacheBypasses\\$class_to_test";
-        $test = new $obj( $maestro );
-        $result = $test->is_cacheable();
-        $this->assertFalse( $result );
-
-        //Now create the function and have it return whatever we provided
-        $cache_settings->set_function( $name, function( ) { return false; } );
-
-        //Test the result against what is provided
-        $obj = "\\Vendi\\Cache\\CacheBypasses\\$class_to_test";
-        $test = new $obj( $maestro );
-        $result = $test->is_cacheable();
-        $this->assertTrue( $result );
-    }
 }

@@ -35,38 +35,6 @@ class Secretary
         return constant($name);
     }
 
-    public function is_function_defined($name)
-    {
-        return function_exists($name);
-    }
-
-    public function get_function_value($name)
-    {
-        Assertion::isCallable($name);
-
-        $args = func_get_args();
-
-        //First $args is actually the $name variable above
-        switch (count($args)) {
-            case 1:
-                return $name();
-
-            case 2:
-                return $name($args[ 1 ]);
-
-            case 3:
-                return $name($args[ 1 ], $args[ 2 ]);
-
-            case 4:
-                return $name($args[ 1 ], $args[ 2 ], $args[ 3 ]);
-
-            case 5:
-                return $name($args[ 1 ], $args[ 2 ], $args[ 3 ], $args[ 4 ]);
-        }
-
-        throw new \Exception('Custom get_function_value() only support a maximum of 4 arguments');
-    }
-
     public function get_cache_folder_abs()
     {
         //If this is defined, use it directly

@@ -8,17 +8,23 @@ final class LoggedInUser extends AbstractCacheBypass
     {
         $settings = $this->get_secretary();
 
-        if ($settings->is_function_defined('wp_get_current_user')) {
-            $user = $settings->get_function_value('wp_get_current_user');
-            if ($user instanceof \WP_User && $user->exists()) {
-                $this->log_request_as_not_cacheable(
-                                                        [
-                                                            'reason' => 'Logged in user',
-                                                            'user'   => '$user',
-                                                        ]
-                                                );
-                return false;
-            }
+        if (!function_exists('wp_get_current_user')) {
+            $this->log_request_as_not_cacheable(
+                                                    [
+                                                        'reason' => 'Required function wp_get_current_user not found',
+                                                    ]
+            );
+            return false;
+        }
+
+        $user = wp_get_current_user();
+        if ($user instanceof \WP_User && $user->exists()) {
+            $this->log_request_as_not_cacheable(
+                                                    [
+                                                        'reason' => 'Logged in user',
+                                                        'user'   => '$user',
+                                                    ]
+                                            );
         }
 
         return true;

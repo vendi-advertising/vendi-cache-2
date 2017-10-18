@@ -2,18 +2,20 @@
 
 namespace Vendi\Cache\CacheBypasses;
 
-final class AjaxMode extends AbstractCacheBypass
+final class AjaxMode extends AbstractCacheBypassWithConstantAndFunction
 {
-    public function is_cacheable()
+    public function __construct(Maestro $maestro)
     {
-        if (false === $this->is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false('DOING_AJAX', __('Request is AJAX', 'vendi-cache'))) {
+        parent::__construct($maestro, 'DOING_AJAX');
+    }
+
+    public function test_specific_function_and_log_failure()
+    {
+        //This function is defined in wp-includes/load.php and is guaranteed to
+        //exist as long as WP exists.
+        if (wp_doing_ajax()) {
+            $this->log_request_as_not_cacheable_because_function_returned_value('wp_doing_ajax', true);
             return false;
         }
-
-        if (false === $this->is_cacheable_because_required_function_defined_and_returned_false('wp_doing_ajax', __('Request is AJAX', 'vendi-cache'))) {
-            return false;
-        }
-
-        return true;
     }
 }

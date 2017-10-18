@@ -102,24 +102,6 @@ class test_Secretary extends vendi_cache_test_base
     }
 
     /**
-     * @covers Vendi\Cache\Secretary::is_function_defined
-     */
-    public function test_is_function_defined()
-    {
-        $secretary = Maestro::get_default_instance()
-                            ->get_secretary()
-                    ;
-
-        $this->assertFalse( $secretary->is_function_defined( 'global_function_must_only_ever_be_included_once' ) );
-
-        //Include a file that creates a function in the global namespace.
-        //Anyone know of another way to do this?
-        include VENDI_CACHE_DIR . '/tests/includes/global_function_must_only_ever_be_included_once.php';
-        $this->assertTrue( $secretary->is_function_defined( 'global_function_must_only_ever_be_included_once' ) );
-        $this->assertSame( 'CHEESE', $secretary->get_function_value( 'global_function_must_only_ever_be_included_once' ) );
-    }
-
-    /**
      * @covers Vendi\Cache\Secretary::get_function_value
      */
     public function test_get_function_value()

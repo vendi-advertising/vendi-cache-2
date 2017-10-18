@@ -10,18 +10,6 @@ final class MaintenanceMode extends AbstractCacheBypass
     {
         $settings = $this->get_secretary();
 
-        if (! $settings->is_constant_defined('ABSPATH')) {
-            $this->log_request_as_not_cacheable(
-                                                    [
-                                                        'reason' => 'Maintenance mode',
-                                                        'extra'  => 'Missing constant ABSPATH',
-                                                    ]
-                                            );
-            //Do not cache because we don't appear to be in WordPress!!!
-            //TODO: Maybe throw here instead?
-            return false;
-        }
-
         $abs = $settings->get_constant_value('ABSPATH');
         $test_file = Path::join($abs, '.maintenance');
 

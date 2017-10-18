@@ -121,64 +121,6 @@ class test_AbstractCacheBypass extends vendi_cache_test_base
     }
 
     /**
-     * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::is_cacheable_because_required_function_defined_and_returned_false
-     */
-    public function test_is_cacheable_because_required_function_defined_and_returned_false()
-    {
-        $mock = $this->_get_mock();
-
-        $maestro = $mock->get_maestro();
-        $cache_settings = $maestro->get_secretary();
-
-        //Function should not exist
-        $this->assertFalse( $cache_settings->is_function_defined( 'CHEESE' ) );
-
-        //The function is required but doesn't exist, should always return false
-        $this->assertFalse( $mock->is_cacheable_because_required_function_defined_and_returned_false( 'CHEESE', 'n/a' ) );
-
-        //Create the function
-        $cache_settings->set_function( 'CHEESE', function( ) { return true; } );
-
-        //If the function returns true then the resource is not cacheable
-        $this->assertFalse( $mock->is_cacheable_because_required_function_defined_and_returned_false( 'CHEESE', 'n/a' ) );
-
-        //Create the function
-        $cache_settings->set_function( 'CHEESE', function( ) { return false; } );
-
-        //If the function return false then the resource is cacheable
-        $this->assertTrue( $mock->is_cacheable_because_required_function_defined_and_returned_false( 'CHEESE', 'n/a' ) );
-    }
-
-    /**
-     * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false
-     */
-    public function test_is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false()
-    {
-        $mock = $this->_get_mock();
-
-        $maestro = $mock->get_maestro();
-        $cache_settings = $maestro->get_secretary();
-
-        //Constant should not exist
-        $this->assertFalse( $cache_settings->is_constant_defined( 'CHEESE' ) );
-
-        //Constant not defined, resource is cacheable
-        $this->assertTrue( $mock->is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( 'CHEESE', 'n/a' ) );
-
-        //Create the constant
-        $cache_settings->set_constant( 'CHEESE', true );
-
-        //When the constant is set to true, the resource is not cacheable
-        $this->assertFalse( $mock->is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( 'CHEESE', 'n/a' ) );
-
-        //Create the constant
-        $cache_settings->set_constant( 'CHEESE', false  );
-
-        //When the constant is set to false (which is weird), the resource is cacheable
-        $this->assertTrue( $mock->is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( 'CHEESE', 'n/a' ) );
-    }
-
-    /**
      * This is one ugly method to test just a single line, but that line is pretty important.
      *
      * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypass::log_request_as_not_cacheable

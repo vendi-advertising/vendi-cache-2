@@ -2,18 +2,20 @@
 
 namespace Vendi\Cache\CacheBypasses;
 
-final class CronMode extends AbstractCacheBypass
+final class CronMode extends AbstractCacheBypassWithConstantAndFunction
 {
-    public function is_cacheable()
+    public function __construct(Maestro $maestro)
     {
-        if (false === $this->is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false('DOING_CRON', __('Request is cron', 'vendi-cache'))) {
+        parent::__construct($maestro, 'DOING_CRON');
+    }
+
+    public function test_specific_function_and_log_failure()
+    {
+        //This function is defined in wp-includes/load.php and is guaranteed to
+        //exist as long as WP exists.
+        if (wp_doing_cron()) {
+            $this->log_request_as_not_cacheable_because_function_returned_value('wp_doing_cron', true);
             return false;
         }
-
-        if (false === $this->is_cacheable_because_required_function_defined_and_returned_false('wp_doing_cron', __('Request is cron', 'vendi-cache'))) {
-            return false;
-        }
-
-        return true;
     }
 }
