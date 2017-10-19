@@ -20,25 +20,10 @@ class test_LoggedInUser extends cache_bypass_base
 
         $this->assertTrue( $test->is_cacheable() );
 
-        $cache_settings->set_function(
-                                        'wp_get_current_user',
-                                        function()
-                                        {
-                                            return new \WP_User( 0 );
-                                        }
-            );
-
+        wp_set_current_user( 0 );
         $this->assertTrue( $test->is_cacheable() );
 
-        $cache_settings->set_function(
-                                        'wp_get_current_user',
-                                        function()
-                                        {
-                                            return new \WP_User( 1 );
-                                        }
-            );
-
+        wp_set_current_user( 1 );
         $this->assertFalse( $test->is_cacheable() );
-
     }
 }

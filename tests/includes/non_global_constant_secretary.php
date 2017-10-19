@@ -8,12 +8,9 @@ final class non_global_constant_secretary extends Secretary
 {
     private $_CONSTANTS = array();
 
-    private $_FUNCTIONS = array();
-
     public function reset_all()
     {
         $this->_CONSTANTS = array();
-        $this->_FUNCTIONS = array();
     }
 
     public function set_constant( $name, $value )
@@ -26,16 +23,6 @@ final class non_global_constant_secretary extends Secretary
         unset( $this->_CONSTANTS[ $name ] );
     }
 
-    public function set_function( $name, callable $func )
-    {
-        $this->_FUNCTIONS[ $name ] = $func;
-    }
-
-    public function unset_function( $name )
-    {
-        unset( $this->_FUNCTIONS[ $name ] );
-    }
-
     public function is_constant_defined( $name )
     {
         return array_key_exists( $name, $this->_CONSTANTS );
@@ -45,46 +32,8 @@ final class non_global_constant_secretary extends Secretary
     {
         if( ! $this->is_constant_defined( $name ) )
         {
-            throw new \Exception( 'Attempt at using constant before checking for definition' );
+            throw new \Exception( sprintf( __( 'Attempt at using constant %1$s before checking for definition', 'vendi-cache' ), $name ) );
         }
         return $this->_CONSTANTS[ $name ];
-    }
-
-    public function is_function_defined( $name )
-    {
-        return array_key_exists( $name, $this->_FUNCTIONS );
-    }
-
-    public function get_function_value( $name )
-    {
-        if( ! $this->is_function_defined( $name ) )
-        {
-            throw new \Exception( 'Attempt at using function before checking for definition' );
-        }
-
-        $func = $this->_FUNCTIONS[ $name ];
-
-        $args = func_get_args();
-
-        //First $args is actually the $name variable above
-        switch( count( $args ) )
-        {
-            case 1:
-                return $func();
-
-            case 2:
-                return $func( $args[ 1 ] );
-
-            case 3:
-                return $func( $args[ 1 ], $args[ 2 ] );
-
-            case 4:
-                return $func( $args[ 1 ], $args[ 2 ], $args[ 3 ] );
-
-            case 5:
-                return $func( $args[ 1 ], $args[ 2 ], $args[ 3 ], $args[ 4 ] );
-        }
-
-        throw new \Exception( 'Custom get_function_value() only support a maximum of 4 arguments' );
     }
 }

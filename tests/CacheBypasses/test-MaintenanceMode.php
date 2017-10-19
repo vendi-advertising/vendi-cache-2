@@ -17,17 +17,11 @@ class test_MaintenanceMode extends cache_bypass_base
         $maestro = $this->__get_new_maestro();
         $cache_settings = $maestro->get_secretary();
 
-        $test = new MaintenanceMode( $maestro );
-
-        //This will be false because ABSPATH isn't defined in the test suite yet
-        $this->assertSame( false, $test->is_cacheable() );
-
-        //Constant doesn't exist yet
-        $this->assertFalse( $cache_settings->is_constant_defined( 'ABSPATH' ) );
-
         //Create a temporary folder to simulate ABSPATH and set global constant
         $dir = $this->create_temp_dir();
         $cache_settings->set_constant( 'ABSPATH', $dir );
+
+        $test = new MaintenanceMode( $maestro );
 
         //Magic WP file path
         $path = Path::join( $dir, '.maintenance' );

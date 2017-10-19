@@ -6,7 +6,7 @@ use Assert\Assertion;
 use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
 
-abstract class AbstractCacheBypass implements CacheBypassInterface
+abstract class AbstractCacheBypass
 {
     private $_request;
 
@@ -14,7 +14,7 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
 
     private $_maestro;
 
-    final public function __construct(Maestro $maestro)
+    public function __construct(Maestro $maestro)
     {
         $this->_maestro = $maestro;
     }
@@ -68,94 +68,5 @@ abstract class AbstractCacheBypass implements CacheBypassInterface
     final public function log_request_as_not_cacheable(array $args)
     {
         $this->get_maestro()->get_logger()->debug('Request not cacheable', $args);
-    }
-
-    final public function is_cacheable_because_required_function_defined_and_returned_false($name, $failure_reason)
-    {
-        //Sanity check params
-        Assertion::notEmpty($name);
-        Assertion::string($name);
-        Assertion::notEmpty($failure_reason);
-        Assertion::string($failure_reason);
-
-        //Get our settings
-        $settings = $this->get_secretary();
-
-        //This is a required function. If it doesn't exist then we are in a
-        //strange state and caching should be disabled.
-        if (! $settings->is_function_defined($name)) {
-            $this->log_request_as_not_cacheable(
-                                                    [
-                                                        'reason' => "Required function $name not defined",
-                                                    ]
-                                            );
-
-            return false;
-        }
-
-        //The function must always return a boolean
-        $result = (bool) $settings->get_function_value($name);
-
-        //If the function returns true then someone else in the pipeline
-        //initiated something special and we don't want to cache this request.
-        if ($result) {
-            $this->log_request_as_not_cacheable(
-                                                    [
-                                                        'reason' => "Required function $name return true",
-                                                    ]
-                                            );
-
-            return false;
-        }
-
-        //Nothing special happened, flag the request as cacheable as far as this
-        //method is concerned.
-        return true;
-    }
-
-    final public function is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false($name, $failure_reason)
-    {
-        //Sanity check params
-        Assertion::notEmpty($name);
-        Assertion::string($name);
-        Assertion::notEmpty($failure_reason);
-        Assertion::string($failure_reason);
-
-        $settings = $this->get_secretary();
-
-        //We're looking for hard-stop constants. If the constant doesn't exist
-        //then assume that we can cache this resource.
-        if (! $settings->is_constant_defined($name)) {
-            return true;
-        }
-
-        //Constants are assumed to be boolean
-        $result = $settings->get_constant_value($name);
-        $result = (bool) $settings->get_constant_value($name);
-
-        //The constant _IS_ defined but set to a false-like value. Super weird
-        //and I'm pretty sure this should never happen but still technically
-        //valid as far as PHP is concerned.
-        if (false === $result) {
-            $this
-                ->get_maestro()
-                ->get_logger()
-                ->debug(
-                            'Strange state - constant set to false',
-                            [
-                                'constant' => $name,
-                            ]
-                    );
-            return true;
-        }
-
-        $this->log_request_as_not_cacheable(
-                                                [
-                                                    'reason' => $failure_reason,
-                                                    'extra'  => "Constant $name is false",
-                                                ]
-                                        );
-
-        return false;
     }
 }

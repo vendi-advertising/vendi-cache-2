@@ -78,9 +78,14 @@ class test_CacheMaster extends \WP_UnitTestCase
 
     private function _get_obj_with_custom_secretary()
     {
+        $secretary = new non_global_constant_secretary();
+        $secretary->set_constant( 'ABSPATH', ABSPATH );
+        $secretary->set_constant( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
+
         $maestro = ( new Maestro() )
-                    ->with_secretary( new non_global_constant_secretary() )
+                    ->with_secretary( $secretary )
                 ;
+
 
         return new CacheMaster( $maestro );
     }
@@ -168,11 +173,11 @@ class test_CacheMaster extends \WP_UnitTestCase
     public function test_is_request_cacheable()
     {
         //No one should be logged in by default
-        $cache_master = $this->_get_obj();
+        $cache_master = $this->_get_obj_with_custom_secretary();
         $this->assertTrue( $cache_master->is_request_cacheable() );
 
         wp_set_current_user( 1 );
-        $cache_master = $this->_get_obj();
+        $cache_master = $this->_get_obj_with_custom_secretary();
         $this->assertFalse( $cache_master->is_request_cacheable() );
     }
 
