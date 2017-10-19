@@ -8,12 +8,9 @@ final class non_global_constant_secretary extends Secretary
 {
     private $_CONSTANTS = array();
 
-    private $_FUNCTIONS = array();
-
     public function reset_all()
     {
         $this->_CONSTANTS = array();
-        $this->_FUNCTIONS = array();
     }
 
     public function set_constant( $name, $value )
@@ -35,7 +32,7 @@ final class non_global_constant_secretary extends Secretary
     {
         if( ! $this->is_constant_defined( $name ) )
         {
-            throw new \Exception( 'Attempt at using constant before checking for definition' );
+            throw new \Exception( sprintf( __( 'Attempt at using constant %1$s before checking for definition', 'vendi-cache' ), $name ) );
         }
         return $this->_CONSTANTS[ $name ];
     }

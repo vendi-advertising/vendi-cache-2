@@ -2,6 +2,8 @@
 
 namespace Vendi\Cache\CacheBypasses;
 
+use Vendi\Cache\Maestro;
+
 final class WpInstalling extends AbstractCacheBypassWithConstantAndFunction
 {
     public function __construct(Maestro $maestro)
@@ -17,5 +19,6 @@ final class WpInstalling extends AbstractCacheBypassWithConstantAndFunction
             $this->log_request_as_not_cacheable_because_function_returned_value('wp_installing', true);
             return false;
         }
+        return true;
     }
 }

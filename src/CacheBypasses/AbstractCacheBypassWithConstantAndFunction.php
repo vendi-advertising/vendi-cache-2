@@ -2,6 +2,9 @@
 
 namespace Vendi\Cache\CacheBypasses;
 
+use Assert\Assertion;
+use Vendi\Cache\Maestro;
+
 abstract class AbstractCacheBypassWithConstantAndFunction extends AbstractCacheBypass
 {
     private $_constant;
@@ -16,30 +19,20 @@ abstract class AbstractCacheBypassWithConstantAndFunction extends AbstractCacheB
 
     final public function is_cacheable()
     {
-        if (false === $this->is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false()) {
+        if (!$this->test_constant()) {
             return false;
         }
 
         //This function is defined in wp-includes/load.php and is guaranteed to
         //exist as long as WP exists.
         if (!$this->test_specific_function_and_log_failure()) {
-            $this->log_request_as_not_cacheable_because_function_returned_value('wp_doing_ajax', true);
             return false;
         }
 
         return true;
     }
 
-    final public function log_request_as_not_cacheable_because_function_returned_value($name, $value)
-    {
-        $this->log_request_as_not_cacheable(
-                                                [
-                                                    'reason' => "Required function $name return $value",
-                                                ]
-            );
-    }
-
-    final public function is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false()
+    final public function test_constant()
     {
         $name = $this->_constant;
 
@@ -83,5 +76,14 @@ abstract class AbstractCacheBypassWithConstantAndFunction extends AbstractCacheB
                                         );
 
         return false;
+    }
+
+    final public function log_request_as_not_cacheable_because_function_returned_value($name, $value)
+    {
+        $this->log_request_as_not_cacheable(
+                                                [
+                                                    'reason' => "Required function $name return $value",
+                                                ]
+            );
     }
 }

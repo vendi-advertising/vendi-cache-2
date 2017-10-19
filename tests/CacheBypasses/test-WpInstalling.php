@@ -10,7 +10,7 @@ class test_CacheBypasses_WpInstalling extends cache_bypass_base
      */
     public function test_is_cacheable__const_WP_INSTALLING__not_defined()
     {
-        $this->_test_is_cacheable_because_fatal_constant_not_defined_or_is_but_set_to_false( 'WpInstalling', 'WP_INSTALLING', 'wp_installing' );
+        $this->_test_is_cacheable_because_fatal_constant_not_defined( 'WpInstalling', 'WP_INSTALLING' );
     }
 
     /**

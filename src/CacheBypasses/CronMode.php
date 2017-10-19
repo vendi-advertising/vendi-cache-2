@@ -2,6 +2,8 @@
 
 namespace Vendi\Cache\CacheBypasses;
 
+use Vendi\Cache\Maestro;
+
 final class CronMode extends AbstractCacheBypassWithConstantAndFunction
 {
     public function __construct(Maestro $maestro)
@@ -17,5 +19,6 @@ final class CronMode extends AbstractCacheBypassWithConstantAndFunction
             $this->log_request_as_not_cacheable_because_function_returned_value('wp_doing_cron', true);
             return false;
         }
+        return true;
     }
 }

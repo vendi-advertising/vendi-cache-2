@@ -86,11 +86,17 @@ final class CacheBypassTester
         $root_namespace = __NAMESPACE__;
         $test_namespace = 'CacheBypasses';
 
+        $debug = defined('CHEESE') && CHEESE && ! defined('BOOGER');
+
         foreach ($tests as $test) {
             $class = "$root_namespace\\$test_namespace\\$test";
 
             $t = new $class($maestro);
             $result = $t->is_cacheable();
+
+            if ($debug && ! $result) {
+                dump($class);
+            }
 
             $logger->debug(
                                 'Single test run',
