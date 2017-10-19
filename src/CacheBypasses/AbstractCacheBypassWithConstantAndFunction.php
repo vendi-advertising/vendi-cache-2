@@ -13,8 +13,17 @@ abstract class AbstractCacheBypassWithConstantAndFunction extends AbstractCacheB
 
     public function __construct(Maestro $maestro, $constant)
     {
+        //Sanity check params
+        Assertion::notEmpty($constant);
+        Assertion::string($constant);
+
         parent::__construct($maestro);
         $this->_constant = $constant;
+    }
+
+    public function get_constant()
+    {
+        return $this->_constant;
     }
 
     final public function is_cacheable()
@@ -35,10 +44,6 @@ abstract class AbstractCacheBypassWithConstantAndFunction extends AbstractCacheB
     final public function test_constant()
     {
         $name = $this->_constant;
-
-        //Sanity check params
-        Assertion::notEmpty($name);
-        Assertion::string($name);
 
         $settings = $this->get_secretary();
 
