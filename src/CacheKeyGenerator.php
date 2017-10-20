@@ -3,7 +3,6 @@
 namespace Vendi\Cache;
 
 use Assert\Assertion;
-use Symfony\Component\HttpFoundation\Request;
 
 class CacheKeyGenerator
 {
@@ -28,15 +27,6 @@ class CacheKeyGenerator
     }
 
     /**
-     * [get_request description]
-     * @return Request
-     */
-    public function get_request()
-    {
-        return $this->get_maestro()->get_request();
-    }
-
-    /**
      * [get_mapping_of_urls_to_files description]
      * @return array
      */
@@ -54,9 +44,9 @@ class CacheKeyGenerator
      */
     public function get_url_without_scheme_and_host()
     {
-        $request = $this->get_request();
+        $request = $this->get_maestro()->get_request();
 
-        return $request->getBaseUrl() . $request->getPathInfo();
+        return $request->getUri()->getPath();
     }
 
     /**
@@ -65,7 +55,7 @@ class CacheKeyGenerator
      */
     public function get_cache_lookup_counts_for_url()
     {
-        $url = $this->get_request()->getUri();
+        $url = $this->get_maestro()->get_request()->getUri()->__toString();
 
         //A non-null string is required
         Assertion::string($url);
@@ -87,7 +77,7 @@ class CacheKeyGenerator
      */
     public function sanitize_host_for_cache_filename()
     {
-        $host = $this->get_request()->getHttpHost();
+        $host = $this->get_maestro()->get_request()->getUri()->getHost();
         //A non-null string is required
         Assertion::string($host);
         Assertion::notEmpty($host);
@@ -108,7 +98,7 @@ class CacheKeyGenerator
      */
     public function local_cache_filename_from_url()
     {
-        $url = $this->get_maestro()->get_request()->getUri();
+        $url = $this->get_maestro()->get_request()->getUri()->__toString();
 
         Assertion::string($url);
         Assertion::notEmpty($url);
@@ -131,7 +121,7 @@ class CacheKeyGenerator
         $host = $this->sanitize_host_for_cache_filename();
         $path = $this->sanitize_path_for_cache_filename();
         $ext = '';
-        if ($this->get_request()->isSecure()) {
+        if ('HTTPS' === strtoupper($this->get_maestro()->get_request()->getUri()->getScheme())) {
             $ext = '_https';
         }
 

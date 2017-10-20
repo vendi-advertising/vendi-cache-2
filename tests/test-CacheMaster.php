@@ -5,7 +5,6 @@ namespace Vendi\Cache\Tests;
 use League\Flysystem\Adapter\Local;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
-use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheMaster;
 use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
@@ -14,119 +13,26 @@ use Vendi\Cache\Maestro;
  * We need to extend from \WP_UnitTestCase because we're calling WP core
  * functions and we need cleanup of stuff.
  */
-class test_CacheMaster extends \WP_UnitTestCase
+class test_CacheMaster extends vendi_cache_test_base
 {
-    private $_dirs = array();
-
-    private $_files = array();
-
-    public function tearDown()
-    {
-        parent::tearDown();
-
-        foreach( $this->_files as $f )
-        {
-            if( is_file( $f ) )
-            {
-                unlink( $f );
-            }
-        }
-
-        foreach( $this->_dirs as $d )
-        {
-            if( is_dir( $d ) )
-            {
-                rmdir( $d );
-            }
-        }
-    }
-
-    //https://stackoverflow.com/a/1707859/231316
-    private function _create_temp_dir()
-    {
-        $tempfile = tempnam( sys_get_temp_dir(), 'VC2' );
-        if( false === $tempfile )
-        {
-            throw new \Exception( 'Could not create file for temporary directory' );
-        }
-
-        if( file_exists( $tempfile ) )
-        {
-            unlink( $tempfile );
-        }
-
-        mkdir( $tempfile );
-
-        if( ! is_dir( $tempfile ) )
-        {
-            throw new \Exception( 'Could not create temporary directory' );
-        }
-
-        $this->_dirs[] = $tempfile;
-
-        return $tempfile;
-    }
 
     private function _get_obj( Maestro $maestro = null )
     {
         if( null === $maestro )
         {
-            $maestro = new Maestro();
+            $maestro = $this->__get_new_maestro();
         }
         return new CacheMaster( $maestro );
     }
 
     private function _get_obj_with_custom_secretary()
     {
-        $secretary = new non_global_constant_secretary();
-        $secretary->set_constant( 'ABSPATH', ABSPATH );
-        $secretary->set_constant( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
-
-        $maestro = ( new Maestro() )
-                    ->with_secretary( $secretary )
-                ;
-
-
-        return new CacheMaster( $maestro );
+        return new CacheMaster( $this->__get_new_maestro() );
     }
 
     private function _get_obj_with_custom_filesystem( $dir )
     {
-        $adapter = new Local(
-                                $dir,
-
-                                //Use locks during write (default)
-                                LOCK_EX,
-
-                                //Throw exception on symlinks (default)
-                                Local::DISALLOW_LINKS,
-
-                                //Special file system permissions
-                                [
-                                    'file' =>
-                                                [
-                                                    'public'  => 0664,
-                                                    'private' => 0664,
-                                                ],
-                                    'dir' =>
-                                                [
-                                                    'public'  => 0777,
-                                                    'private' => 0777,
-                                                ]
-                                ]
-                            );
-
-        $maestro =  ( new Maestro() )
-                        ->with_file_system_adapter( $adapter )
-                        ->with_logger(
-                                        new \Monolog\Logger(
-                                                        'vendi-cache-noop',
-                                                        array( new NullHandler( ) )
-                                                    )
-                         )
-                    ;
-
-        return $this->_get_obj( $maestro );
+        return $this->_get_obj( $this->__get_new_maestro( null, null, $dir ) );
     }
 
     /**
@@ -174,9 +80,7 @@ class test_CacheMaster extends \WP_UnitTestCase
     {
         //No one should be logged in by default
         $cache_master = $this->_get_obj_with_custom_secretary();
-        define( 'GERP', true );
         $this->assertFalse( $cache_master->is_resource_not_cacheable() );
-        define( 'TERP', true );
 
         wp_set_current_user( 1 );
         $cache_master = $this->_get_obj_with_custom_secretary();
@@ -205,7 +109,7 @@ class test_CacheMaster extends \WP_UnitTestCase
      */
     public function test__file_io()
     {
-        $dir = $this->_create_temp_dir();
+        $dir = $this->create_temp_dir();
         $this->assertTrue( is_dir( $dir ) );
 
         $obj = $this->_get_obj_with_custom_filesystem( $dir );
@@ -229,7 +133,7 @@ class test_CacheMaster extends \WP_UnitTestCase
      */
     public function test__delete_cache_dir_contents()
     {
-        $dir = $this->_create_temp_dir();
+        $dir = $this->create_temp_dir();
         $this->assertTrue( is_dir( $dir ) );
 
         $obj = $this->_get_obj_with_custom_filesystem( $dir );

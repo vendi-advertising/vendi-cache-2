@@ -7,7 +7,7 @@ use League\Flysystem\Adapter\Local;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 use Vendi\Cache\CacheMaster;
 use Vendi\Cache\CacheSettings;
 use Vendi\Cache\Secretary;
@@ -52,12 +52,12 @@ final class Maestro
     }
 
     /**
-     * Use the supplied Request.
+     * Use the supplied ServerRequestInterface.
      *
-     * @param  Request $logger The Symfony Request object to base decisions off of
+     * @param  ServerRequestInterface $request The PSR-7 Request object to base decisions off of
      * @return Maestro
      */
-    public function with_request(Request $request)
+    public function with_request(ServerRequestInterface $request)
     {
         $this->_request = $request;
         return $this;
@@ -113,11 +113,11 @@ final class Maestro
 
     /**
      * [get_request description]
-     * @return Request
+     * @return ServerRequestInterface
      */
     public function get_request($do_not_create_new = false)
     {
-        if (! $this->_request instanceof Request) {
+        if (! $this->_request instanceof ServerRequestInterface) {
             if ($do_not_create_new) {
                 throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_request', 'get_request'));
             }
@@ -229,11 +229,11 @@ final class Maestro
 
     /**
      * [get_default_request description]
-     * @return Request
+     * @return ServerRequestInterface
      */
     public static function get_default_request()
     {
-        return Request::createFromGlobals();
+        return VendiPsr7RequestMaker::create_default_request();
     }
 
     /**

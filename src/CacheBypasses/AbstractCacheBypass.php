@@ -41,12 +41,12 @@ abstract class AbstractCacheBypass
 
     final public function get_url()
     {
-        return $this->get_maestro()->get_request()->getUri();
+        return $this->get_maestro()->get_request()->getUri()->__toString();
     }
 
     final public function get_query_string()
     {
-        return $this->get_maestro()->get_request()->getQueryString();
+        return $this->get_maestro()->get_request()->getUri()->getQuery();
     }
 
     final public function get_method()
@@ -56,15 +56,12 @@ abstract class AbstractCacheBypass
 
     final public function get_path_url()
     {
-        //TODO: I'm not 100% sure this is right
-        //https://github.com/symfony/http-foundation/blob/3.4/Request.php#L982
-        $request = $this->get_maestro()->get_request();
-        return $request->getBaseUrl() . $request->getPathInfo();
+        return $this->get_maestro()->get_request()->getUri()->getPath();
     }
 
     final public function get_cookies()
     {
-        return $this->get_maestro()->get_request()->cookies;
+        return $this->get_maestro()->get_request()->getCookieParams();
     }
 
     final public function log_request_as_not_cacheable(array $args)

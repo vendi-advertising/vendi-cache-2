@@ -16,9 +16,7 @@ class test_CacheKeyGenerator extends vendi_cache_test_base
 
     private function _get_cache_key_generator( $url, $method = 'GET', $parameters = array(), $cookies = array(), $files = array(), $server = array(), $content = null )
     {
-        $maestro = Maestro::get_default_instance()
-                    ->with_request( Request::create( $url, $method ) )
-                ;
+        $maestro = $this->__get_new_maestro( Request::create( $url, $method ) );
         return new CacheKeyGenerator( $maestro );
     }
 
@@ -84,14 +82,6 @@ class test_CacheKeyGenerator extends vendi_cache_test_base
     public function test_get_maestro()
     {
         $this->assertInstanceOf( 'Vendi\Cache\Maestro', $this->_get_cache_key_generator( '' )->get_maestro() );
-    }
-
-    /**
-     * @covers Vendi\Cache\CacheKeyGenerator::get_request
-     */
-    public function test_get_request()
-    {
-        $this->assertInstanceOf( 'Symfony\Component\HttpFoundation\Request', $this->_get_cache_key_generator( '' )->get_request() );
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace Vendi\Cache\Tests;
 
 use Symfony\Component\HttpFoundation\Request;
-use Vendi\Cache\Maestro;
 use Vendi\Cache\Admin\UI;
 
 class test_UI extends vendi_cache_test_base
@@ -15,18 +14,9 @@ class test_UI extends vendi_cache_test_base
      */
     public function test___construct__and__get_maestro()
     {
-        $maestro = Maestro::get_default_instance();
+        $maestro = $this->__get_new_maestro();
         $admin_ui = new UI( $maestro );
         $this->assertSame( $maestro, $admin_ui->get_maestro() );
-    }
-
-    /**
-     * @covers Vendi\Cache\Admin\UI::get_request
-     */
-    public function test_get_request()
-    {
-        $admin_ui = new UI( Maestro::get_default_instance() );
-        $this->assertInstanceOf( '\Symfony\Component\HttpFoundation\Request', $admin_ui->get_request() );
     }
 
     /**
@@ -35,10 +25,7 @@ class test_UI extends vendi_cache_test_base
      */
     public function test_get_current_tab( $expected, $url )
     {
-        $maestro = Maestro::get_default_instance()
-                    ->with_request( Request::create( $url ) )
-                ;
-        $admin_ui = new UI( $maestro );
+        $admin_ui = new UI( $this->__get_new_maestro( Request::create( $url ) ) );
         $this->assertSame( $expected, $admin_ui->get_current_tab() );
     }
 
@@ -49,7 +36,7 @@ class test_UI extends vendi_cache_test_base
     {
         $test_url_base = $this->__get_test_url();
 
-        $admin_ui = new UI( Maestro::get_default_instance() );
+        $admin_ui = new UI( $this->__get_new_maestro() );
 
         $this->assertSame(
                             $test_url_base . 'wp-admin/options-general.php?page=vendi-cache-2-settings&tab=cheese',
@@ -62,7 +49,7 @@ class test_UI extends vendi_cache_test_base
      */
     public function test_get_all_tabs_associative( )
     {
-        $admin_ui = new UI( Maestro::get_default_instance() );
+        $admin_ui = new UI( $this->__get_new_maestro() );
 
         $expected = [
                         'cache-mode'       => 'Cache Mode',
@@ -86,7 +73,7 @@ class test_UI extends vendi_cache_test_base
      */
     public function test__NOT_REALLY_A_TEST()
     {
-        $admin_ui = new UI( Maestro::get_default_instance() );
+        $admin_ui = new UI( $this->__get_new_maestro() );
         $admin_ui->handle_page_routing( false );
 
         $this->assertTrue( true );

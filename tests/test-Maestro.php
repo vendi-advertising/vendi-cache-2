@@ -12,7 +12,7 @@ class test_Maestro extends vendi_cache_test_base
      */
     public function test___construct()
     {
-        $maestro = new Maestro();
+        $maestro = $this->__get_new_maestro();
         $this->assertInstanceOf( 'Vendi\\Cache\\Admin\\UI', $maestro->get_admin_ui() );
     }
 
@@ -21,7 +21,7 @@ class test_Maestro extends vendi_cache_test_base
      */
     public function test_with_admin_ui()
     {
-        $maestro = ( new Maestro() );
+        $maestro = $this->__get_new_maestro();
 
         $this->assertInstanceOf( 'Vendi\\Cache\\Maestro', $maestro->with_admin_ui( Maestro::get_default_admin_ui( $maestro ) ) );
     }
@@ -31,7 +31,7 @@ class test_Maestro extends vendi_cache_test_base
      */
     public function test_with_request()
     {
-        $maestro = ( new Maestro() );
+        $maestro = $this->__get_new_maestro();
 
         $this->assertInstanceOf( 'Vendi\\Cache\\Maestro', $maestro->with_request( Maestro::get_default_request( ) ) );
     }
@@ -41,7 +41,7 @@ class test_Maestro extends vendi_cache_test_base
      */
     public function test_with_secretary()
     {
-        $maestro = ( new Maestro() );
+        $maestro = $this->__get_new_maestro();
 
         $this->assertInstanceOf( 'Vendi\\Cache\\Maestro', $maestro->with_secretary( Maestro::get_default_secretary( ) ) );
     }
@@ -51,7 +51,7 @@ class test_Maestro extends vendi_cache_test_base
      */
     public function test_with_logger()
     {
-        $maestro = ( new Maestro() );
+        $maestro = $this->__get_new_maestro();
 
         $this->assertInstanceOf( 'Vendi\\Cache\\Maestro', $maestro->with_logger( Maestro::get_default_logger( Maestro::get_default_secretary( ) ) ) );
     }
@@ -61,7 +61,7 @@ class test_Maestro extends vendi_cache_test_base
      */
     public function test_with_file_system_adapter()
     {
-        $maestro = ( new Maestro() );
+        $maestro = $this->__get_new_maestro();
 
         $this->assertInstanceOf( 'Vendi\\Cache\\Maestro', $maestro->with_file_system_adapter( Maestro::get_default_adapter( Maestro::get_default_secretary( ) ) ) );
     }
@@ -71,7 +71,7 @@ class test_Maestro extends vendi_cache_test_base
      */
     public function test_get_default_admin_ui()
     {
-        $this->assertInstanceOf( 'Vendi\\Cache\\Admin\\UI', Maestro::get_default_admin_ui( new Maestro() ) );
+        $this->assertInstanceOf( 'Vendi\\Cache\\Admin\\UI', Maestro::get_default_admin_ui( $this->__get_new_maestro() ) );
     }
 
     /**
@@ -79,7 +79,7 @@ class test_Maestro extends vendi_cache_test_base
      */
     public function test_get_default_request()
     {
-        $this->assertInstanceOf( 'Symfony\\Component\\HttpFoundation\\Request', Maestro::get_default_request( ) );
+        $this->assertInstanceOf( 'Psr\\Http\\Message\\ServerRequestInterface', Maestro::get_default_request( ) );
     }
 
     /**
@@ -97,7 +97,7 @@ class test_Maestro extends vendi_cache_test_base
     {
         $this->setExpectedException( '\Exception', 'Attempt at getting undeclared property xyz.' );
 
-        $maestro = new Maestro();
+        $maestro = $this->__get_new_maestro();
         $maestro->xyz;
     }
 
@@ -108,7 +108,7 @@ class test_Maestro extends vendi_cache_test_base
     {
         $this->setExpectedException( '\Exception', 'Attempt at setting undeclared property xyz.' );
 
-        $maestro = new Maestro();
+        $maestro = $this->__get_new_maestro();
         $maestro->xyz = 'ABC';
     }
 
@@ -124,11 +124,13 @@ class test_Maestro extends vendi_cache_test_base
      */
     public function test__get_XYZ_no_gen( $property, $method, $type )
     {
-        $maestro = new Maestro();
+        $maestro = $this->__get_new_maestro();
         $this->assertInstanceOf( $type, $maestro->$method( ) );
 
-        $this->setExpectedException( '\Exception', "The property $property is null and the getter $method was requested to not generate a new one." );
+        //DO NOT convert to __get_new_maestro(). This is explicitly used this
+        //way in order to throw the exception below!!
         $maestro = new Maestro();
+        $this->setExpectedException( '\Exception', "The property $property is null and the getter $method was requested to not generate a new one." );
         $maestro->$method( true );
     }
 
@@ -136,7 +138,7 @@ class test_Maestro extends vendi_cache_test_base
     {
         return [
                     [ '_admin_ui',     'get_admin_ui',     'Vendi\\Cache\\Admin\\UI' ],
-                    [ '_request',      'get_request',      'Symfony\\Component\\HttpFoundation\\Request' ],
+                    [ '_request',      'get_request',      'Psr\\Http\\Message\\ServerRequestInterface' ],
                     [ '_logger',       'get_logger',       'Psr\\Log\\LoggerInterface' ],
                     [ '_adapter',      'get_adapter',      'League\\Flysystem\\AdapterInterface' ],
                     [ '_secretary',    'get_secretary',    'Vendi\\Cache\\Secretary' ],
