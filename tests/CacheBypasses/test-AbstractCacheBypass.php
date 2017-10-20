@@ -17,51 +17,6 @@ class test_1 extends AbstractCacheBypass
     }
 }
 
-class nullhandler_for_test_log_request_as_not_cacheable extends NullHandler
-{
-    //This is what we're searching for
-    private $search_text;
-
-    //The instance of a PHP Unit class to that we can
-    //use assert
-    private $outer_class;
-
-    public function __construct( $search_text, \PHPUnit_Framework_TestCase $outer_class )
-    {
-        $this->search_text = $search_text;
-        $this->outer_class = $outer_class;
-    }
-
-    public function handle( array $record )
-    {
-        //We're calling MonoLog's logger just once and it should match
-        //everything that we expect
-
-        //Check for known keys
-        $this->outer_class->assertArrayHasKey( 'message',    $record );
-        $this->outer_class->assertArrayHasKey( 'level_name', $record );
-        $this->outer_class->assertArrayHasKey( 'level',      $record );
-        $this->outer_class->assertArrayHasKey( 'channel',    $record );
-        $this->outer_class->assertArrayHasKey( 'context',    $record );
-
-        //Check their values
-        $this->outer_class->assertSame( $record[ 'message'    ], 'Request not cacheable' );
-        $this->outer_class->assertSame( $record[ 'level_name' ], 'DEBUG' );
-        $this->outer_class->assertSame( $record[ 'level'      ], 100 );
-        $this->outer_class->assertSame( $record[ 'channel'    ], 'vendi-cache-noop' );
-
-        //The context us the special part and it should be an array with one key
-        //name "reason" and our specified value
-        $this->outer_class->assertTrue( is_array( $record[ 'context' ] ) );
-        $this->outer_class->assertCount( 1, $record[ 'context' ] );
-
-        $this->outer_class->assertArrayHasKey( 'reason',    $record[ 'context' ] );
-        $this->outer_class->assertSame( $record[ 'context' ][ 'reason' ], $this->search_text );
-
-
-    }
-}
-
 class abstractcachebypass_for_test_log_request_as_not_cacheable extends AbstractCacheBypass
 {
     public $search_text;
@@ -134,7 +89,12 @@ class test_AbstractCacheBypass extends vendi_cache_test_base
         //an instance of this class so that it can invoke PHP unit asserts.
         //Re-read the second part of that sentence again to make sure you
         //understand it.
-        $handler = new nullhandler_for_test_log_request_as_not_cacheable( $search_text, $this );
+        $handler = new nullhandler_log_handler(
+                                                function( array $record ) use ( $search_text )
+                                                {
+                                                    $this->_handle( $record, $search_text );
+                                                }
+                                            );
 
         //Create a new Maestro with mostly default except for our customer
         //handler from above
@@ -158,6 +118,35 @@ class test_AbstractCacheBypass extends vendi_cache_test_base
         //Actually invoke the test (results don't matter) which invokes the
         //logger
         $tester->is_resource_not_cacheable();
+
+    }
+
+    private function _handle( array $record, $search_text )
+    {
+        //We're calling MonoLog's logger just once and it should match
+        //everything that we expect
+
+        //Check for known keys
+        $this->assertArrayHasKey( 'message',    $record );
+        $this->assertArrayHasKey( 'level_name', $record );
+        $this->assertArrayHasKey( 'level',      $record );
+        $this->assertArrayHasKey( 'channel',    $record );
+        $this->assertArrayHasKey( 'context',    $record );
+
+        //Check their values
+        $this->assertSame( $record[ 'message'    ], 'Request not cacheable' );
+        $this->assertSame( $record[ 'level_name' ], 'DEBUG' );
+        $this->assertSame( $record[ 'level'      ], 100 );
+        $this->assertSame( $record[ 'channel'    ], 'vendi-cache-noop' );
+
+        //The context us the special part and it should be an array with one key
+        //name "reason" and our specified value
+        $this->assertTrue( is_array( $record[ 'context' ] ) );
+        $this->assertCount( 1, $record[ 'context' ] );
+
+        $this->assertArrayHasKey( 'reason',    $record[ 'context' ] );
+        $this->assertSame( $record[ 'context' ][ 'reason' ], $search_text );
+
 
     }
 }
