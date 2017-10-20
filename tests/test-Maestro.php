@@ -124,11 +124,12 @@ class test_Maestro extends vendi_cache_test_base
      */
     public function test__get_XYZ_no_gen( $property, $method, $type )
     {
-        $maestro = $this->__get_new_maestro();
+        //DO NOT convert these to __get_new_maestro().
+        //These explicitly use the constructor for testing purposes.
+
+        $maestro = new Maestro();
         $this->assertInstanceOf( $type, $maestro->$method( ) );
 
-        //DO NOT convert to __get_new_maestro(). This is explicitly used this
-        //way in order to throw the exception below!!
         $maestro = new Maestro();
         $this->setExpectedException( '\Exception', "The property $property is null and the getter $method was requested to not generate a new one." );
         $maestro->$method( true );
