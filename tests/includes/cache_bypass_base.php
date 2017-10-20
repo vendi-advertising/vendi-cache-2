@@ -90,19 +90,19 @@ class cache_bypass_base extends \PHPUnit_Framework_TestCase
         //If the constant doesn't exist then we assume the resource is cacheable
         $obj = "\\Vendi\\Cache\\CacheBypasses\\$class_to_test";
         $test = new $obj( $maestro );
-        $this->assertTrue( $test->test_constant() );
+        $this->assertFalse( $test->is_resource_not_cacheable_because_constant_is_true() );
 
         $cache_settings->set_constant( $name, true );
 
         $obj = "\\Vendi\\Cache\\CacheBypasses\\$class_to_test";
         $test = new $obj( $maestro );
-        $this->assertFalse( $test->test_constant() );
+        $this->assertTrue( $test->is_resource_not_cacheable_because_constant_is_true() );
 
         //Constant is define but weirdly set to false. This me
         $cache_settings->set_constant( $name, false );
 
         $obj = "\\Vendi\\Cache\\CacheBypasses\\$class_to_test";
         $test = new $obj( $maestro );
-        $this->assertTrue( $test->test_constant() );
+        $this->assertFalse( $test->is_resource_not_cacheable_because_constant_is_true() );
     }
 }

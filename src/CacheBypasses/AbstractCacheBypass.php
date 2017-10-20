@@ -14,6 +14,8 @@ abstract class AbstractCacheBypass
 
     private $_maestro;
 
+    abstract public function is_resource_not_cacheable();
+
     public function __construct(Maestro $maestro)
     {
         $this->_maestro = $maestro;

@@ -55,7 +55,7 @@ final class CacheBypassTester
         return $this->get_maestro()->get_request();
     }
 
-    public function test_request()
+    public function is_resource_not_cacheable()
     {
         $maestro  = $this->get_maestro();
         $request  = $this->get_request();
@@ -86,28 +86,28 @@ final class CacheBypassTester
         $root_namespace = __NAMESPACE__;
         $test_namespace = 'CacheBypasses';
 
-        $debug = defined('CHEESE') && CHEESE && ! defined('BOOGER');
+        $debug = defined('GERP') && GERP && ! defined('TERP');
 
         foreach ($tests as $test) {
             $class = "$root_namespace\\$test_namespace\\$test";
 
             $t = new $class($maestro);
-            $result = $t->is_cacheable();
+            $result = $t->is_resource_not_cacheable();
 
-            if ($debug && ! $result) {
+            if ($debug && $result) {
                 dump($class);
             }
 
             $logger->debug(
                                 'Single test run',
                                 [
-                                    'test'          => $test,
-                                    'is_cacheable'  => $result,
+                                    'test'                      => $test,
+                                    'is_resource_not_cacheable' => $result,
                                 ]
                         );
 
-            if (false === $result) {
-                return false;
+            if ($result) {
+                return true;
             }
         }
 
@@ -125,6 +125,6 @@ final class CacheBypassTester
         //     $logger->debug( 'Request not cacheable', [ 'reason' => 'Exclusion rule cound', 'exclusion_rule' => $exclusion_rule ] );
         // }
 
-        return true;
+        return false;
     }
 }

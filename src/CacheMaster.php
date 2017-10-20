@@ -22,7 +22,7 @@ final class CacheMaster
 
     const LEGACY_FILTER_NAME__NO_CACHE = 'vendi-cache/do-not-cache';
 
-    private $_is_request_cacheable = null;
+    private $_is_resource_not_cacheable = null;
 
     private $_maestro = null;
 
@@ -210,34 +210,34 @@ final class CacheMaster
         }
     }
 
-    public function is_request_cacheable()
+    public function is_resource_not_cacheable()
     {
         $test_runner = new CacheBypassTester($this->get_maestro());
-        if (false === $test_runner->test_request()) {
-            return false;
+        if ($test_runner->is_resource_not_cacheable()) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public function _flag_request_as_cacheable()
     {
-        if (false === $this->_is_request_cacheable) {
+        if ($this->_is_resource_not_cacheable) {
             $this->get_logger()->error('Request previously marked as not cacheable, cannot undo action');
             return;
         }
 
-        $this->_is_request_cacheable = true;
+        $this->_is_resource_not_cacheable = false;
     }
 
     public function _flag_request_as_not_cacheable()
     {
-        $this->_is_request_cacheable = false;
+        $this->_is_resource_not_cacheable = true;
     }
 
     public function _maybe_serve_cached_file()
     {
-        if (false === $this->is_request_cacheable()) {
+        if ($this->is_resource_not_cacheable()) {
             $this->_flag_request_as_not_cacheable();
             return;
         }
@@ -294,7 +294,7 @@ final class CacheMaster
 
     public function _setup_actual_request_caching()
     {
-        if (true !== $this->_is_request_cacheable) {
+        if ($this->_is_resource_not_cacheable) {
             $this->get_logger()->debug('Not setting up page caching, previous check flagged request as non-cacheable');
             return;
         }

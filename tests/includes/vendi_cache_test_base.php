@@ -13,6 +13,19 @@ class vendi_cache_test_base extends \PHPUnit_Framework_TestCase
         return new Maestro();
     }
 
+    public function _get_new_maestro_with_non_global_secretary()
+    {
+        return ( new Maestro() )
+                    ->with_secretary( new \Vendi\Cache\Tests\non_global_constant_secretary() )
+                    ->with_logger(
+                                    new \Monolog\Logger(
+                                                    'vendi-cache-noop',
+                                                    array( new NullHandler( ) )
+                                                )
+                     )
+                ;
+    }
+
     public function _get_maestro_with_custom_filesystem( $dir )
     {
         $adapter = new Local(

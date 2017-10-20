@@ -9,7 +9,7 @@ abstract class AbstractCacheBypassWithConstantAndFunction extends AbstractCacheB
 {
     private $_constant;
 
-    abstract public function test_specific_function_and_log_failure();
+    abstract public function is_resource_not_cacheable_because_function_says_so();
 
     public function __construct(Maestro $maestro, $constant)
     {
@@ -26,22 +26,20 @@ abstract class AbstractCacheBypassWithConstantAndFunction extends AbstractCacheB
         return $this->_constant;
     }
 
-    final public function is_cacheable()
+    final public function is_resource_not_cacheable()
     {
-        if (!$this->test_constant()) {
-            return false;
+        if ($this->is_resource_not_cacheable_because_constant_is_true()) {
+            return true;
         }
 
-        //This function is defined in wp-includes/load.php and is guaranteed to
-        //exist as long as WP exists.
-        if (!$this->test_specific_function_and_log_failure()) {
-            return false;
+        if ($this->is_resource_not_cacheable_because_function_says_so()) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
-    final public function test_constant()
+    final public function is_resource_not_cacheable_because_constant_is_true()
     {
         $name = $this->_constant;
 
@@ -50,7 +48,7 @@ abstract class AbstractCacheBypassWithConstantAndFunction extends AbstractCacheB
         //We're looking for hard-stop constants. If the constant doesn't exist
         //then assume that we can cache this resource.
         if (! $settings->is_constant_defined($name)) {
-            return true;
+            return false;
         }
 
         //Constants are assumed to be boolean
@@ -70,7 +68,7 @@ abstract class AbstractCacheBypassWithConstantAndFunction extends AbstractCacheB
                                 'constant' => $name,
                             ]
                     );
-            return true;
+            return false;
         }
 
         $this->log_request_as_not_cacheable(
@@ -80,7 +78,7 @@ abstract class AbstractCacheBypassWithConstantAndFunction extends AbstractCacheB
                                                 ]
                                         );
 
-        return false;
+        return true;
     }
 
     final public function log_request_as_not_cacheable_because_function_returned_value($name, $value)

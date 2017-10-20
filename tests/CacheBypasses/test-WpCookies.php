@@ -9,10 +9,10 @@ use Vendi\Cache\CacheBypasses\WpCookies;
 class test_WpCookies extends cache_bypass_base
 {
     /**
-     * @covers Vendi\Cache\CacheBypasses\WpCookies::is_cacheable
-     * @dataProvider provider_for_test_is_cacheable
+     * @covers Vendi\Cache\CacheBypasses\WpCookies::is_resource_not_cacheable
+     * @dataProvider provider_for_test_is_resource_not_cacheable
      */
-    public function test_is_cacheable( $name, $value, $is_cacheable )
+    public function test_is_resource_not_cacheable( $name, $value, $is_resource_not_cacheable )
     {
         //Common bootstrap
         $request = Request::create( '', 'GET', array(), array( $name => $value ) );
@@ -20,22 +20,22 @@ class test_WpCookies extends cache_bypass_base
 
         $test = new WpCookies( $maestro );
 
-        $this->assertSame( $is_cacheable, $test->is_cacheable() );
+        $this->assertSame( $is_resource_not_cacheable, $test->is_resource_not_cacheable() );
     }
 
-    public function provider_for_test_is_cacheable( )
+    public function provider_for_test_is_resource_not_cacheable( )
     {
         return [
                     //Unknown cookie, should cache
-                    [ 'cheese',                 'cheese', true ],
+                    [ 'cheese',                 'cheese', false ],
 
                     //Should not cache
-                    [ 'comment_author',         'cheese', false ],
-                    [ 'wp-postpass',            'cheese', false ],
-                    [ 'wf_logout',              'cheese', false ],
-                    [ 'wordpress_logged_in',    'cheese', false ],
-                    [ 'wptouch_switch_toggle',  'cheese', false ],
-                    [ 'wpmp_switcher',          'cheese', false ],
+                    [ 'comment_author',         'cheese', true ],
+                    [ 'wp-postpass',            'cheese', true ],
+                    [ 'wf_logout',              'cheese', true ],
+                    [ 'wordpress_logged_in',    'cheese', true ],
+                    [ 'wptouch_switch_toggle',  'cheese', true ],
+                    [ 'wpmp_switcher',          'cheese', true ],
             ];
     }
 }

@@ -4,7 +4,7 @@ namespace Vendi\Cache\CacheBypasses;
 
 final class WpCorePage extends AbstractCacheBypass
 {
-    public function is_cacheable()
+    public function is_resource_not_cacheable()
     {
         $no_cache_pages = [
                             '/wp-login.php',
@@ -23,10 +23,10 @@ final class WpCorePage extends AbstractCacheBypass
                                                             'page'   => $page,
                                                         ]
                                                 );
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 }

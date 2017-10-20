@@ -11,9 +11,9 @@ use Vendi\Cache\Tests\vendi_cache_test_base;
 
 class test_1 extends AbstractCacheBypass
 {
-    public function is_cacheable( )
+    public function is_resource_not_cacheable( )
     {
-        return true;
+        return false;
     }
 }
 
@@ -66,7 +66,7 @@ class abstractcachebypass_for_test_log_request_as_not_cacheable extends Abstract
 {
     public $search_text;
 
-    public function is_cacheable( )
+    public function is_resource_not_cacheable( )
     {
         //Invoke the logger which will be asserted above
         $this->log_request_as_not_cacheable(
@@ -157,7 +157,7 @@ class test_AbstractCacheBypass extends vendi_cache_test_base
 
         //Actually invoke the test (results don't matter) which invokes the
         //logger
-        $tester->is_cacheable();
+        $tester->is_resource_not_cacheable();
 
     }
 }

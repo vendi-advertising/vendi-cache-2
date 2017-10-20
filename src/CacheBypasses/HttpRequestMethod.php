@@ -4,7 +4,7 @@ namespace Vendi\Cache\CacheBypasses;
 
 final class HttpRequestMethod extends AbstractCacheBypass
 {
-    public function is_cacheable()
+    public function is_resource_not_cacheable()
     {
         $method = $this->get_method();
 
@@ -16,9 +16,9 @@ final class HttpRequestMethod extends AbstractCacheBypass
                                                     ]
                                             );
 
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

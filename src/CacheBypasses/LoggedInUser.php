@@ -4,7 +4,7 @@ namespace Vendi\Cache\CacheBypasses;
 
 final class LoggedInUser extends AbstractCacheBypass
 {
-    public function is_cacheable()
+    public function is_resource_not_cacheable()
     {
         //I have no way to test this. There's really no way for this method to
         //get invoked without the function existing (since we load everything in
@@ -16,7 +16,7 @@ final class LoggedInUser extends AbstractCacheBypass
                                                         'reason' => 'Required function get_current_user_id not found',
                                                     ]
             );
-            return false;
+            return true;
         }
 
         if (0 !== get_current_user_id()) {
@@ -26,9 +26,9 @@ final class LoggedInUser extends AbstractCacheBypass
                                                         'user_id' => '$user_id',
                                                     ]
                                             );
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

@@ -12,13 +12,13 @@ class test_CacheBypassTester extends vendi_cache_test_base
 {
 
     /**
-     * @covers Vendi\Cache\CacheBypassTester::test_request
+     * @covers Vendi\Cache\CacheBypassTester::is_resource_not_cacheable
      */
     public function test_test_request()
     {
         $maestro = Maestro::get_default_instance();
         $tester = new CacheBypassTester( $maestro );
-        $this->assertTrue( is_bool( $tester->test_request() ) );
+        $this->assertTrue( is_bool( $tester->is_resource_not_cacheable() ) );
     }
 
     /**

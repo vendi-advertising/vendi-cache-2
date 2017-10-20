@@ -4,7 +4,7 @@ namespace Vendi\Cache\CacheBypasses;
 
 final class PhpError extends AbstractCacheBypass
 {
-    public function is_cacheable()
+    public function is_resource_not_cacheable()
     {
         $settings = $this->get_secretary();
 
@@ -15,9 +15,9 @@ final class PhpError extends AbstractCacheBypass
                                                         'constant' => 'VENDI_CACHE_PHP_ERROR',
                                                     ]
                                             );
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

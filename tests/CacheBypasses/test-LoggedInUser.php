@@ -8,9 +8,9 @@ use Vendi\Cache\CacheBypasses\LoggedInUser;
 class test_LoggedInUser extends cache_bypass_base
 {
     /**
-     * @covers Vendi\Cache\CacheBypasses\LoggedInUser::is_cacheable
+     * @covers Vendi\Cache\CacheBypasses\LoggedInUser::is_resource_not_cacheable
      */
-    public function test_is_cacheable( )
+    public function test_is_resource_not_cacheable( )
     {
         //Common bootstrap
         $maestro = $this->__get_new_maestro();
@@ -18,12 +18,12 @@ class test_LoggedInUser extends cache_bypass_base
 
         $test = new LoggedInUser( $maestro );
 
-        $this->assertTrue( $test->is_cacheable() );
+        $this->assertFalse( $test->is_resource_not_cacheable() );
 
         wp_set_current_user( 0 );
-        $this->assertTrue( $test->is_cacheable() );
+        $this->assertFalse( $test->is_resource_not_cacheable() );
 
         wp_set_current_user( 1 );
-        $this->assertFalse( $test->is_cacheable() );
+        $this->assertTrue( $test->is_resource_not_cacheable() );
     }
 }

@@ -168,17 +168,19 @@ class test_CacheMaster extends \WP_UnitTestCase
     }
 
     /**
-     * @covers Vendi\Cache\CacheMaster::is_request_cacheable()
+     * @covers Vendi\Cache\CacheMaster::is_resource_not_cacheable()
      */
-    public function test_is_request_cacheable()
+    public function test_is_resource_not_cacheable()
     {
         //No one should be logged in by default
         $cache_master = $this->_get_obj_with_custom_secretary();
-        $this->assertTrue( $cache_master->is_request_cacheable() );
+        define( 'GERP', true );
+        $this->assertFalse( $cache_master->is_resource_not_cacheable() );
+        define( 'TERP', true );
 
         wp_set_current_user( 1 );
         $cache_master = $this->_get_obj_with_custom_secretary();
-        $this->assertFalse( $cache_master->is_request_cacheable() );
+        $this->assertTrue( $cache_master->is_resource_not_cacheable() );
     }
 
     /**

@@ -4,7 +4,7 @@ namespace Vendi\Cache\CacheBypasses;
 
 final class QueryString extends AbstractCacheBypass
 {
-    public function is_cacheable()
+    public function is_resource_not_cacheable()
     {
         //TODO: Cache resources if we have a DDOS style querystring? Original code was:
         /*
@@ -24,9 +24,9 @@ final class QueryString extends AbstractCacheBypass
                                                         'query_string' => $query_string,
                                                     ]
                                             );
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

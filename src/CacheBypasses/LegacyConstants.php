@@ -4,7 +4,7 @@ namespace Vendi\Cache\CacheBypasses;
 
 final class LegacyConstants extends AbstractCacheBypass
 {
-    public function is_cacheable()
+    public function is_resource_not_cacheable()
     {
         $settings = $this->get_secretary();
 
@@ -23,10 +23,10 @@ final class LegacyConstants extends AbstractCacheBypass
                                                             'constant' => $constant,
                                                         ]
                                                 );
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 }

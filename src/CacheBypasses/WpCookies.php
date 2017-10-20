@@ -6,7 +6,7 @@ use \Symfony\Component\HttpFoundation\ParameterBag;
 
 final class WpCookies extends AbstractCacheBypass
 {
-    public function is_cacheable()
+    public function is_resource_not_cacheable()
     {
         $client_cookies = $this->get_cookies();
 
@@ -32,12 +32,12 @@ final class WpCookies extends AbstractCacheBypass
                                                                     'value'  => $client_cookies->get($client_cookie),
                                                                 ]
                                                         );
-                        return false;
+                        return true;
                     }
                 }
             }
         }
 
-        return true;
+        return false;
     }
 }

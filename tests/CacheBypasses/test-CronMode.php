@@ -8,9 +8,10 @@ class test_CacheBypasses_CronMode extends cache_bypass_base
 {
 
     /**
-     * @covers Vendi\Cache\CacheBypasses\CronMode::is_cacheable
+     * @covers Vendi\Cache\CacheBypasses\CronMode::is_resource_not_cacheable
+     * @covers Vendi\Cache\CacheBypasses\AbstractCacheBypassWithConstantAndFunction::is_resource_not_cacheable_because_constant_is_true
      */
-    public function test_is_cacheable__DOING_CRON__not_defined()
+    public function test_is_resource_not_cacheable__DOING_CRON__not_defined()
     {
         $this->_test_is_cacheable_because_fatal_constant_not_defined( 'CronMode', 'DOING_CRON' );
     }
@@ -26,16 +27,16 @@ class test_CacheBypasses_CronMode extends cache_bypass_base
     }
 
     /**
-     * @covers Vendi\Cache\CacheBypasses\CronMode::test_specific_function_and_log_failure
+     * @covers Vendi\Cache\CacheBypasses\CronMode::is_resource_not_cacheable_because_function_says_so
      */
-    public function test_test_specific_function_and_log_failure()
+    public function test_is_resource_not_cacheable_because_function_says_so()
     {
         $tester = new CronMode( $this->__get_new_maestro(), 'DOING_CRON' );
 
         add_filter( 'wp_doing_cron', function(){return true;}, 99998 );
-        $this->assertFalse($tester->test_specific_function_and_log_failure() );
+        $this->assertTrue($tester->is_resource_not_cacheable_because_function_says_so() );
 
         add_filter( 'wp_doing_cron', function(){return false;}, 99999 );
-        $this->assertTrue($tester->test_specific_function_and_log_failure() );
+        $this->assertFalse($tester->is_resource_not_cacheable_because_function_says_so() );
     }
 }

@@ -9,23 +9,23 @@ class test_LegacyConstants extends cache_bypass_base
 {
 
     /**
-     * @covers Vendi\Cache\CacheBypasses\LegacyConstants::is_cacheable
-     * @dataProvider provider_for_test_is_cacheable
+     * @covers Vendi\Cache\CacheBypasses\LegacyConstants::is_resource_not_cacheable
+     * @dataProvider provider_for_test_is_resource_not_cacheable
      */
-    public function test_is_cacheable( $name )
+    public function test_is_resource_not_cacheable( $name )
     {
         $maestro = $this->__get_new_maestro();
         $cache_settings = $maestro->get_secretary();
         $this->assertFalse( $cache_settings->is_constant_defined( $name ) );
 
         $test = new LegacyConstants( $maestro );
-        $this->assertTrue( $test->is_cacheable() );
+        $this->assertFalse( $test->is_resource_not_cacheable() );
 
         $cache_settings->set_constant( $name, true );
-        $this->assertFalse( $test->is_cacheable() );
+        $this->assertTrue( $test->is_resource_not_cacheable() );
     }
 
-    public function provider_for_test_is_cacheable()
+    public function provider_for_test_is_resource_not_cacheable()
     {
         $legacy_cache_constants = [
                                     [ 'WFDONOTCACHE' ],

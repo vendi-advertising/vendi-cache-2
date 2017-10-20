@@ -6,7 +6,7 @@ use Webmozart\PathUtil\Path;
 
 final class MaintenanceMode extends AbstractCacheBypass
 {
-    public function is_cacheable()
+    public function is_resource_not_cacheable()
     {
         $settings = $this->get_secretary();
 
@@ -21,7 +21,7 @@ final class MaintenanceMode extends AbstractCacheBypass
                                                         'file'   => $test_file,
                                                     ]
                                             );
-            return false;
+            return true;
         }
 
         if (apply_filters('enable_maintenance_mode', false, 0)) {
@@ -31,9 +31,9 @@ final class MaintenanceMode extends AbstractCacheBypass
                                                         'src'    => 'Filter enable_maintenance_mode returned true',
                                                     ]
                                             );
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }
