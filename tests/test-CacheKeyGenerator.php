@@ -108,7 +108,7 @@ class test_CacheKeyGenerator extends vendi_cache_test_base
      */
     public function test___construct( )
     {
-        $cache_key_generator = new CacheKeyGenerator( Maestro::get_default_instance() );
+        $cache_key_generator = new CacheKeyGenerator( $this->__get_new_maestro() );
         $this->assertInstanceOf( 'Vendi\Cache\Maestro', $cache_key_generator->get_maestro() );
     }
 

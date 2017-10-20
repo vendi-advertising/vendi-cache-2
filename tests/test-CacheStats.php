@@ -106,8 +106,7 @@ class test_CacheStats extends vendi_cache_test_base
 
     public function test_NOTHING()
     {
-        $maestro = Maestro::get_default_instance();
-        \Vendi\Cache\CacheStats::generate_from_file_system( $maestro );
+        \Vendi\Cache\CacheStats::generate_from_file_system( $this->__get_new_maestro() );
         $this->assertTrue( true );
     }
 

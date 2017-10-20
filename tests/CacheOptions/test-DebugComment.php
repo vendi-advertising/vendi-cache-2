@@ -11,7 +11,7 @@ class test_DebugComment extends vendi_cache_test_base
 {
     private function _get_test_object()
     {
-        return ( new DebugComment( Maestro::get_default_instance()->get_secretary() ) );
+        return ( new DebugComment( $this->__get_new_maestro()->get_secretary() ) );
     }
 
     /**

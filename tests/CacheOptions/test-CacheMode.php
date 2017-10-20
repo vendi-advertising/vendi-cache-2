@@ -11,7 +11,7 @@ class test_CacheMode extends vendi_cache_test_base
 {
     private function _get_test_object()
     {
-        return ( new CacheMode( Maestro::get_default_instance()->get_secretary() ) );
+        return ( new CacheMode( $this->__get_new_maestro()->get_secretary() ) );
     }
 
     /**

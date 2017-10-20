@@ -12,13 +12,8 @@ use Vendi\Cache\Tests\vendi_cache_test_base;
 
 abstract class generic_child_class_of_AbstractCacheOption extends AbstractCacheOption
 {
-    public function __construct( Maestro $maestro = null )
+    public function __construct( Maestro $maestro )
     {
-        if( null === $maestro )
-        {
-            $maestro = Maestro::get_default_instance();
-        }
-
         parent::__construct( $maestro->get_secretary() );
     }
 
@@ -79,17 +74,17 @@ class test_AbstractCacheOption extends vendi_cache_test_base
 {
     private function _get_mock_radio()
     {
-        return new radio_child_class_of_AbstractCacheOption( );
+        return new radio_child_class_of_AbstractCacheOption( $this->__get_new_maestro() );
     }
 
     private function _get_mock_checkbox()
     {
-        return new checkbox_child_class_of_AbstractCacheOption( );
+        return new checkbox_child_class_of_AbstractCacheOption( $this->__get_new_maestro() );
     }
 
     private function _get_mock_unsupported()
     {
-        return new unsupport_child_class_of_AbstractCacheOption( );
+        return new unsupport_child_class_of_AbstractCacheOption( $this->__get_new_maestro() );
     }
 
     /**
