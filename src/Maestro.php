@@ -11,8 +11,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Vendi\Cache\CacheMaster;
 use Vendi\Cache\CacheSettings;
 use Vendi\Cache\Secretary;
-use Vendi\Cache\DefaultUpdater;
-use Vendi\Cache\UpdaterInterface;
 use Vendi\Cache\VendiPsr3Logger;
 use Vendi\Cache\Admin\UI;
 
