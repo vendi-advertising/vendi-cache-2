@@ -2,7 +2,7 @@
 
 namespace Vendi\Cache\Tests;
 
-use Symfony\Component\HttpFoundation\Request;
+use GuzzleHttp\Psr7\ServerRequest;
 use Vendi\Cache\Admin\UI;
 
 class test_UI extends vendi_cache_test_base
@@ -25,7 +25,8 @@ class test_UI extends vendi_cache_test_base
      */
     public function test_get_current_tab( $expected, $url )
     {
-        $admin_ui = new UI( $this->__get_new_maestro( Request::create( $url ) ) );
+        $admin_ui = new UI( $this->__get_new_maestro( $this->__create_server_request_from_url( $url ) ) );
+        // dump( $admin_ui->get_maestro()->get_request()->getQueryParams() );
         $this->assertSame( $expected, $admin_ui->get_current_tab() );
     }
 

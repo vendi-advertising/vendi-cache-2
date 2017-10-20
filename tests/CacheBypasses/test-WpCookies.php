@@ -2,7 +2,6 @@
 
 namespace Vendi\Cache\Tests\CacheBypasses;
 
-use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\Tests\cache_bypass_base;
 use Vendi\Cache\CacheBypasses\WpCookies;
 
@@ -15,7 +14,7 @@ class test_WpCookies extends cache_bypass_base
     public function test_is_resource_not_cacheable( $name, $value, $is_resource_not_cacheable )
     {
         //Common bootstrap
-        $request = Request::create( '', 'GET', array(), array( $name => $value ) );
+        $request = $this->__create_server_request_from_url( '', 'GET', array( $name => $value ) );
         $maestro = $this->__get_new_maestro( $request );
 
         $test = new WpCookies( $maestro );

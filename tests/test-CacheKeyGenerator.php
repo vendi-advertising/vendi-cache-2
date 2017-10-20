@@ -16,7 +16,7 @@ class test_CacheKeyGenerator extends vendi_cache_test_base
 
     private function _get_cache_key_generator( $url, $method = 'GET', $parameters = array(), $cookies = array(), $files = array(), $server = array(), $content = null )
     {
-        $maestro = $this->__get_new_maestro( Request::create( $url, $method ) );
+        $maestro = $this->__get_new_maestro( $this->__create_server_request_from_url( $url, $method ) );
         return new CacheKeyGenerator( $maestro );
     }
 
@@ -117,7 +117,9 @@ class test_CacheKeyGenerator extends vendi_cache_test_base
         return[
                     //expected                  url
 
-                    //A minimum of a trailing slash should always be returned
+                    //PSR-7 says that although "" and "/" are usually the same there's cases
+                    //where specific implementations need them to be different. In thise case,
+                    //however, our implementation merges them.
                     [ '/',                      'http://example.com' ],
                     [ '/',                      'http://example.com/' ],
 

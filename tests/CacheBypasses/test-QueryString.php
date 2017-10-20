@@ -15,7 +15,7 @@ class test_QueryString extends cache_bypass_base
     public function test_is_resource_not_cacheable( $url, $is_resource_not_cacheable )
     {
         //Common bootstrap
-        $maestro = $this->__get_new_maestro( Request::create( $url ) );
+        $maestro = $this->__get_new_maestro( $this->__create_server_request_from_url( $url ) );
 
         $test = new QueryString( $maestro );
 

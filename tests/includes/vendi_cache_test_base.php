@@ -4,7 +4,8 @@ namespace Vendi\Cache\Tests;
 
 use League\Flysystem\Adapter\Local;
 use Monolog\Handler\NullHandler;
-use Symfony\Component\HttpFoundation\Request;
+use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Uri;
 use Vendi\Cache\Maestro;
 use Vendi\Cache\Secretary;
 use Vendi\Cache\Tests\nullhandler_log_handler;
@@ -93,9 +94,25 @@ class vendi_cache_test_base extends \WP_UnitTestCase
         return $tempfile;
     }
 
+    public function __create_server_request_from_url( $url, $method = 'GET', array $cookies = [] )
+    {
+        //This is dumb but whatever. As far as I can tell, Guzzle ignores the query string
+        //for ServerRequest when manually creating an instance.
+        $query_as_string = parse_url( $url, PHP_URL_QUERY );
+        $query_as_array = [];
+        if( $query_as_string )
+        {
+            parse_str( $query_as_string, $query_as_array );
+        }
+        return ( new ServerRequest( $method, $url ) )
+                ->withCookieParams( $cookies )
+                ->withQueryParams( $query_as_array )
+            ;
+    }
+
     /**
      * Create a new maestro for all tests with optional parameters.
-     * @param  Request|null  $request         A specific Symfony Request or null
+     * @param  ServerRequest|null  $request   A specific Guzzle Request or null
      *                                        for the default Request.
      * @param  callable|null $handle_function The function to invoke for each
      *                                        log call or null for none.
@@ -104,7 +121,7 @@ class vendi_cache_test_base extends \WP_UnitTestCase
      *                                        default.
      * @return Maestro
      */
-    public function __get_new_maestro( Request $request = null, callable $handle_function = null, $dir = null, Secretary $secretary = null )
+    public function __get_new_maestro( ServerRequest $request = null, callable $handle_function = null, $dir = null, Secretary $secretary = null )
     {
         $adapter = null;
         if( $dir )
@@ -143,7 +160,7 @@ class vendi_cache_test_base extends \WP_UnitTestCase
 
         return ( new Maestro() )
                 ->with_secretary( $secretary )
-                ->with_request( $request ? VendiPsr7RequestMaker::convert_symfony_request( $request ) : Maestro::get_default_request() )
+                ->with_request( $request ? $request : Maestro::get_default_request() )
                 ->with_file_system_adapter( $adapter ? $adapter : Maestro::get_default_adapter( $secretary ) )
                 ->with_logger(
                                 new \Monolog\Logger(

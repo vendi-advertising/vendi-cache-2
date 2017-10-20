@@ -2,7 +2,6 @@
 
 namespace Vendi\Cache\Tests\CacheBypasses;
 
-use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\Tests\cache_bypass_base;
 use Vendi\Cache\CacheBypasses\WpCorePage;
 
@@ -15,7 +14,7 @@ class test_WpCorePage extends cache_bypass_base
     public function test_is_resource_not_cacheable( $url, $is_resource_not_cacheable )
     {
         //Common bootstrap
-        $maestro = $this->__get_new_maestro( Request::create( $url ) );
+        $maestro = $this->__get_new_maestro( $this->__create_server_request_from_url( $url ) );
 
         $test = new WpCorePage( $maestro );
 

@@ -46,7 +46,12 @@ class CacheKeyGenerator
     {
         $request = $this->get_maestro()->get_request();
 
-        return $request->getUri()->getPath();
+        $ret = $request->getUri()->getPath();
+        if ('' === $ret) {
+            $ret = '/';
+        }
+
+        return $ret;
     }
 
     /**

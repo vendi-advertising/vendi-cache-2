@@ -16,7 +16,7 @@ class test_HttpRequestMethod extends cache_bypass_base
     public function test_is_resource_not_cacheable( $name, $is_resource_not_cacheable )
     {
         $maestro = $this->__get_new_maestro(
-                                                Request::create( '', $name )
+                                                $this->__create_server_request_from_url( '', $name )
                                         );
 
         $test = new HttpRequestMethod( $maestro );

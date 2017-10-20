@@ -3,7 +3,6 @@
 namespace Vendi\Cache\Tests\CacheBypasses;
 
 use Monolog\Handler\NullHandler;
-use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheBypasses\AbstractCacheBypass;
 use Vendi\Cache\Maestro;
 use Vendi\Cache\Secretary;
@@ -39,7 +38,7 @@ class test_AbstractCacheBypass extends vendi_cache_test_base
 
     private function _get_mock()
     {
-        $maestro = $this->__get_new_maestro( Request::create( $this->_url ) );
+        $maestro = $this->__get_new_maestro( $this->__create_server_request_from_url( $this->_url ) );
 
         return new test_1( $maestro );
     }
