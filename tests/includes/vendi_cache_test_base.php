@@ -67,11 +67,45 @@ class vendi_cache_test_base extends \WP_UnitTestCase
         return $tempfile;
     }
 
-    public function __get_new_maestro( Request $request = null, callable $handle_function = null )
+    public function __get_new_maestro( Request $request = null, callable $handle_function = null, $dir = null )
     {
+        $adapter = null;
+        if( $dir )
+        {
+            $adapter = new Local(
+                                    $dir,
+
+                                    //Use locks during write (default)
+                                    LOCK_EX,
+
+                                    //Throw exception on symlinks (default)
+                                    Local::DISALLOW_LINKS,
+
+                                    //Special file system permissions
+                                    [
+                                        'file' =>
+                                                    [
+                                                        'public'  => 0664,
+                                                        'private' => 0664,
+                                                    ],
+                                        'dir' =>
+                                                    [
+                                                        'public'  => 0777,
+                                                        'private' => 0777,
+                                                    ]
+                                    ]
+                                );
+        }
+
+        $secretary = new \Vendi\Cache\Tests\non_global_constant_secretary();
+
+        $secretary->set_constant( 'ABSPATH',        ABSPATH );
+        $secretary->set_constant( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
+
         return ( new Maestro() )
-                ->with_secretary( new \Vendi\Cache\Tests\non_global_constant_secretary() )
-                ->with_request( $request ? $request : Maestro::get_default_request() )
+                ->with_secretary( $secretary )
+                ->with_request(             $request ? $request : Maestro::get_default_request() )
+                ->with_file_system_adapter( $adapter ? $adapter : Maestro::get_default_adapter( $secretary ) )
                 ->with_logger(
                                 new \Monolog\Logger(
                                                 'vendi-cache-noop',
@@ -81,37 +115,6 @@ class vendi_cache_test_base extends \WP_UnitTestCase
                                             )
                  )
             ;
-    }
-
-    public function _get_maestro_with_custom_filesystem( $dir )
-    {
-        $adapter = new Local(
-                                $dir,
-
-                                //Use locks during write (default)
-                                LOCK_EX,
-
-                                //Throw exception on symlinks (default)
-                                Local::DISALLOW_LINKS,
-
-                                //Special file system permissions
-                                [
-                                    'file' =>
-                                                [
-                                                    'public'  => 0664,
-                                                    'private' => 0664,
-                                                ],
-                                    'dir' =>
-                                                [
-                                                    'public'  => 0777,
-                                                    'private' => 0777,
-                                                ]
-                                ]
-                            );
-
-        return $this->_get_new_maestro()
-                        ->with_file_system_adapter( $adapter )
-                    ;
     }
 
      /**
