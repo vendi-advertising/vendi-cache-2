@@ -93,7 +93,7 @@ class test_AbstractCacheOption extends vendi_cache_test_base
     public function test___construct()
     {
         $mock = $this->_get_mock_radio();
-        $this->assertInstanceOf( '\\Vendi\Cache\CacheOptions\\AbstractCacheOption', $mock );
+        $this->assertInstanceOf( '\\Vendi\\Cache\\CacheOptions\\AbstractCacheOption', $mock );
     }
 
     /**
