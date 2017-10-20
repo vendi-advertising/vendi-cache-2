@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheMaster;
 use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
-use Vendi\Cache\VendiMonoLoggger;
+use Vendi\Cache\VendiPsr3Logger;
 
 final class CacheBypassTester
 {

@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
 
 use Vendi\Cache\Secretary;
 
-final class VendiMonoLoggger extends Logger
+final class VendiPsr3Logger extends Logger
 {
     /**
      * Used to trace a specific request through the pipeline by the default logger

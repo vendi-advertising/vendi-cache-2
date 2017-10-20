@@ -13,7 +13,7 @@ use Vendi\Cache\CacheSettings;
 use Vendi\Cache\Secretary;
 use Vendi\Cache\DefaultUpdater;
 use Vendi\Cache\UpdaterInterface;
-use Vendi\Cache\VendiMonoLoggger;
+use Vendi\Cache\VendiPsr3Logger;
 use Vendi\Cache\Admin\UI;
 
 final class Maestro
@@ -297,7 +297,7 @@ final class Maestro
      */
     public static function get_default_logger(Secretary $cache_settings)
     {
-        return new VendiMonoLoggger($cache_settings);
+        return new VendiPsr3Logger($cache_settings);
     }
 
     /**
