@@ -166,13 +166,13 @@ final class CacheMaster
 
             $request = $this->get_maestro()->get_request();
 
-            if ($request->isMethod('POST')) {
+            if ('POST' === $request->getMethod()) {
                 $pages = [
                             '/wp-admin/options.php',
                             '/wp-admin/options-permalink.php',
                         ];
 
-                $current_page = strtolower($request->getBaseUrl() . $request->getPathInfo());
+                $current_page = strtolower($request->getUri()->getPath());
 
                 foreach ($pages as $page) {
                     if ($page == $current_page) {
@@ -193,7 +193,7 @@ final class CacheMaster
     {
         $request = $this->get_maestro()->get_request();
 
-        if ($request->isMethod('GET')) {
+        if ('GET' === $request->getMethod()) {
             return;
         }
 
@@ -347,7 +347,7 @@ final class CacheMaster
             return $buffer;
         }
 
-        $request = $this->get_maestro()->get_request();
+        $uri = $this->get_maestro()->get_request()->getUri();
 
         // $this->get_logger()->debug( 'Buffer', [ 'buffer' => strlen( $buffer ) ] );
 
@@ -372,10 +372,10 @@ final class CacheMaster
         $append .= 'Protocol: ' . ($this->is_https_page() ? 'HTTPS' : 'HTTP') . '. ';
         $append .= 'Page size: ' . strlen($buffer) . ' bytes. ';
 
-        $host = wp_kses($request->getHttpHost(), array());
+        $host = wp_kses($uri->getHost(), array());
 
         $append .= 'Host: ' . $host . '. ';
-        $append .= 'Request URI: ' . wp_kses($request->getBaseUrl() . $request->getPathInfo(), array()) . ' ';
+        $append .= 'Request URI: ' . wp_kses($uri->getPath(), array()) . ' ';
         $appendGzip = $append . " Encoding: GZEncode -->\n";
         $append .= " Encoding: Uncompressed -->\n";
         // }
@@ -405,7 +405,7 @@ final class CacheMaster
             return true;
         }
 
-        return $this->get_maestro()->get_request()->isSecure();
+        return 'HTTPS' === strtoupper($this->get_maestro()->get_request()->getUri()->getScheme());
     }
 
     public function setup_caching()
@@ -417,13 +417,13 @@ final class CacheMaster
 
         $this->_setup_main_hooks();
 
-        $request = $this->get_maestro()->get_request();
+        $uri = $this->get_maestro()->get_request()->getUri();
 
         $this->get_logger()->debug(
                                                         'Request URL is:',
                                                         [
-                                                            'host'   => $request->getHttpHost(),
-                                                            'path'   => $request->getBaseUrl() . $request->getPathInfo(),
+                                                            'host'   => $uri->getHost(),
+                                                            'path'   => $uri->getPath(),
                                                             'secure' => $this->is_https_page(),
                                                         ]
                                                     );

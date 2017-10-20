@@ -25,20 +25,18 @@ class UI
         return $this->_maestro;
     }
 
-    public function get_request()
-    {
-        $request = $this->get_maestro()->get_request();
-        Assertion::isInstanceOf($request, 'Symfony\Component\HttpFoundation\Request');
-        return $request;
-    }
-
     public function get_current_tab()
     {
-        return $this
+        $params = $this
+                ->get_maestro()
                 ->get_request()
-                ->query
-                ->get('tab', '')
+                ->getQueryParams()
             ;
+        if (array_key_exists('tab', $params)) {
+            return $params[ 'tab' ];
+        }
+
+        return '';
     }
 
     public function get_tab_url($tab)
@@ -106,7 +104,7 @@ class UI
             $current_tab = reset($keys);
         }
 
-        if ('POST' === $this->get_request()->getMethod()) {
+        if ('POST' === $this->get_maestro()->get_request()->getMethod()) {
             $this->handle_post($current_tab);
         }
 

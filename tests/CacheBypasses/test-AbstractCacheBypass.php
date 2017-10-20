@@ -39,16 +39,7 @@ class test_AbstractCacheBypass extends vendi_cache_test_base
 
     private function _get_mock()
     {
-        $maestro = ( new Maestro() )
-                    ->with_secretary( new \Vendi\Cache\Tests\non_global_constant_secretary() )
-                    ->with_request( Request::create( $this->_url ) )
-                    ->with_logger(
-                                    new \Monolog\Logger(
-                                                    'vendi-cache-noop',
-                                                    array( new NullHandler( ) )
-                                                )
-                     )
-                ;
+        $maestro = $this->__get_new_maestro( Request::create( $this->_url ) );
 
         return new test_1( $maestro );
     }
@@ -73,7 +64,7 @@ class test_AbstractCacheBypass extends vendi_cache_test_base
         $this->assertSame( 'a=b', $mock->get_query_string() );
         $this->assertSame( 'GET', $mock->get_method() );
         $this->assertSame( '/cheese', $mock->get_path_url() );
-        $this->assertInstanceOf( 'Symfony\Component\HttpFoundation\ParameterBag', $mock->get_cookies() );
+        $this->assertInternalType( 'array', $mock->get_cookies() );
     }
 
     /**
@@ -85,29 +76,15 @@ class test_AbstractCacheBypass extends vendi_cache_test_base
     {
         $search_text = 'cheese';
 
-        //Create a custom MonoLog handler based off of the simple NullHandler.
-        //This handler will be given the string above to search for as well as
-        //an instance of this class so that it can invoke PHP unit asserts.
-        //Re-read the second part of that sentence again to make sure you
-        //understand it.
-        $handler = new nullhandler_log_handler(
+        //Create a new Maestro with mostly default except for our customer
+        //handler from above
+        $maestro = $this->__get_new_maestro(
+                                                null,
                                                 function( array $record ) use ( $search_text )
                                                 {
                                                     $this->_handle( $record, $search_text );
                                                 }
-                                            );
-
-        //Create a new Maestro with mostly default except for our customer
-        //handler from above
-        $maestro = ( new Maestro() )
-
-                    ->with_logger(
-                                    new \Monolog\Logger(
-                                                    'vendi-cache-noop',
-                                                    array( $handler )
-                                                )
-                     )
-                ;
+                                        );
 
         //Finally, subclass our abstract class and create an instance
         $tester = new abstractcachebypass_for_test_log_request_as_not_cacheable( $maestro );

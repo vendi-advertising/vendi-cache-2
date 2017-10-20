@@ -6,15 +6,17 @@ use League\Flysystem\Adapter\Local;
 use Monolog\Handler\NullHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\Maestro;
+use Vendi\Cache\Secretary;
 use Vendi\Cache\Tests\nullhandler_log_handler;
+use Vendi\Cache\VendiPsr7RequestMaker;
 
 class vendi_cache_test_base extends \WP_UnitTestCase
 {
     //Array of directories that this test should cleanup when done
-    private $_dirs = array();
+    public $_dirs = array();
 
     //Array of files that this test should cleanup when done
-    private $_files = array();
+    public $_files = array();
 
     public function tearDown()
     {
@@ -102,7 +104,7 @@ class vendi_cache_test_base extends \WP_UnitTestCase
      *                                        default.
      * @return Maestro
      */
-    public function __get_new_maestro( Request $request = null, callable $handle_function = null, $dir = null )
+    public function __get_new_maestro( Request $request = null, callable $handle_function = null, $dir = null, Secretary $secretary = null )
     {
         $adapter = null;
         if( $dir )
@@ -132,14 +134,16 @@ class vendi_cache_test_base extends \WP_UnitTestCase
                                 );
         }
 
-        $secretary = new \Vendi\Cache\Tests\non_global_constant_secretary();
-
-        $secretary->set_constant( 'ABSPATH',        ABSPATH );
-        $secretary->set_constant( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
+        if( ! $secretary )
+        {
+            $secretary = new \Vendi\Cache\Tests\non_global_constant_secretary();
+            $secretary->set_constant( 'ABSPATH',        ABSPATH );
+            $secretary->set_constant( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
+        }
 
         return ( new Maestro() )
                 ->with_secretary( $secretary )
-                ->with_request(             $request ? $request : Maestro::get_default_request() )
+                ->with_request( $request ? VendiPsr7RequestMaker::convert_symfony_request( $request ) : Maestro::get_default_request() )
                 ->with_file_system_adapter( $adapter ? $adapter : Maestro::get_default_adapter( $secretary ) )
                 ->with_logger(
                                 new \Monolog\Logger(

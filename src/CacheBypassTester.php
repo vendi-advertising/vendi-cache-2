@@ -3,8 +3,6 @@
 namespace Vendi\Cache;
 
 use Assert\Assertion;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheMaster;
 use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
@@ -28,44 +26,13 @@ final class CacheBypassTester
         return $this->_maestro;
     }
 
-    /**
-     * [get_logger description]
-     * @return LoggerInterface
-     */
-    public function get_logger()
-    {
-        return $this->get_maestro()->get_logger();
-    }
-
-    /**
-     * [get_secretary description]
-     * @return Secretary
-     */
-    public function get_secretary()
-    {
-        return $this->get_maestro()->get_secretary();
-    }
-
-    /**
-     * [get_request description]
-     * @return Request
-     */
-    public function get_request()
-    {
-        return $this->get_maestro()->get_request();
-    }
-
     public function is_resource_not_cacheable()
     {
         $maestro  = $this->get_maestro();
-        $request  = $this->get_request();
-        $logger   = $this->get_logger();
-        $settings = $this->get_secretary();
+        $logger   = $this->get_maestro()->get_logger();
 
         Assertion::isInstanceOf($maestro, 'Vendi\Cache\Maestro');
-        Assertion::isInstanceOf($request, 'Symfony\Component\HttpFoundation\Request');
         Assertion::isInstanceOf($logger, 'Psr\Log\LoggerInterface');
-        Assertion::isInstanceOf($settings, 'Vendi\Cache\Secretary');
 
         $tests = [
                     'MaintenanceMode',
