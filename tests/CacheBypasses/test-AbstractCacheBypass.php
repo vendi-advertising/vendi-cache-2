@@ -5,8 +5,9 @@ namespace Vendi\Cache\Tests\CacheBypasses;
 use Monolog\Handler\NullHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Vendi\Cache\CacheBypasses\AbstractCacheBypass;
-use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
+use Vendi\Cache\Secretary;
+use Vendi\Cache\Tests\nullhandler_log_handler;
 use Vendi\Cache\Tests\vendi_cache_test_base;
 
 class test_1 extends AbstractCacheBypass

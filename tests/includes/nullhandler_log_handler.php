@@ -1,6 +1,6 @@
 <?php
 
-namespace Vendi\Cache\Tests\CacheBypasses;
+namespace Vendi\Cache\Tests;
 
 use Monolog\Handler\NullHandler;
 

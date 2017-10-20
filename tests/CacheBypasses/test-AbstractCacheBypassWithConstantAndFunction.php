@@ -35,7 +35,7 @@ class test_AbstractCacheBypassWithConstantAndFunction extends vendi_cache_test_b
     public function test___all($constant_value, $function_return_value, $is_resource_not_cacheable)
     {
 
-        $mock = new test_2( $this->_get_new_maestro_with_non_global_secretary(), 'TEST_DO_NOT_CACHE_CHEESE', $function_return_value );
+        $mock = new test_2( $this->__get_new_maestro(), 'TEST_DO_NOT_CACHE_CHEESE', $function_return_value );
         $this->assertFalse( $mock->get_secretary()->is_constant_defined( 'TEST_DO_NOT_CACHE_CHEESE' ) );
         $mock->get_secretary()->set_constant( 'TEST_DO_NOT_CACHE_CHEESE', $constant_value );
 
