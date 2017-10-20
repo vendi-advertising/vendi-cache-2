@@ -38,6 +38,7 @@ class test_Maestro extends vendi_cache_test_base
 
     /**
      * @covers Vendi\Cache\Maestro::with_secretary()
+     * @covers Vendi\Cache\Maestro::get_default_secretary()
      */
     public function test_with_secretary()
     {
@@ -48,6 +49,7 @@ class test_Maestro extends vendi_cache_test_base
 
     /**
      * @covers Vendi\Cache\Maestro::with_logger()
+     * @covers Vendi\Cache\Maestro::get_default_logger()
      */
     public function test_with_logger()
     {
@@ -58,6 +60,7 @@ class test_Maestro extends vendi_cache_test_base
 
     /**
      * @covers Vendi\Cache\Maestro::with_file_system_adapter()
+     * @covers Vendi\Cache\Maestro::get_default_adapter()
      */
     public function test_with_file_system_adapter()
     {
@@ -80,6 +83,14 @@ class test_Maestro extends vendi_cache_test_base
     public function test_get_default_request()
     {
         $this->assertInstanceOf( 'Psr\\Http\\Message\\ServerRequestInterface', Maestro::get_default_request( ) );
+    }
+
+    /**
+     * @covers Vendi\Cache\Maestro::get_default_instance()
+     */
+    public function test_get_default_instance()
+    {
+        $this->assertInstanceOf( 'Vendi\\Cache\\Maestro', Maestro::get_default_instance() );
     }
 
     /**
