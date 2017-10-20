@@ -8,7 +8,8 @@ A complete rewrite of Vendi Cache (formerly Wordfence Falcon Cache). The goal of
 This version will have a minimum PHP version of probably 5.5. Because of this we are considering releasing this plugin as a second plugin instead of an upgrade of Vendi Cache 1.0. We are hoping to get feedback from users and we'll be monitoring [WordPress's plan on supporting required minimum versions of PHP](https://make.wordpress.org/plugins/2017/08/29/minimum-php-version-requirement/).
 
 ## New Features
- * Built-in logging via [Monolog](https://github.com/Seldaek/monolog)
+ * [PSR-3 Logging](http://www.php-fig.org/psr/psr-3/) via [Monolog](https://github.com/Seldaek/monolog)
+ * All parts of the HTTP request interpreted through [Symfony HttpFoundation](https://github.com/symfony/http-foundation)
  * Better file system abstraction via [Flysystem](http://flysystem.thephpleague.com/) and [File Path Utility](https://github.com/webmozart/path-util)
  * Unit Tests! Unit Tests! Unit Tests! Unit Tests!
 
