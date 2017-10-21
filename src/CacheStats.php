@@ -6,7 +6,7 @@ use League\Flysystem\Plugin\ListWith;
 use Psr\Log\LogLevel;
 use Vendi\Cache\Maestro;
 use Vendi\Cache\CacheOptions\CacheOptionInterface;
-use \Webmozart\PathUtil\Path;
+use Webmozart\PathUtil\Path;
 
 class CacheStats
 {
