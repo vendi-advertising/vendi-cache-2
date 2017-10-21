@@ -22,6 +22,7 @@ return PhpCsFixer\Config::create()
         'no_php4_constructor' => true,
         'no_short_bool_cast' => true,
         'no_short_echo_tag' => true,
+        'no_unused_imports' => true,
     ])
     ->setFinder($finder)
     ->setUsingCache(false)

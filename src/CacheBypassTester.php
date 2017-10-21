@@ -2,10 +2,6 @@
 namespace Vendi\Cache;
 
 use Assert\Assertion;
-use Vendi\Cache\CacheMaster;
-use Vendi\Cache\Secretary;
-use Vendi\Cache\Maestro;
-use Vendi\Cache\VendiPsr3Logger;
 
 final class CacheBypassTester
 {

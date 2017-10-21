@@ -1,16 +1,11 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache;
 
-use Assert\Assertion;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Vendi\Cache\CacheMaster;
-use Vendi\Cache\CacheSettings;
-use Vendi\Cache\Secretary;
-use Vendi\Cache\VendiPsr3Logger;
 use Vendi\Cache\Admin\UI;
 
 final class Maestro

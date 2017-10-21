@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\Admin;
 
-use Assert\Assertion;
 use Vendi\Cache\Maestro;
 
 class UI

@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\CacheBypasses;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
-
 final class WpCookies extends AbstractCacheBypass
 {
     public function is_resource_not_cacheable()

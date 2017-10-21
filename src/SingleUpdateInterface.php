@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache;
 
-use Naneau\SemVer\Version\Versionable;
 use SGH\Comparable\Comparable;
 
 interface SingleUpdateInterface extends Comparable

@@ -4,11 +4,6 @@ namespace Vendi\Cache;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Plugin\ListPaths;
 use Psr\Log\LoggerInterface;
-use Vendi\Cache\Auditing;
-use Vendi\Cache\CacheExclusions;
-use Vendi\Cache\CacheKeyGenerator;
-use Vendi\Cache\ErrorHandler;
-use Vendi\Cache\Secretary;
 
 final class CacheMaster
 {

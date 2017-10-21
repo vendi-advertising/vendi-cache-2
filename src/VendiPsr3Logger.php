@@ -8,8 +8,6 @@ use MySQLHandler\MySQLHandler;
 
 use Ramsey\Uuid\Uuid;
 
-use Vendi\Cache\Secretary;
-
 final class VendiPsr3Logger extends Logger
 {
     /**
