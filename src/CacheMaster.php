@@ -1,15 +1,9 @@
-<?php
-
+<?php declare(strict_types=1);
 namespace Vendi\Cache;
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Plugin\ListPaths;
 use Psr\Log\LoggerInterface;
-use Vendi\Cache\Auditing;
-use Vendi\Cache\CacheExclusions;
-use Vendi\Cache\CacheKeyGenerator;
-use Vendi\Cache\ErrorHandler;
-use Vendi\Cache\Secretary;
 
 final class CacheMaster
 {
@@ -124,7 +118,7 @@ final class CacheMaster
     public function _set_ajax_only_hooks()
     {
         $this->get_logger()->debug('AJAX request found, only listening for cache clear');
-        add_action(self::ACTION_NAME__CACHE_CLEAR, array( $this, 'clear_entire_page_cache' ));
+        add_action(self::ACTION_NAME__CACHE_CLEAR, [ $this, 'clear_entire_page_cache' ]);
         return;
     }
 
@@ -137,15 +131,15 @@ final class CacheMaster
             return;
         }
 
-        add_action(self::ACTION_NAME__CACHE_CLEAR, array( $this, 'clear_entire_page_cache' ));
+        add_action(self::ACTION_NAME__CACHE_CLEAR, [ $this, 'clear_entire_page_cache' ]);
 
         //In theory this should be put at the bottom
         $this->_caching_hooks_setup = true;
 
         if ($this->is_user_logged_in()) {
             $this->get_logger()->debug('User is logged in, additional hooks added');
-            add_action('publish_post', array( $this, 'handle_action_publish_post' ));
-            add_action('publish_page', array( $this, 'handle_action_publish_post' ));
+            add_action('publish_post', [ $this, 'handle_action_publish_post' ]);
+            add_action('publish_page', [ $this, 'handle_action_publish_post' ]);
 
             $hooks = [
                         'clean_object_term_cache',
@@ -161,7 +155,7 @@ final class CacheMaster
 
             foreach ($hooks as $action) {
                 //Schedules a cache clear for immediately so it won't lag current request.
-                add_action($action, array( $this, 'handle_action_clear_page_cache' ));
+                add_action($action, [ $this, 'handle_action_clear_page_cache' ]);
             }
 
             $request = $this->get_maestro()->get_request();
@@ -172,7 +166,7 @@ final class CacheMaster
                             '/wp-admin/options-permalink.php',
                         ];
 
-                $current_page = strtolower($request->getUri()->getPath());
+                $current_page = mb_strtolower($request->getUri()->getPath());
 
                 foreach ($pages as $page) {
                     if ($page == $current_page) {
@@ -185,8 +179,8 @@ final class CacheMaster
         }
 
         //Might not be logged in
-        add_action('comment_post', array( $this, 'handle_action_comment_post' ));
-        add_filter('wp_redirect', array( $this, 'handle_filter_redirect_filter' ));
+        add_action('comment_post', [ $this, 'handle_action_comment_post' ]);
+        add_filter('wp_redirect', [ $this, 'handle_filter_redirect_filter' ]);
     }
 
     public function _maybe_purge_cached_file_on_non_GET_method()
@@ -320,7 +314,7 @@ final class CacheMaster
                                                             }
          );
 
-        ob_start(array( __CLASS__, 'handle_ob_complete' )); //Setup routine to store the file
+        ob_start([ __CLASS__, 'handle_ob_complete' ]); //Setup routine to store the file
     }
 
     public function handle_ob_complete($buffer = '')
@@ -342,8 +336,8 @@ final class CacheMaster
 
         //The average web page size is 1246,000 bytes. If web page is less than 1000 bytes, don't cache it.
         //TODO: Move to option
-        if (strlen($buffer) < $this->get_secretary()->get_min_page_size()) {
-            $this->log_request_as_not_cacheable([ 'reason' => 'Page too small', 'size' => strlen($buffer), 'min_size' => $this->get_secretary()->get_min_page_size() ]);
+        if (mb_strlen($buffer) < $this->get_secretary()->get_min_page_size()) {
+            $this->log_request_as_not_cacheable([ 'reason' => 'Page too small', 'size' => mb_strlen($buffer), 'min_size' => $this->get_secretary()->get_min_page_size() ]);
             return $buffer;
         }
 
@@ -370,12 +364,12 @@ final class CacheMaster
         //
         $append .= 'Time created on server: ' . date('Y-m-d H:i:s T') . '. ';
         $append .= 'Protocol: ' . ($this->is_https_page() ? 'HTTPS' : 'HTTP') . '. ';
-        $append .= 'Page size: ' . strlen($buffer) . ' bytes. ';
+        $append .= 'Page size: ' . mb_strlen($buffer) . ' bytes. ';
 
-        $host = wp_kses($uri->getHost(), array());
+        $host = wp_kses($uri->getHost(), []);
 
         $append .= 'Host: ' . $host . '. ';
-        $append .= 'Request URI: ' . wp_kses($uri->getPath(), array()) . ' ';
+        $append .= 'Request URI: ' . wp_kses($uri->getPath(), []) . ' ';
         $appendGzip = $append . " Encoding: GZEncode -->\n";
         $append .= " Encoding: Uncompressed -->\n";
         // }
@@ -405,7 +399,7 @@ final class CacheMaster
             return true;
         }
 
-        return 'HTTPS' === strtoupper($this->get_maestro()->get_request()->getUri()->getScheme());
+        return 'HTTPS' === mb_strtoupper($this->get_maestro()->get_request()->getUri()->getScheme());
     }
 
     public function setup_caching()
@@ -504,7 +498,7 @@ final class CacheMaster
         //rand makes sure this is called every time and isn't subject to the
         //10 minute window where the same event won't be run twice with
         //wp_schedule_single_event
-        wp_schedule_single_event(time() - 15, self::ACTION_NAME__CACHE_CLEAR, array( rand(0, 999999999) ));
+        wp_schedule_single_event(time() - 15, self::ACTION_NAME__CACHE_CLEAR, [ rand(0, 999999999) ]);
         $url = admin_url('admin-ajax.php');
 
         $this->get_logger()->debug('Invoking URL to kick-off cron to clear cache');

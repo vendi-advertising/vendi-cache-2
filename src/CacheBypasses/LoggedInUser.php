@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 namespace Vendi\Cache\CacheBypasses;
 
 final class LoggedInUser extends AbstractCacheBypass

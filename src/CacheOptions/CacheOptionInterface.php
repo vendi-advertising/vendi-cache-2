@@ -1,8 +1,5 @@
-<?php
-
+<?php declare(strict_types=1);
 namespace Vendi\Cache\CacheOptions;
-
-use Vendi\Cache\Secretary;
 
 interface CacheOptionInterface
 {

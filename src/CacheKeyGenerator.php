@@ -1,14 +1,13 @@
-<?php
-
+<?php declare(strict_types=1);
 namespace Vendi\Cache;
 
 use Assert\Assertion;
 
 class CacheKeyGenerator
 {
-    private $_urls_to_files = array();
+    private $_urls_to_files = [];
 
-    private $_urls_to_files_cache_lookups = array();
+    private $_urls_to_files_cache_lookups = [];
 
     private $_maestro;
 
@@ -126,7 +125,7 @@ class CacheKeyGenerator
         $host = $this->sanitize_host_for_cache_filename();
         $path = $this->sanitize_path_for_cache_filename();
         $ext = '';
-        if ('HTTPS' === strtoupper($this->get_maestro()->get_request()->getUri()->getScheme())) {
+        if ('HTTPS' === mb_strtoupper($this->get_maestro()->get_request()->getUri()->getScheme())) {
             $ext = '_https';
         }
 
@@ -164,7 +163,7 @@ class CacheKeyGenerator
         if (preg_match('/\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)(.*)$/', $path, $matches)) {
             $path = $matches[ 1 ] . '/';
             for ($i = 2; $i <= 6; $i++) {
-                $path .= strlen($matches[ $i ]) > 0 ? $matches[ $i ] : '';
+                $path .= mb_strlen($matches[ $i ]) > 0 ? $matches[ $i ] : '';
                 $path .= $i < 6 ? '~' : '';
             }
         }
