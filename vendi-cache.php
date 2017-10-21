@@ -12,7 +12,7 @@ Domain Path: /languages
 
 //Shortcuts to the root of the plugin for various formats
 define('VENDI_CACHE_FILE', __FILE__);
-define('VENDI_CACHE_DIR', dirname(__FILE__));
+define('VENDI_CACHE_DIR', __DIR__ );
 define('VENDI_CACHE_URL', plugin_dir_url(__FILE__));
 
 define('VENDI_CACHE_VERSION', '2.0.0');
