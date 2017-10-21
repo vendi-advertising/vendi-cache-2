@@ -74,7 +74,7 @@ maybe_run_php_cs()
     {
         echo "running...";
 
-        vendor/bin/php-cs-fixer fix src/ --using-cache=no
+        vendor/bin/php-cs-fixer fix
         if [ $? -ne 0 ]; then
         {
             echo "Error with composer... exiting";
