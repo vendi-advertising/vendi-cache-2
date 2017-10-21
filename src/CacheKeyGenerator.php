@@ -6,9 +6,9 @@ use Assert\Assertion;
 
 class CacheKeyGenerator
 {
-    private $_urls_to_files = array();
+    private $_urls_to_files = [];
 
-    private $_urls_to_files_cache_lookups = array();
+    private $_urls_to_files_cache_lookups = [];
 
     private $_maestro;
 

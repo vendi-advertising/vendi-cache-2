@@ -193,18 +193,18 @@ class CacheStats
                 //General observations on the current file
                 $obj->increment_file_count();
                 $obj->maybe_set_oldest_newest_file($item[ 'timestamp' ]);
-                $obj->add_size_to_data((int)$item[ 'size' ]);
-                $obj->maybe_set_largest_file_size((int)$item[ 'size' ]);
+                $obj->add_size_to_data((int) $item[ 'size' ]);
+                $obj->maybe_set_largest_file_size((int) $item[ 'size' ]);
 
                 //
                 switch ($item[ 'mimetype' ]) {
                     case 'application/x-gzip':
-                        $obj->add_bytes_to_compressed_file_size((int)$item[ 'size' ]);
+                        $obj->add_bytes_to_compressed_file_size((int) $item[ 'size' ]);
                         $obj->increment_compressed_file_count();
                         break;
 
                     case 'text/html':
-                        $obj->add_bytes_to_uncompressed_file_size((int)$item[ 'size' ]);
+                        $obj->add_bytes_to_uncompressed_file_size((int) $item[ 'size' ]);
                         $obj->increment_uncompressed_file_count();
                         break;
 

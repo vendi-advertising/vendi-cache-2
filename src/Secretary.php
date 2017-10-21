@@ -106,7 +106,7 @@ class Secretary
     public function get_max_file_age()
     {
         if ($this->is_constant_defined('VENDI_CACHE_MAX_FILE_AGE')) {
-            return (int)$this->get_constant_value('VENDI_CACHE_MAX_FILE_AGE');
+            return (int) $this->get_constant_value('VENDI_CACHE_MAX_FILE_AGE');
         }
 
         return 10000;
@@ -119,7 +119,7 @@ class Secretary
     public function get_min_page_size()
     {
         if ($this->is_constant_defined('VENDI_CACHE_MIN_PAGE_SIZE')) {
-            return (int)$this->get_constant_value('VENDI_CACHE_MIN_PAGE_SIZE');
+            return (int) $this->get_constant_value('VENDI_CACHE_MIN_PAGE_SIZE');
         }
 
         return 1000;
@@ -159,7 +159,7 @@ class Secretary
     public function get_logging_level()
     {
         if ($this->is_constant_defined('VENDI_CACHE_LOGGING_LEVEL')) {
-            return (int)$this->get_constant_value('VENDI_CACHE_LOGGING_LEVEL');
+            return (int) $this->get_constant_value('VENDI_CACHE_LOGGING_LEVEL');
         }
 
         return LogLevel::DEBUG;
