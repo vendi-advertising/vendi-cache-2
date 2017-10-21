@@ -4,6 +4,7 @@ namespace Vendi\Cache\Tests;
 
 use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
+use Webmozart\PathUtil\Path;
 
 class test_Secretary extends vendi_cache_test_base
 {
@@ -44,10 +45,37 @@ class test_Secretary extends vendi_cache_test_base
      */
     public function test_get_cache_folder_abs()
     {
-        // $dir = $this->create_temp_dir();
-
         $secretary = $this->__get_new_maestro()->get_secretary();
 
         $this->assertFalse( $secretary->is_constant_defined( 'VENDI_CACHE_FOLDER_ABS' ) );
+        $this->assertSame( Path::join( $secretary->get_constant_value('WP_CONTENT_DIR'), 'vendi_cache' ), $secretary->get_cache_folder_abs() );
+        $secretary->set_constant( 'VENDI_CACHE_FOLDER_ABS', '/tmp' );
+        $this->assertSame( '/tmp', $secretary->get_cache_folder_abs() ) ;
+
+        $secretary->unset_constant( 'VENDI_CACHE_FOLDER_ABS' );
+
+        $secretary->set_constant( 'VENDI_CACHE_FOLDER_NAME', 'cheese' );
+        $this->assertSame( Path::join( $secretary->get_constant_value('WP_CONTENT_DIR'), 'cheese' ), $secretary->get_cache_folder_abs() );
+        $secretary->unset_constant( 'VENDI_CACHE_FOLDER_NAME' );
+    }
+
+    /**
+     * @covers Vendi\Cache\Secretary::get_log_file_abs
+     */
+    public function test_get_log_file_abs()
+    {
+        $secretary = $this->__get_new_maestro()->get_secretary();
+
+        $this->assertFalse( $secretary->is_constant_defined( 'VENDI_CACHE_LOG_FILE_ABS' ) );
+
+        $secretary->set_constant( 'VENDI_CACHE_FOLDER_ABS', '/tmp' );
+        $secretary->set_constant( 'VENDI_CACHE_LOG_FILE_NAME', 'cheese.log' );
+        $this->assertSame( '/tmp/__log__/cheese.log', $secretary->get_log_file_abs() ) ;
+
+        // $secretary->unset_constant( 'VENDI_CACHE_FOLDER_ABS' );
+
+        // $secretary->set_constant( 'VENDI_CACHE_FOLDER_NAME', 'cheese' );
+        // $this->assertSame( Path::join( $secretary->get_constant_value('WP_CONTENT_DIR'), 'cheese' ), $secretary->get_cache_folder_abs() );
+        // $secretary->unset_constant( 'VENDI_CACHE_FOLDER_NAME' );
     }
 }
