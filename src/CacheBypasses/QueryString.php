@@ -16,7 +16,7 @@ final class QueryString extends AbstractCacheBypass
 
         $query_string = $this->get_query_string();
 
-        if (strlen($query_string) > 0) {
+        if (mb_strlen($query_string) > 0) {
             $this->log_request_as_not_cacheable(
                                                     [
                                                         'reason'       => 'Query string found',

@@ -171,7 +171,7 @@ final class CacheMaster
                             '/wp-admin/options-permalink.php',
                         ];
 
-                $current_page = strtolower($request->getUri()->getPath());
+                $current_page = mb_strtolower($request->getUri()->getPath());
 
                 foreach ($pages as $page) {
                     if ($page == $current_page) {
@@ -341,8 +341,8 @@ final class CacheMaster
 
         //The average web page size is 1246,000 bytes. If web page is less than 1000 bytes, don't cache it.
         //TODO: Move to option
-        if (strlen($buffer) < $this->get_secretary()->get_min_page_size()) {
-            $this->log_request_as_not_cacheable([ 'reason' => 'Page too small', 'size' => strlen($buffer), 'min_size' => $this->get_secretary()->get_min_page_size() ]);
+        if (mb_strlen($buffer) < $this->get_secretary()->get_min_page_size()) {
+            $this->log_request_as_not_cacheable([ 'reason' => 'Page too small', 'size' => mb_strlen($buffer), 'min_size' => $this->get_secretary()->get_min_page_size() ]);
             return $buffer;
         }
 
@@ -369,7 +369,7 @@ final class CacheMaster
         //
         $append .= 'Time created on server: ' . date('Y-m-d H:i:s T') . '. ';
         $append .= 'Protocol: ' . ($this->is_https_page() ? 'HTTPS' : 'HTTP') . '. ';
-        $append .= 'Page size: ' . strlen($buffer) . ' bytes. ';
+        $append .= 'Page size: ' . mb_strlen($buffer) . ' bytes. ';
 
         $host = wp_kses($uri->getHost(), []);
 
@@ -404,7 +404,7 @@ final class CacheMaster
             return true;
         }
 
-        return 'HTTPS' === strtoupper($this->get_maestro()->get_request()->getUri()->getScheme());
+        return 'HTTPS' === mb_strtoupper($this->get_maestro()->get_request()->getUri()->getScheme());
     }
 
     public function setup_caching()
