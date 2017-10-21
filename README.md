@@ -8,8 +8,11 @@ A complete rewrite of Vendi Cache (formerly Wordfence Falcon Cache). The goal of
 This version will have a minimum PHP version of probably 5.5. Because of this we are considering releasing this plugin as a second plugin instead of an upgrade of Vendi Cache 1.0. We are hoping to get feedback from users and we'll be monitoring [WordPress's plan on supporting required minimum versions of PHP](https://make.wordpress.org/plugins/2017/08/29/minimum-php-version-requirement/).
 
 ## New Features
- * [PSR-3 Logging](http://www.php-fig.org/psr/psr-3/) via [Monolog](https://github.com/Seldaek/monolog)
- * All parts of the HTTP request interpreted through [Symfony HttpFoundation](https://github.com/symfony/http-foundation)
+ * [PSR-1](http://www.php-fig.org/psr/psr-1/) basic coding standard enforced by [Friends of PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
+ * [PSR-2](http://www.php-fig.org/psr/psr-2/) extended coding standard enforced by [Friends of PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
+ * [PSR-3](http://www.php-fig.org/psr/psr-3/) Logging via [Monolog](https://github.com/Seldaek/monolog)
+ * [PSR-4](http://www.php-fig.org/psr/psr-4/) Autoloading.
+ * [PSR-7](http://www.php-fig.org/psr/psr-7/) HTTP Request interpretation via [Guzzle Psr7](https://github.com/guzzle/psr7)
  * Better file system abstraction via [Flysystem](http://flysystem.thephpleague.com/) and [File Path Utility](https://github.com/webmozart/path-util)
  * Unit Tests! Unit Tests! Unit Tests! Unit Tests!
 
@@ -24,7 +27,7 @@ This version will have a minimum PHP version of probably 5.5. Because of this we
  * WP-CLI support including `wp cache flush`
 
 ## Non-goals
- * Use a [PSR-6](http://www.php-fig.org/psr/psr-6/) or [PSR-16](http://www.php-fig.org/psr/psr-16/) logger
+ * Use a [PSR-6](http://www.php-fig.org/psr/psr-6/) or [PSR-16](http://www.php-fig.org/psr/psr-16/) cache
    * The entire point of this plugin is to cache files to disk so at this time I don't see a need to implement one of the common caching interfaces. I worry if I do that I'll get _too_ lost in abstraction and be also promising features that I can't test. Further, this plugin is meant to be used side-by-side with Apache or Nginx rules which are file-based. Although someone could write a PHP router handler to run through Redis/Memcache/whatever we'd still be incurring a PHP hit which we want to avoid.
 
 ## API
