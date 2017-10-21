@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\CacheBypasses;
 
-use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
+use Vendi\Cache\Secretary;
 
 abstract class AbstractCacheBypass
 {

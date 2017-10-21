@@ -23,6 +23,8 @@ return PhpCsFixer\Config::create()
         'no_short_bool_cast' => true,
         'no_short_echo_tag' => true,
         'no_unused_imports' => true,
+        'non_printable_character' => ['use_escape_sequences_in_strings' => true],
+        'ordered_imports' => ['sortAlgorithm' => 'alpha'],
     ])
     ->setFinder($finder)
     ->setUsingCache(false)

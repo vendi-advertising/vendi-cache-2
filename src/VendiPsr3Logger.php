@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache;
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use MySQLHandler\MySQLHandler;
 
 use Ramsey\Uuid\Uuid;
