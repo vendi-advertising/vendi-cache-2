@@ -17,7 +17,7 @@ class CacheKeyGenerator
     }
 
     /**
-     * [get_maestro description]
+     * [get_maestro description].
      * @return Maestro
      */
     public function get_maestro()
@@ -26,7 +26,7 @@ class CacheKeyGenerator
     }
 
     /**
-     * [get_mapping_of_urls_to_files description]
+     * [get_mapping_of_urls_to_files description].
      * @return array
      */
     public function get_mapping_of_urls_to_files()
@@ -38,7 +38,7 @@ class CacheKeyGenerator
     }
 
     /**
-     * [get_url_without_scheme_and_host description]
+     * [get_url_without_scheme_and_host description].
      * @return string
      */
     public function get_url_without_scheme_and_host()
@@ -54,7 +54,7 @@ class CacheKeyGenerator
     }
 
     /**
-     * [get_cache_lookup_counts_for_url description]
+     * [get_cache_lookup_counts_for_url description].
      * @return string
      */
     public function get_cache_lookup_counts_for_url()
@@ -76,7 +76,7 @@ class CacheKeyGenerator
     }
 
     /**
-     * [sanitize_host_for_cache_filename description]
+     * [sanitize_host_for_cache_filename description].
      * @return string
      */
     public function sanitize_host_for_cache_filename()
@@ -98,7 +98,7 @@ class CacheKeyGenerator
      * Return a file-system-local file name based on the given URL or global
      * HTTP Request variables.
 
-     * @return string                       A path to the local file for the given request.
+     * @return string a path to the local file for the given request
      */
     public function local_cache_filename_from_url()
     {
@@ -147,7 +147,7 @@ class CacheKeyGenerator
     }
 
     /**
-     * [sanitize_path_for_cache_filename description]
+     * [sanitize_path_for_cache_filename description].
      * @return string
      */
     public function sanitize_path_for_cache_filename()

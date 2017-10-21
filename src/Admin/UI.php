@@ -15,7 +15,7 @@ class UI
     }
 
     /**
-     * [get_maestro description]
+     * [get_maestro description].
      * @return Maestro
      */
     public function get_maestro()

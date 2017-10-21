@@ -70,7 +70,7 @@ final class Maestro
     /**
      * Use the supplied File System Adapter.
      *
-     * @param  AdapterInterface $adapter The FlySystem Adapter to use.
+     * @param  AdapterInterface $adapter the FlySystem Adapter to use
      * @return Maestro
      */
     public function with_file_system_adapter(AdapterInterface $adapter)
@@ -82,7 +82,7 @@ final class Maestro
     /**
      * Use the supplied cache settings.
      *
-     * @param  Secretary $cache_settings The Cache Settings to use.
+     * @param  Secretary $cache_settings the Cache Settings to use
      * @return Maestro
      */
     public function with_secretary(Secretary $cache_settings)
@@ -104,7 +104,8 @@ final class Maestro
     }
 
     /**
-     * [get_request description]
+     * [get_request description].
+     * @param  mixed                  $do_not_create_new
      * @return ServerRequestInterface
      */
     public function get_request($do_not_create_new = false)
@@ -122,6 +123,7 @@ final class Maestro
     /**
      * Get the current or default logger.
      *
+     * @param  mixed  $do_not_create_new
      * @return Logger
      */
     public function get_logger($do_not_create_new = false)
@@ -137,8 +139,9 @@ final class Maestro
     }
 
     /**
-     * Get the current or default FlySystem adapter
+     * Get the current or default FlySystem adapter.
      *
+     * @param  mixed            $do_not_create_new
      * @return AdapterInterface
      */
     public function get_adapter($do_not_create_new = false)
@@ -156,6 +159,7 @@ final class Maestro
     /**
      * Get the current or default Cache Settings.
      *
+     * @param  mixed     $do_not_create_new
      * @return Secretary
      */
     public function get_secretary($do_not_create_new = false)
@@ -173,6 +177,7 @@ final class Maestro
     /**
      * Get the FlySystem using the current or default adapter.
      *
+     * @param  mixed      $do_not_create_new
      * @return Filesystem
      */
     public function get_file_system($do_not_create_new = false)
@@ -199,6 +204,7 @@ final class Maestro
      * with_logger() before calling this method if you wish to override the
      * defaults.
      *
+     * @param  mixed       $do_not_create_new
      * @return CacheMaster
      */
     public function get_cache_master($do_not_create_new = false)
@@ -220,7 +226,7 @@ final class Maestro
     }
 
     /**
-     * [get_default_request description]
+     * [get_default_request description].
      * @return ServerRequestInterface
      */
     public static function get_default_request()
@@ -231,7 +237,7 @@ final class Maestro
     /**
      * Get an instance of Maestro with all defaults applied.
      *
-     * @param  Secretary|null $cache_settings Optional. Custom CacheSettings.
+     * @param Secretary|null $cache_settings Optional. Custom CacheSettings.
      *
      * @return Maestro
      */
@@ -261,7 +267,7 @@ final class Maestro
     /**
      * Get the default FlySystem adapater using the supplied settings.
      *
-     * @param  CacheSettings $cache_settings The settings to use for the adapter.
+     * @param  CacheSettings    $cache_settings the settings to use for the adapter
      * @return AdapterInterface
      */
     public static function get_default_adapter(Secretary $cache_settings)
@@ -284,7 +290,7 @@ final class Maestro
     /**
      * Get the default LoggerInterface using the supplied settings.
      *
-     * @param  Secretary $cache_settings The settings to use for the adapter.
+     * @param  Secretary       $cache_settings the settings to use for the adapter
      * @return LoggerInterface
      */
     public static function get_default_logger(Secretary $cache_settings)
@@ -294,6 +300,8 @@ final class Maestro
 
     /**
      * Override magic method so that we don't use incorrect property names.
+     * @param mixed $name
+     * @param mixed $value
      */
     public function __set($name, $value)
     {
@@ -302,6 +310,7 @@ final class Maestro
 
     /**
      * Override magic method so that we don't use incorrect property names.
+     * @param mixed $name
      */
     public function __get($name)
     {

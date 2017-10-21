@@ -15,7 +15,7 @@ final class WpCorePage extends AbstractCacheBypass
         $this_page = $this->get_path_url();
 
         foreach ($no_cache_pages as $page) {
-            if ($page == $this_page) {
+            if ($page === $this_page) {
                 $this->log_request_as_not_cacheable(
                                                         [
                                                             'reason' => 'Special WordPress page detected',

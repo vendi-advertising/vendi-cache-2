@@ -21,7 +21,7 @@ final class ErrorHandler
      *
      * @since  1.1.5
      *
-     * @param  \Exception $exception The exception that occurred.
+     * @param \Exception $exception the exception that occurred
      */
     public function handle_exception($exception)
     {
@@ -54,6 +54,11 @@ final class ErrorHandler
      * See PHP docs for parameters.
      *
      * @since  1.1.5
+     * @param mixed      $errno
+     * @param mixed      $errstr
+     * @param null|mixed $errfile
+     * @param null|mixed $errline
+     * @param null|mixed $errcontext
      */
     public function handle_error($errno, $errstr, $errfile = null, $errline = null, $errcontext = null)
     {

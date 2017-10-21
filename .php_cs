@@ -25,6 +25,21 @@ return PhpCsFixer\Config::create()
         'no_unused_imports' => true,
         'non_printable_character' => ['use_escape_sequences_in_strings' => true],
         'ordered_imports' => ['sortAlgorithm' => 'alpha'],
+
+        'phpdoc_add_missing_param_annotation' => ['only_untyped' => true],
+        'phpdoc_align' => ['tags' => ['param', 'return', 'throws', 'type', 'var'] ],
+        'phpdoc_annotation_without_dot' => true,
+        'phpdoc_indent' => true,
+        'phpdoc_no_empty_return' => true,
+        'phpdoc_order' => true,
+        'phpdoc_scalar' => true,
+        'phpdoc_summary' => true,
+        'phpdoc_trim' => true,
+        'phpdoc_types' => true,
+
+        'short_scalar_cast' => true,
+        'single_quote' => true,
+        'strict_comparison' => true,
     ])
     ->setFinder($finder)
     ->setUsingCache(false)

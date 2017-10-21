@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
 final class VendiPsr3Logger extends Logger
 {
     /**
-     * Used to trace a specific request through the pipeline by the default logger
+     * Used to trace a specific request through the pipeline by the default logger.
      * @var string
      */
     private $_request_id;

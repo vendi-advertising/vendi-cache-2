@@ -151,7 +151,7 @@ class Secretary
     }
 
     /**
-     * [get_logging_level description]
+     * [get_logging_level description].
      * @return int|string Either a string-based Monolog logging level or a
      *                    numeric-based PSR-3 logging level
      */

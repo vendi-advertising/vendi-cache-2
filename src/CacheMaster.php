@@ -30,7 +30,8 @@ final class CacheMaster
     }
 
     /**
-     * [get_updater description]
+     * [get_updater description].
+     * @param  mixed            $do_not_create_new
      * @return UpdaterInterface
      */
     public function get_updater($do_not_create_new = false)
@@ -58,7 +59,7 @@ final class CacheMaster
     }
 
     /**
-     * [get_maestro description]
+     * [get_maestro description].
      * @return Maestro
      */
     public function get_maestro()
@@ -67,7 +68,7 @@ final class CacheMaster
     }
 
     /**
-     * [get_logger description]
+     * [get_logger description].
      * @return LoggerInterface
      */
     public function get_logger()
@@ -76,7 +77,7 @@ final class CacheMaster
     }
 
     /**
-     * [get_secretary description]
+     * [get_secretary description].
      * @return Secretary
      */
     public function get_secretary()
@@ -85,7 +86,7 @@ final class CacheMaster
     }
 
     /**
-     * [get_file_system description]
+     * [get_file_system description].
      * @return Filesystem
      */
     public function get_file_system()
@@ -107,7 +108,7 @@ final class CacheMaster
      * This function does not exist at cache setup time so it has been
      * duplicated here.
      *
-     * @return boolean True if user is logged in, false if not logged in.
+     * @return bool true if user is logged in, false if not logged in
      */
     public function is_user_logged_in()
     {
@@ -169,7 +170,7 @@ final class CacheMaster
                 $current_page = mb_strtolower($request->getUri()->getPath());
 
                 foreach ($pages as $page) {
-                    if ($page == $current_page) {
+                    if ($page === $current_page) {
                         $this->get_logger()->debug('POST to special admin page, clearing cache', [ 'page' => $page ]);
                         $this->schedule_cache_clear();
                         break;
@@ -390,7 +391,7 @@ final class CacheMaster
     }
 
     /**
-     * @return boolean True if the reqeusted page was an HTTPS page, otherwise false.
+     * @return bool true if the reqeusted page was an HTTPS page, otherwise false
      */
     public function is_https_page()
     {
