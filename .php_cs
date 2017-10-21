@@ -16,6 +16,12 @@ return PhpCsFixer\Config::create()
         'mb_str_functions' => true,
         'method_separation' => true,
         'no_empty_statement' => true,
+        'no_homoglyph_names' => true,
+        'no_leading_import_slash' => true,
+        'no_mixed_echo_print' => ['use' => 'echo'],
+        'no_php4_constructor' => true,
+        'no_short_bool_cast' => true,
+        'no_short_echo_tag' => true,
     ])
     ->setFinder($finder)
     ->setUsingCache(false)
