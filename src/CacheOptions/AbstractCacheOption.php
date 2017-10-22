@@ -23,7 +23,19 @@ abstract class AbstractCacheOption implements CacheOptionInterface
         Assertion::notEmpty($value);
         Assertion::string($value);
 
-        if (in_array($value, array_keys($this->get_potential_options()))) {
+        $potential_options = [];
+        switch ($this->get_option_type()) {
+            case self::OPTION_TYPE_RADIO:
+                $potential_options = array_keys($this->get_potential_options());
+                break;
+            case self::OPTION_TYPE_CHECKBOX:
+                $potential_options = $this->get_potential_options();
+                break;
+            default:
+                $potential_options = [];
+        }
+
+        if (in_array($value, $potential_options)) {
             return true;
         }
 
