@@ -109,17 +109,6 @@ class test_AbstractCacheOption extends vendi_cache_test_base
     }
 
     /**
-     * @covers Vendi\Cache\CacheOptions\AbstractCacheOption::is_value_valid
-     */
-    public function test_is_value_valid__null()
-    {
-        $this->setExpectedException( '\\Assert\\InvalidArgumentException', 'Value "<NULL>" is empty, but non empty value was expected' );
-
-        $mock = $this->_get_mock_radio();
-        $mock->is_value_valid( null );
-    }
-
-    /**
      * @covers Vendi\Cache\CacheOptions\AbstractCacheOption::get_true_value
      */
     public function test_get_true_value()
