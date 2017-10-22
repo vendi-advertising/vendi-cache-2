@@ -104,6 +104,9 @@ class test_CacheStats extends vendi_cache_test_base
         $this->assertSame( 100, $cs->get_largest_file() );
     }
 
+    /**
+     * @coversNothing
+     */
     public function test_NOTHING()
     {
         \Vendi\Cache\CacheStats::generate_from_file_system( $this->__get_new_maestro() );
