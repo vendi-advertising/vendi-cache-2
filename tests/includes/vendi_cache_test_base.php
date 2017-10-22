@@ -1,45 +1,39 @@
-<?php
-
+<?php declare(strict_types=1);
 namespace Vendi\Cache\Tests;
 
-use League\Flysystem\Adapter\Local;
-use Monolog\Handler\NullHandler;
 use GuzzleHttp\Psr7\ServerRequest;
-use GuzzleHttp\Psr7\Uri;
+use League\Flysystem\Adapter\Local;
 use Vendi\Cache\Maestro;
 use Vendi\Cache\Secretary;
-use Vendi\Cache\Tests\nullhandler_log_handler;
-use Vendi\Cache\VendiPsr7RequestMaker;
 
+/**
+ * @coversNothing
+ */
 class vendi_cache_test_base extends \WP_UnitTestCase
 {
     //Array of directories that this test should cleanup when done
-    public $_dirs = array();
+    public $_dirs = [];
 
     //Array of files that this test should cleanup when done
-    public $_files = array();
+    public $_files = [];
 
     public function tearDown()
     {
         parent::tearDown();
 
         //Cleanup all files
-        foreach( $this->_files as $f )
-        {
-            if( is_file( $f ) )
-            {
-                unlink( $f );
+        foreach ($this->_files as $f) {
+            if (is_file($f)) {
+                unlink($f);
             }
         }
 
         //Cleanup all dirs
         //NOTE: rmdir() will fail if the dir is not empty so remember to add
         //each file you create to $this->_files, too!
-        foreach( $this->_dirs as $d )
-        {
-            if( is_dir( $d ) )
-            {
-                rmdir( $d );
+        foreach ($this->_dirs as $d) {
+            if (is_dir($d)) {
+                rmdir($d);
             }
         }
     }
@@ -48,11 +42,11 @@ class vendi_cache_test_base extends \WP_UnitTestCase
      * Create (or just touch) the supplied file and mark
      * it for cleanup afterwards.
      *
-     * @param string $path The absolute path to the file.
+     * @param string $path the absolute path to the file
      */
-    public function touch_file( $path )
+    public function touch_file($path)
     {
-        touch( $path );
+        touch($path);
         $this->_files[] = $path;
     }
 
@@ -66,25 +60,22 @@ class vendi_cache_test_base extends \WP_UnitTestCase
     {
 
         //tempnam actually creates a file, so do that first
-        $tempfile = tempnam( sys_get_temp_dir(), 'VC2' );
-        if( false === $tempfile )
-        {
-            throw new \Exception( 'Could not create file for temporary directory' );
+        $tempfile = tempnam(sys_get_temp_dir(), 'VC2');
+        if (false === $tempfile) {
+            throw new \Exception('Could not create file for temporary directory');
         }
 
         //Race-condition sanity check
-        if( file_exists( $tempfile ) )
-        {
-            unlink( $tempfile );
+        if (file_exists($tempfile)) {
+            unlink($tempfile);
         }
 
         //Actually create the directory
-        mkdir( $tempfile );
+        mkdir($tempfile);
 
         //Race-condition sanity double-check
-        if( ! is_dir( $tempfile ) )
-        {
-            throw new \Exception( 'Could not create temporary directory' );
+        if (! is_dir($tempfile)) {
+            throw new \Exception('Could not create temporary directory');
         }
 
         //Mark the directory for cleanup
@@ -94,38 +85,36 @@ class vendi_cache_test_base extends \WP_UnitTestCase
         return $tempfile;
     }
 
-    public function __create_server_request_from_url( $url, $method = 'GET', array $cookies = [] )
+    public function __create_server_request_from_url($url, $method = 'GET', array $cookies = [])
     {
         //This is dumb but whatever. As far as I can tell, Guzzle ignores the query string
         //for ServerRequest when manually creating an instance.
-        $query_as_string = parse_url( $url, PHP_URL_QUERY );
+        $query_as_string = parse_url($url, PHP_URL_QUERY);
         $query_as_array = [];
-        if( $query_as_string )
-        {
-            parse_str( $query_as_string, $query_as_array );
+        if ($query_as_string) {
+            parse_str($query_as_string, $query_as_array);
         }
-        return ( new ServerRequest( $method, $url ) )
-                ->withCookieParams( $cookies )
-                ->withQueryParams( $query_as_array )
+        return ( new ServerRequest($method, $url) )
+                ->withCookieParams($cookies)
+                ->withQueryParams($query_as_array)
             ;
     }
 
     /**
      * Create a new maestro for all tests with optional parameters.
-     * @param  ServerRequest|null  $request   A specific Guzzle Request or null
-     *                                        for the default Request.
-     * @param  callable|null $handle_function The function to invoke for each
-     *                                        log call or null for none.
-     * @param  string|null   $dir             The directory to bind the file
-     *                                        system adapter to or null for the
-     *                                        default.
+     * @param  ServerRequest|null $request         a specific Guzzle Request or null
+     *                                             for the default Request
+     * @param  callable|null      $handle_function the function to invoke for each
+     *                                             log call or null for none
+     * @param  string|null        $dir             the directory to bind the file
+     *                                             system adapter to or null for the
+     *                                             default
      * @return Maestro
      */
-    public function __get_new_maestro( ServerRequest $request = null, callable $handle_function = null, $dir = null, Secretary $secretary = null )
+    public function __get_new_maestro(ServerRequest $request = null, callable $handle_function = null, $dir = null, Secretary $secretary = null)
     {
         $adapter = null;
-        if( $dir )
-        {
+        if ($dir) {
             $adapter = new Local(
                                     $dir,
 
@@ -151,54 +140,50 @@ class vendi_cache_test_base extends \WP_UnitTestCase
                                 );
         }
 
-        if( ! $secretary )
-        {
+        if (! $secretary) {
             $secretary = new \Vendi\Cache\Tests\non_global_constant_secretary();
-            $secretary->set_constant( 'ABSPATH',        ABSPATH );
-            $secretary->set_constant( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
+            $secretary->set_constant('ABSPATH', ABSPATH);
+            $secretary->set_constant('WP_CONTENT_DIR', ABSPATH . 'wp-content');
         }
 
         return ( new Maestro() )
-                ->with_secretary( $secretary )
-                ->with_request( $request ? $request : Maestro::get_default_request() )
-                ->with_file_system_adapter( $adapter ? $adapter : Maestro::get_default_adapter( $secretary ) )
+                ->with_secretary($secretary)
+                ->with_request($request ? $request : Maestro::get_default_request())
+                ->with_file_system_adapter($adapter ? $adapter : Maestro::get_default_adapter($secretary))
                 ->with_logger(
                                 new \Monolog\Logger(
                                                 'vendi-cache-noop',
                                                 [
-                                                    new nullhandler_log_handler( $handle_function )
+                                                    new nullhandler_log_handler($handle_function)
                                                 ]
                                             )
                  )
             ;
     }
 
-     /**
-     * Determine if two associative arrays are similar
+    /**
+     * Determine if two associative arrays are similar.
      *
      * Both arrays must have the same indexes with identical values
      * without respect to key ordering.
      *
      * @see  https://stackoverflow.com/a/3843768/231316
      *
-     * @param array $a
-     * @param array $b
+     * @param  array $a
+     * @param  array $b
      * @return bool
      */
-    public function arrays_are_similar( $a, $b )
+    public function arrays_are_similar($a, $b)
     {
         // if the indexes don't match, return immediately
-        if( count( array_diff_assoc( $a, $b ) ) )
-        {
+        if (count(array_diff_assoc($a, $b))) {
             return false;
         }
 
         // we know that the indexes, but maybe not values, match.
         // compare the values between the two arrays
-        foreach( $a as $k => $v )
-        {
-            if( $v !== $b[ $k ] )
-            {
+        foreach ($a as $k => $v) {
+            if ($v !== $b[ $k ]) {
                 return false;
             }
         }

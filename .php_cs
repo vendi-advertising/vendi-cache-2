@@ -2,6 +2,7 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in('src/')
+    ->in('tests/')
 ;
 
 return PhpCsFixer\Config::create()
@@ -26,7 +27,13 @@ return PhpCsFixer\Config::create()
         'non_printable_character' => ['use_escape_sequences_in_strings' => true],
         'ordered_imports' => ['sortAlgorithm' => 'alpha'],
 
-        'phpdoc_add_missing_param_annotation' => ['only_untyped' => true],
+        'php_unit_construct' => true,
+        'php_unit_dedicate_assert' => true,
+        'php_unit_fqcn_annotation' => true,
+        'php_unit_strict' => true,
+        'php_unit_test_class_requires_covers' => true,
+
+        'phpdoc_add_missing_param_annotation' => true,
         'phpdoc_align' => ['tags' => ['param', 'return', 'throws', 'type', 'var'] ],
         'phpdoc_annotation_without_dot' => true,
         'phpdoc_indent' => true,

@@ -1,15 +1,14 @@
-<?php
-
+<?php declare(strict_types=1);
 namespace Vendi\Cache\Tests\CacheOptions;
 
-use Vendi\Cache\Maestro;
 use Vendi\Cache\CacheOptions\AbstractCacheOption;
+use Vendi\Cache\Maestro;
 
 abstract class generic_child_class_of_AbstractCacheOption extends AbstractCacheOption
 {
-    public function __construct( Maestro $maestro )
+    public function __construct(Maestro $maestro)
     {
-        parent::__construct( $maestro->get_secretary() );
+        parent::__construct($maestro->get_secretary());
     }
 
     public function get_default_value()

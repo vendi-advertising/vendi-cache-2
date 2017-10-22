@@ -1,12 +1,7 @@
-<?php
-
+<?php declare(strict_types=1);
 namespace Vendi\Cache\Tests;
 
-use League\Flysystem\Adapter\Local;
-use Monolog\Handler\NullHandler;
-use Monolog\Logger;
 use Vendi\Cache\CacheMaster;
-use Vendi\Cache\Secretary;
 use Vendi\Cache\Maestro;
 
 /**
@@ -15,28 +10,26 @@ use Vendi\Cache\Maestro;
  */
 class test_CacheMaster extends vendi_cache_test_base
 {
-
-    private function _get_obj( Maestro $maestro = null )
+    private function _get_obj(Maestro $maestro = null)
     {
-        if( null === $maestro )
-        {
+        if (null === $maestro) {
             $maestro = $this->__get_new_maestro();
         }
-        return new CacheMaster( $maestro );
+        return new CacheMaster($maestro);
     }
 
     private function _get_obj_with_custom_secretary()
     {
-        return new CacheMaster( $this->__get_new_maestro() );
+        return new CacheMaster($this->__get_new_maestro());
     }
 
-    private function _get_obj_with_custom_filesystem( $dir )
+    private function _get_obj_with_custom_filesystem($dir)
     {
-        return $this->_get_obj( $this->__get_new_maestro( null, null, $dir ) );
+        return $this->_get_obj($this->__get_new_maestro(null, null, $dir));
     }
 
     /**
-     * @covers Vendi\Cache\CacheMaster::__construct
+     * @covers \Vendi\Cache\CacheMaster::__construct
      */
     public function test___construct()
     {
@@ -48,95 +41,100 @@ class test_CacheMaster extends vendi_cache_test_base
 
     /**
      * @dataProvider provider_for_test__get_XYZ_no_gen
-     * @covers Vendi\Cache\CacheMaster::get_updater()
-     * @covers Vendi\Cache\CacheMaster::get_cache_key_generator()
+     * @covers \Vendi\Cache\CacheMaster::get_updater()
+     * @covers \Vendi\Cache\CacheMaster::get_cache_key_generator()
+     * @param mixed $property
+     * @param mixed $method
+     * @param mixed $type
      */
-    public function test__get_XYZ_no_gen( $property, $method, $type )
+    public function test__get_XYZ_no_gen($property, $method, $type)
     {
         $cache_master = $this->_get_obj();
-        $this->assertInstanceOf( $type, $cache_master->$method( ) );
+        $this->assertInstanceOf($type, $cache_master->$method());
 
-        $this->setExpectedException( '\Exception', "The property $property is null and the getter $method was requested to not generate a new one." );
+        $this->setExpectedException('\Exception', "The property $property is null and the getter $method was requested to not generate a new one.");
         $cache_master = $this->_get_obj();
-        $cache_master->$method( true );
+        $cache_master->$method(true);
     }
 
     /**
      * @dataProvider provider_for_test__get_XYZ__passthrough
-     * @covers Vendi\Cache\CacheMaster::get_maestro()
-     * @covers Vendi\Cache\CacheMaster::get_logger()
-     * @covers Vendi\Cache\CacheMaster::get_secretary()
-     * @covers Vendi\Cache\CacheMaster::get_file_system()
+     * @covers \Vendi\Cache\CacheMaster::get_maestro()
+     * @covers \Vendi\Cache\CacheMaster::get_logger()
+     * @covers \Vendi\Cache\CacheMaster::get_secretary()
+     * @covers \Vendi\Cache\CacheMaster::get_file_system()
+     * @param mixed $method
+     * @param mixed $type
      */
-    public function test__get_XYZ__passthrough( $method, $type )
+    public function test__get_XYZ__passthrough($method, $type)
     {
-        $this->assertInstanceOf( $type, $this->_get_obj()->$method( ) );
+        $this->assertInstanceOf($type, $this->_get_obj()->$method());
     }
 
     /**
-     * @covers Vendi\Cache\CacheMaster::is_resource_not_cacheable()
+     * @covers \Vendi\Cache\CacheMaster::is_resource_not_cacheable()
      */
     public function test_is_resource_not_cacheable()
     {
         //No one should be logged in by default
         $cache_master = $this->_get_obj_with_custom_secretary();
-        $this->assertFalse( $cache_master->is_resource_not_cacheable() );
+        $this->assertFalse($cache_master->is_resource_not_cacheable());
 
-        wp_set_current_user( 1 );
+        wp_set_current_user(1);
         $cache_master = $this->_get_obj_with_custom_secretary();
-        $this->assertTrue( $cache_master->is_resource_not_cacheable() );
+        $this->assertTrue($cache_master->is_resource_not_cacheable());
     }
 
     /**
-     * @covers Vendi\Cache\CacheMaster::is_user_logged_in()
+     * @covers \Vendi\Cache\CacheMaster::is_user_logged_in()
      */
     public function test_is_user_logged_in()
     {
         //No one should be logged in by default
         $cache_master = $this->_get_obj();
-        $this->assertFalse( $cache_master->is_user_logged_in() );
+        $this->assertFalse($cache_master->is_user_logged_in());
 
         //Log a user in
-        wp_set_current_user( 1 );
+        wp_set_current_user(1);
         $cache_master = $this->_get_obj();
-        $this->assertTrue( $cache_master->is_user_logged_in() );
+        $this->assertTrue($cache_master->is_user_logged_in());
     }
 
     /**
-     * @covers Vendi\Cache\CacheMaster::file_exists()
-     * @covers Vendi\Cache\CacheMaster::write_file()
-     * @covers Vendi\Cache\CacheMaster::delete_file()
+     * @covers \Vendi\Cache\CacheMaster::file_exists()
+     * @covers \Vendi\Cache\CacheMaster::write_file()
+     * @covers \Vendi\Cache\CacheMaster::delete_file()
      */
     public function test__file_io()
     {
         $dir = $this->create_temp_dir();
-        $this->assertTrue( is_dir( $dir ) );
+        $this->assertTrue(is_dir($dir));
 
-        $obj = $this->_get_obj_with_custom_filesystem( $dir );
+        $obj = $this->_get_obj_with_custom_filesystem($dir);
 
         $file = 'test/more-test';
         $contents = 'cheese';
 
-        $abs_path = \Webmozart\PathUtil\Path::join( $dir, $file );
+        $abs_path = \Webmozart\PathUtil\Path::join($dir, $file);
 
-        $this->assertFalse( $obj->file_exists( $file ) );
-        $this->assertTrue( $obj->write_file( $file, $contents ) );
-        $this->assertTrue( $obj->file_exists( $file ) );
-        $this->assertTrue( file_exists( $abs_path ) );
-        $this->assertTrue( $obj->delete_file( $file ) );
-        $this->assertTrue( $obj->delete_dir( 'test/' ) );
+        $this->assertFalse($obj->file_exists($file));
+        $this->assertTrue($obj->write_file($file, $contents));
+        $this->assertTrue($obj->file_exists($file));
+        $this->assertFileExists($abs_path);
+        $this->assertTrue($obj->delete_file($file));
+        $this->assertTrue($obj->delete_dir('test/'));
     }
 
     /**
-     * @covers Vendi\Cache\CacheMaster::delete_cache_dir_contents()
-     * @covers Vendi\Cache\CacheMaster::write_file()
+     * @covers \Vendi\Cache\CacheMaster::delete_cache_dir_contents()
+     * @covers \Vendi\Cache\CacheMaster::write_file()
      */
     public function test__delete_cache_dir_contents()
     {
         $dir = $this->create_temp_dir();
-        $this->assertTrue( is_dir( $dir ) );
+        $this->assertTrue(is_dir($dir));
 
-        $obj = $this->_get_obj_with_custom_filesystem( $dir );
+        $obj = $this->_get_obj_with_custom_filesystem($dir);
 
         $files = [
                     'test/alpha/beta.txt',
@@ -145,13 +143,12 @@ class test_CacheMaster extends vendi_cache_test_base
 
         $contents = 'cheese';
 
-        foreach( $files as $file )
-        {
-            $this->assertTrue( $obj->write_file( $file, $contents ) );
-            $this->_files[] = \Webmozart\PathUtil\Path::join( $dir, $file );
+        foreach ($files as $file) {
+            $this->assertTrue($obj->write_file($file, $contents));
+            $this->_files[] = \Webmozart\PathUtil\Path::join($dir, $file);
         }
 
-        $this->assertTrue( $obj->delete_cache_dir_contents( $dir ) );
+        $this->assertTrue($obj->delete_cache_dir_contents($dir));
     }
 
     public function provider_for_test__get_XYZ__passthrough()
