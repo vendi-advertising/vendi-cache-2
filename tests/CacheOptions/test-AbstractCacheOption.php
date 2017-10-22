@@ -10,66 +10,11 @@ use Vendi\Cache\Maestro;
 use Vendi\Cache\CacheOptions\AbstractCacheOption;
 use Vendi\Cache\Tests\vendi_cache_test_base;
 
-abstract class generic_child_class_of_AbstractCacheOption extends AbstractCacheOption
-{
-    public function __construct( Maestro $maestro )
-    {
-        parent::__construct( $maestro->get_secretary() );
-    }
+require_once VENDI_CACHE_DIR . '/tests/includes/classes-for-cache-options.php';
 
-    public function get_default_value()
-    {
-        return 'CHEESE';
-    }
-
-    public function get_potential_options()
-    {
-        return [
-                     'CHEESE' => 'American',
-                     'MEAT'   => 'Cow',
-            ];
-    }
-
-    public function get_description()
-    {
-        return 'Test Child Class';
-    }
-
-    public function get_storage_name()
-    {
-        return 'test-child-class';
-    }
-}
-
-final class radio_child_class_of_AbstractCacheOption extends generic_child_class_of_AbstractCacheOption
-{
-    public function get_option_type()
-    {
-        return self::OPTION_TYPE_RADIO;
-    }
-}
-
-final class checkbox_child_class_of_AbstractCacheOption extends generic_child_class_of_AbstractCacheOption
-{
-    public function get_option_type()
-    {
-        return self::OPTION_TYPE_CHECKBOX;
-    }
-
-    public function get_true_value()
-    {
-        return 'CHEESE';
-    }
-}
-
-final class unsupport_child_class_of_AbstractCacheOption extends generic_child_class_of_AbstractCacheOption
-{
-    public function get_option_type()
-    {
-        return 'TRIANGLE';
-    }
-}
-
+/**
+ * @group CacheOptions
+ */
 class test_AbstractCacheOption extends vendi_cache_test_base
 {
     private function _get_mock_radio()
@@ -106,6 +51,13 @@ class test_AbstractCacheOption extends vendi_cache_test_base
         $this->assertTrue( $mock->is_value_valid( 'CHEESE' ) );
         $this->assertTrue( $mock->is_value_valid( 'MEAT' ) );
         $this->assertFalse( $mock->is_value_valid( 'cheese' ) );
+
+        $mock = $this->_get_mock_checkbox();
+        $this->assertTrue( $mock->is_value_valid( 'Cow' ) );
+
+
+        $mock = $this->_get_mock_unsupported();
+        $this->assertFalse( $mock->is_value_valid( 'Cow' ) );
     }
 
     /**

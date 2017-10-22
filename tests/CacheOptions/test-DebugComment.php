@@ -2,11 +2,13 @@
 
 namespace Vendi\Cache\Tests\CacheOptions;
 
-use Vendi\Cache\Maestro;
 use Vendi\Cache\CacheOptions\DebugComment;
 use Vendi\Cache\CacheOptions\CacheOptionInterface;
 use Vendi\Cache\Tests\vendi_cache_test_base;
 
+/**
+ * @group CacheOptions
+ */
 class test_DebugComment extends vendi_cache_test_base
 {
     private function _get_test_object()
