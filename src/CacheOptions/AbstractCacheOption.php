@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\CacheOptions;
 
-use Assert\Assertion;
 use Vendi\Cache\Secretary;
 
 abstract class AbstractCacheOption implements CacheOptionInterface
@@ -20,9 +19,6 @@ abstract class AbstractCacheOption implements CacheOptionInterface
 
     public function is_value_valid($value)
     {
-        Assertion::notEmpty($value);
-        Assertion::string($value);
-
         $potential_options = [];
         switch ($this->get_option_type()) {
             case self::OPTION_TYPE_RADIO:
