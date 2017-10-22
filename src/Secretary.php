@@ -124,49 +124,87 @@ class Secretary
         return 1000;
     }
 
+    public function get_fs_permission_for_log_file()
+    {
+        if ($this->is_constant_defined('VENDI_CACHE_FS_PERM_LOG_FILE')) {
+            return (int) $this->get_constant_value('VENDI_CACHE_FS_PERM_LOG_FILE');
+        }
+
+        return 0664;
+    }
+
+    public function get_fs_permission_for_log_dir()
+    {
+        if ($this->is_constant_defined('VENDI_CACHE_FS_PERM_LOG_DIR')) {
+            return (int) $this->get_constant_value('VENDI_CACHE_FS_PERM_LOG_DIR');
+        }
+
+        return 0775;
+    }
+
+    public function get_fs_permission_for_cache_file_public()
+    {
+        if ($this->is_constant_defined('VENDI_CACHE_FS_PERM_FILE_PUBLIC')) {
+            return (int) $this->get_constant_value('VENDI_CACHE_FS_PERM_FILE_PUBLIC');
+        }
+
+        return 0664;
+    }
+
+    public function get_fs_permission_for_cache_dir_public()
+    {
+        if ($this->is_constant_defined('VENDI_CACHE_FS_PERM_DIR_PUBLIC')) {
+            return (int) $this->get_constant_value('VENDI_CACHE_FS_PERM_DIR_PUBLIC');
+        }
+
+        return 0777;
+    }
+
+    public function get_fs_permission_for_cache_file_private()
+    {
+        if ($this->is_constant_defined('VENDI_CACHE_FS_PERM_FILE_PRIVATE')) {
+            return (int) $this->get_constant_value('VENDI_CACHE_FS_PERM_FILE_PRIVATE');
+        }
+
+        return 0664;
+    }
+
+    public function get_fs_permission_for_cache_dir_private()
+    {
+        if ($this->is_constant_defined('VENDI_CACHE_FS_PERM_DIR_PRIVATE')) {
+            return (int) $this->get_constant_value('VENDI_CACHE_FS_PERM_DIR_PRIVATE');
+        }
+
+        return 0777;
+    }
+
     public function get_fs_permissions_for_cache()
     {
         return [
                 'file' =>
                             [
-                                'public'  => $this->is_constant_defined('VENDI_CACHE_FS_PERM_FILE_PUBLIC')  ? $this->get_constant_value('VENDI_CACHE_FS_PERM_FILE_PUBLIC') : 0664,
-                                'private' => $this->is_constant_defined('VENDI_CACHE_FS_PERM_FILE_PRIVATE') ? $this->get_constant_value('VENDI_CACHE_FS_PERM_FILE_PRIVATE') : 0664,
+                                'public'  => $this->get_fs_permission_for_cache_file_public(),
+                                'private' => $this->get_fs_permission_for_cache_file_private(),
                             ],
                 'dir' =>
                             [
-                                'public'  => $this->is_constant_defined('VENDI_CACHE_FS_PERM_DIR_PUBLIC')   ? $this->get_constant_value('VENDI_CACHE_FS_PERM_DIR_PUBLIC')   : 0777,
-                                'private' => $this->is_constant_defined('VENDI_CACHE_FS_PERM_DIR_PRIVATE')  ? $this->get_constant_value('VENDI_CACHE_FS_PERM_DIR_PRIVATE')  : 0777,
+                                'public'  => $this->get_fs_permission_for_cache_dir_public(),
+                                'private' => $this->get_fs_permission_for_cache_dir_private(),
                             ]
             ];
     }
 
-    public function get_fs_permission_for_log_file()
-    {
-        return $this->is_constant_defined('VENDI_CACHE_FS_PERM_LOG_FILE') ? $this->get_constant_value('VENDI_CACHE_FS_PERM_LOG') : 0664;
-    }
-
-    public function get_fs_permission_for_log_dir()
-    {
-        return $this->is_constant_defined('VENDI_CACHE_FS_PERM_LOG_DIR') ? $this->get_constant_value('VENDI_CACHE_FS_PERM_LOG') : 0775;
-    }
-
     /**
      * [get_logging_level description].
-     * @return int|string Either a string-based Monolog logging level or a
-     *                    numeric-based PSR-3 logging level
+     * @return string A PSR-3 logging level
      */
     public function get_logging_level()
     {
         if ($this->is_constant_defined('VENDI_CACHE_LOGGING_LEVEL')) {
-            return (int) $this->get_constant_value('VENDI_CACHE_LOGGING_LEVEL');
+            return $this->get_constant_value('VENDI_CACHE_LOGGING_LEVEL');
         }
 
         return LogLevel::DEBUG;
-    }
-
-    public function get_is_auditing_enabled()
-    {
-        return true;
     }
 
     public function get_option_value(CacheOptionInterface $option)
@@ -178,7 +216,7 @@ class Secretary
         }
 
         if (! $option->is_value_valid($value)) {
-            $name = esc_html($name);
+            $name = esc_html($option->get_storage_name());
             $value = esc_html($value);
             throw new \Exception("Unsupported cache value for $name: $value");
         }
