@@ -43,6 +43,15 @@ do
                 CREATE_DB=true
             ;;
 
+            --simple)
+                RUN_PHP_CS=false
+                RUN_LINT=true
+                RUN_PHAN=false
+                CREATE_DB=false
+                UPDATE_COMPOSER=false
+                RUN_SEC=false
+            ;;
+
             --no-run-php-cs)
                 RUN_PHP_CS=false
             ;;
