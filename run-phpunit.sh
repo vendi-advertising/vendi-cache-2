@@ -243,7 +243,7 @@ run_php_unit()
 }
 
 if [ ! -d './vendor' ]; then
-    composer install
+    composer update
 fi
 
 maybe_update_composer;
