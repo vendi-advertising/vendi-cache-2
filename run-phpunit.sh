@@ -104,7 +104,7 @@ maybe_update_composer()
     if [ "$UPDATE_COMPOSER" = true ]; then
     {
         echo "running...";
-        composer update && composer install
+        composer update
         if [ $? -ne 0 ]; then
         {
             echo "Error with composer... exiting";
@@ -243,7 +243,7 @@ run_php_unit()
 }
 
 if [ ! -d './vendor' ]; then
-    UPDATE_COMPOSER=true
+    composer install
 fi
 
 maybe_update_composer;
