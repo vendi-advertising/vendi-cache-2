@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\Tests;
 
+/**
+ * @group CacheStats
+ */
 class test_CacheStats extends vendi_cache_test_base
 {
     /**

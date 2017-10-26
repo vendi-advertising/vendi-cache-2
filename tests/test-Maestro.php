@@ -57,17 +57,6 @@ class test_Maestro extends vendi_cache_test_base
     }
 
     /**
-     * @covers \Vendi\Cache\Maestro::with_file_system_adapter()
-     * @covers \Vendi\Cache\Maestro::get_default_adapter()
-     */
-    public function test_with_file_system_adapter()
-    {
-        $maestro = $this->__get_new_maestro();
-
-        $this->assertInstanceOf('Vendi\\Cache\\Maestro', $maestro->with_file_system_adapter(Maestro::get_default_adapter(Maestro::get_default_secretary())));
-    }
-
-    /**
      * @covers \Vendi\Cache\Maestro::get_default_admin_ui()
      */
     public function test_get_default_admin_ui()
@@ -126,7 +115,6 @@ class test_Maestro extends vendi_cache_test_base
      * @covers \Vendi\Cache\Maestro::get_admin_ui()
      * @covers \Vendi\Cache\Maestro::get_request()
      * @covers \Vendi\Cache\Maestro::get_logger()
-     * @covers \Vendi\Cache\Maestro::get_adapter()
      * @covers \Vendi\Cache\Maestro::get_secretary()
      * @covers \Vendi\Cache\Maestro::get_file_system()
      * @covers \Vendi\Cache\Maestro::get_cache_master()
@@ -153,9 +141,8 @@ class test_Maestro extends vendi_cache_test_base
                     [ '_admin_ui',     'get_admin_ui',     'Vendi\\Cache\\Admin\\UI' ],
                     [ '_request',      'get_request',      'Psr\\Http\\Message\\ServerRequestInterface' ],
                     [ '_logger',       'get_logger',       'Psr\\Log\\LoggerInterface' ],
-                    [ '_adapter',      'get_adapter',      'League\\Flysystem\\AdapterInterface' ],
                     [ '_secretary',    'get_secretary',    'Vendi\\Cache\\Secretary' ],
-                    [ '_file_system',  'get_file_system',  'League\\Flysystem\\Filesystem' ],
+                    [ '_file_system',  'get_file_system',  'Vendi\\Cache\\AbstractFilesystem' ],
                     [ '_cache_master', 'get_cache_master', 'Vendi\\Cache\\CacheMaster' ],
             ];
     }

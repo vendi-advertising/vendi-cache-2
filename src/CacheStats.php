@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache;
 
-use League\Flysystem\Plugin\ListWith;
-use Webmozart\PathUtil\Path;
+use MimeType\MimeType;
 
 class CacheStats
 {
@@ -134,72 +133,38 @@ class CacheStats
                 ->get_file_system()
             ;
 
-        //We need this plugin to get the listWith command to get additional data
-        $fs
-            ->addPlugin(new ListWith())
-        ;
-
-        //Get all items recursively
-        $items = $fs->listWith([ 'mimetype', 'size', 'timestamp'], '', true);
-
-        //Get the log file so that we can exclude it
-        $log_file_abs = Path::canonicalize($maestro->get_secretary()->get_log_file_abs());
-
-        //Get the abs path to the cache folder to that we can prepend it to the
-        //individual item to get the full path of the file. Weird, I know, but
-        //FlySystem is a relative-based system only.
-        $cache_folder = $maestro->get_secretary()->get_cache_folder_abs();
+        $files = $fs->get_directory_contents_abs($maestro->get_secretary()->get_cache_folder_abs());
 
         //Create a new instance of this class
         $obj = new self();
 
-        $found_log_file = false;
-
         //Loop through all files and dirs
-        foreach ($items as $item) {
+        foreach ($files as $item) {
+
             //For dirs, we only record their count
-            if ('dir' === $item[ 'type' ]) {
+            if ($item->isDir()) {
                 $obj->increment_dir_count();
                 continue;
             }
 
             //On the off-chance that there's other things (today or in the
-            //future) we'll specifically handle only file below
-            if ('file' === $item[ 'type' ]) {
-                if (! $found_log_file) {
-                    //This is the ABS path to the file
-                    $test_file_path = Path::join(
-                                                    $cache_folder,
-                                                    $item[ 'path' ]
-                                                );
-
-                    //If the current file is the log file
-                    if ($test_file_path === $log_file_abs) {
-                        //Flag that we found it so that subsequent passes don't
-                        //need to do this
-                        $found_log_file = true;
-
-                        $logger->info('Skipping log file');
-                        //Skip it
-                        continue;
-                    }
-                }
+            //future) we'll specifically handle only files below
+            if ($item->isFile()) {
 
                 //General observations on the current file
                 $obj->increment_file_count();
-                $obj->maybe_set_oldest_newest_file($item[ 'timestamp' ]);
-                $obj->add_size_to_data((int) $item[ 'size' ]);
-                $obj->maybe_set_largest_file_size((int) $item[ 'size' ]);
+                $obj->maybe_set_oldest_newest_file($item->getMTime());
+                $obj->add_size_to_data($item->getSize());
+                $obj->maybe_set_largest_file_size($item->getSize());
 
-                //
-                switch ($item[ 'mimetype' ]) {
+                switch (MimeType::getType($item->getRealPath())) {
                     case 'application/x-gzip':
-                        $obj->add_bytes_to_compressed_file_size((int) $item[ 'size' ]);
+                        $obj->add_bytes_to_compressed_file_size($item->getSize());
                         $obj->increment_compressed_file_count();
                         break;
 
                     case 'text/html':
-                        $obj->add_bytes_to_uncompressed_file_size((int) $item[ 'size' ]);
+                        $obj->add_bytes_to_uncompressed_file_size($item->getSize());
                         $obj->increment_uncompressed_file_count();
                         break;
 

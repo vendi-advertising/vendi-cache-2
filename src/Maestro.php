@@ -1,9 +1,6 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache;
 
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\AdapterInterface;
-use League\Flysystem\Filesystem;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Vendi\Cache\Admin\UI;
@@ -13,8 +10,6 @@ final class Maestro
     private static $_default_instance = null;
 
     private $_logger = null;
-
-    private $_adapter = null;
 
     private $_secretary = null;
 
@@ -68,18 +63,6 @@ final class Maestro
     }
 
     /**
-     * Use the supplied File System Adapter.
-     *
-     * @param  AdapterInterface $adapter the FlySystem Adapter to use
-     * @return Maestro
-     */
-    public function with_file_system_adapter(AdapterInterface $adapter)
-    {
-        $this->_adapter = $adapter;
-        return $this;
-    }
-
-    /**
      * Use the supplied cache settings.
      *
      * @param  Secretary $cache_settings the Cache Settings to use
@@ -88,6 +71,12 @@ final class Maestro
     public function with_secretary(Secretary $cache_settings)
     {
         $this->_secretary = $cache_settings;
+        return $this;
+    }
+
+    public function with_file_system(AbstractFileSystem $file_system)
+    {
+        $this->_file_system = $file_system;
         return $this;
     }
 
@@ -139,24 +128,6 @@ final class Maestro
     }
 
     /**
-     * Get the current or default FlySystem adapter.
-     *
-     * @param  mixed            $do_not_create_new
-     * @return AdapterInterface
-     */
-    public function get_adapter($do_not_create_new = false)
-    {
-        if (! $this->_adapter instanceof AdapterInterface) {
-            if ($do_not_create_new) {
-                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_adapter', 'get_adapter'));
-            }
-            $this->_adapter = self::get_default_adapter($this->get_secretary());
-        }
-
-        return $this->_adapter;
-    }
-
-    /**
      * Get the current or default Cache Settings.
      *
      * @param  mixed     $do_not_create_new
@@ -175,34 +146,7 @@ final class Maestro
     }
 
     /**
-     * Get the FlySystem using the current or default adapter.
-     *
-     * @param  mixed      $do_not_create_new
-     * @return Filesystem
-     */
-    public function get_file_system($do_not_create_new = false)
-    {
-        if (! $this->_file_system instanceof Filesystem) {
-            if ($do_not_create_new) {
-                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_file_system', 'get_file_system'));
-            }
-            $this->_file_system = new Filesystem(
-                                                    $this->get_adapter(),
-                                                    [
-                                                        'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                                                    ]
-                                                );
-        }
-
-        return $this->_file_system;
-    }
-
-    /**
      * Get the CacheMaster object bound to all of this object's properties.
-     *
-     * NOTE: You must call with_secretary(), with_file_system_adapter() and
-     * with_logger() before calling this method if you wish to override the
-     * defaults.
      *
      * @param  mixed       $do_not_create_new
      * @return CacheMaster
@@ -220,6 +164,19 @@ final class Maestro
         return $this->_cache_master;
     }
 
+    public function get_file_system($do_not_create_new = false)
+    {
+        //Already setup, just return
+        if (! $this->_file_system instanceof AbstractFileSystem) {
+            if ($do_not_create_new) {
+                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_file_system', 'get_file_system'));
+            }
+            $this->_file_system = self::get_default_file_system($this);
+        }
+
+        return $this->_file_system;
+    }
+
     public static function get_default_admin_ui(Maestro $maestro)
     {
         return new UI($maestro);
@@ -232,6 +189,11 @@ final class Maestro
     public static function get_default_request()
     {
         return VendiPsr7RequestMaker::create_default_request();
+    }
+
+    public static function get_default_file_system(Maestro $maestro)
+    {
+        return new FileSystem($maestro);
     }
 
     /**
@@ -247,10 +209,11 @@ final class Maestro
             $cache_settings = self::get_default_secretary();
         }
 
+        $ret = new self();
         return ( new self() )
                 ->with_secretary($cache_settings)
-                ->with_file_system_adapter(self::get_default_adapter($cache_settings))
                 ->with_logger(self::get_default_logger($cache_settings))
+                ->with_file_system(self::get_default_file_system($ret))
             ;
     }
 
@@ -262,29 +225,6 @@ final class Maestro
     public static function get_default_secretary()
     {
         return new Secretary();
-    }
-
-    /**
-     * Get the default FlySystem adapater using the supplied settings.
-     *
-     * @param  CacheSettings    $cache_settings the settings to use for the adapter
-     * @return AdapterInterface
-     */
-    public static function get_default_adapter(Secretary $cache_settings)
-    {
-        return new Local(
-                            //The folder to cache to
-                            $cache_settings->get_cache_folder_abs(),
-
-                            //Use locks during write (default)
-                            LOCK_EX,
-
-                            //Throw exception on symlinks (default)
-                            Local::DISALLOW_LINKS,
-
-                            //Special file system permissions
-                            $cache_settings->get_fs_permissions_for_cache()
-                        );
     }
 
     /**

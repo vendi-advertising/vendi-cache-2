@@ -2,7 +2,7 @@
 namespace Vendi\Cache\Tests;
 
 use GuzzleHttp\Psr7\ServerRequest;
-use League\Flysystem\Adapter\Local;
+use Vendi\Cache\FileSystem;
 use Vendi\Cache\Maestro;
 use Vendi\Cache\Secretary;
 
@@ -113,31 +113,10 @@ class vendi_cache_test_base extends \WP_UnitTestCase
      */
     public function __get_new_maestro(ServerRequest $request = null, callable $handle_function = null, $dir = null, Secretary $secretary = null)
     {
-        $adapter = null;
+        $maestro = new Maestro();
+
         if ($dir) {
-            $adapter = new Local(
-                                    $dir,
-
-                                    //Use locks during write (default)
-                                    LOCK_EX,
-
-                                    //Throw exception on symlinks (default)
-                                    Local::DISALLOW_LINKS,
-
-                                    //Special file system permissions
-                                    [
-                                        'file' =>
-                                                    [
-                                                        'public'  => 0664,
-                                                        'private' => 0664,
-                                                    ],
-                                        'dir' =>
-                                                    [
-                                                        'public'  => 0777,
-                                                        'private' => 0777,
-                                                    ]
-                                    ]
-                                );
+            $maestro->with_file_system(new FileSystem($maestro, $dir));
         }
 
         if (! $secretary) {
@@ -146,10 +125,9 @@ class vendi_cache_test_base extends \WP_UnitTestCase
             $secretary->set_constant('WP_CONTENT_DIR', ABSPATH . 'wp-content');
         }
 
-        return ( new Maestro() )
+        return $maestro
                 ->with_secretary($secretary)
                 ->with_request($request ? $request : Maestro::get_default_request())
-                ->with_file_system_adapter($adapter ? $adapter : Maestro::get_default_adapter($secretary))
                 ->with_logger(
                                 new \Monolog\Logger(
                                                 'vendi-cache-noop',

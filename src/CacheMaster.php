@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache;
 
-use League\Flysystem\Filesystem;
-use League\Flysystem\Plugin\ListPaths;
 use Psr\Log\LoggerInterface;
 
 final class CacheMaster
@@ -83,15 +81,6 @@ final class CacheMaster
     public function get_secretary()
     {
         return $this->get_maestro()->get_secretary();
-    }
-
-    /**
-     * [get_file_system description].
-     * @return Filesystem
-     */
-    public function get_file_system()
-    {
-        return $this->get_maestro()->get_file_system();
     }
 
     public function log_request_as_not_cacheable(array $args)
@@ -376,14 +365,14 @@ final class CacheMaster
         // }
 
         $this->get_logger()->info('Caching file', [ 'cache_file' => $cache_file ]);
-        $this->write_file($cache_file, $buffer . $append);
+        $this->get_maestro()->get_file_system()->write_file($cache_file, $buffer . $append);
         // chmod( $file, 0644 );
         // if( self::$cacheType == cache_settings::CACHE_MODE_ENHANCED )
         // {
         //create gzipped files so we can send precompressed files
         $cache_file .= '_gzip';
         $this->get_logger()->info('Caching file gzip', [ 'cache_file' => $cache_file ]);
-        $this->write_file($cache_file, gzencode($buffer . $appendGzip, 9));
+        $this->get_maestro()->get_file_system()->write_file($cache_file, gzencode($buffer . $appendGzip, 9));
         // @file_put_contents( $file, gzencode( $buffer . $appendGzip, 9 ), LOCK_EX );
         // chmod( $file, 0644 );
         // }
@@ -467,7 +456,7 @@ final class CacheMaster
 
         if ($this->file_exists($cache_file)) {
             $this->get_logger()->debug('Cache file found, deleting', [ 'cache_file' => $cache_file ]);
-            $this->delete_file($cache_file);
+            $this->get_maestro()->get_file_system()->delete_file($cache_file);
         } else {
             $this->get_logger()->debug('Cache file not found, skipping', [ 'cache_file' => $cache_file ]);
         }
@@ -477,7 +466,7 @@ final class CacheMaster
     {
         $this->get_logger()->info('Starting clearing of page cache');
 
-        if (! $this->delete_cache_dir_contents()) {
+        if (! $this->get_maestro()->get_file_system()->delete_dir()) {
             $this->get_logger()->error('Unable to clear page cache');
             return;
         }
@@ -510,77 +499,5 @@ final class CacheMaster
     public function handle_action_clear_page_cache()
     {
         $this->schedule_cache_clear();
-    }
-
-    public function file_exists($relative_file_path)
-    {
-        return $this->get_file_system()->has($relative_file_path);
-    }
-
-    public function delete_file($relative_file_path)
-    {
-        return $this->get_file_system()->delete($relative_file_path);
-    }
-
-    public function delete_dir($relative_dir_path)
-    {
-        return $this->get_file_system()->deleteDir($relative_dir_path);
-    }
-
-    public function write_file($relative_file_path, $contents)
-    {
-        return $this->get_file_system()->write($relative_file_path, $contents);
-    }
-
-    public function delete_cache_dir_contents($absolute_path = null)
-    {
-        //Allow callers to optionally supply the path
-        if (! $absolute_path) {
-            $absolute_path = $this->get_secretary()->get_cache_folder_abs();
-        }
-
-        //Log the start of deletion
-        $this->get_logger()->debug('Delete directory request', [ 'dir' => $absolute_path ]);
-
-        //If we don't have an actual folder, skip it
-        if (! is_dir($absolute_path)) {
-            $this->get_logger()->debug('Directory empty... skipping', [ 'dir' => $absolute_path ]);
-            return false;
-        }
-
-        //We only want folders, not files, so we'll use the ListPaths plugin
-        //to get only those
-        $this->get_file_system()->addPlugin(new ListPaths());
-        $child_paths = $this->get_file_system()->listPaths();
-
-        //We don't want to delete
-        $log_file_abs = \Webmozart\PathUtil\Path::canonicalize($this->get_secretary()->get_log_file_abs());
-
-        $found_log_file = false;
-
-        foreach ($child_paths as $dir) {
-            if (! $found_log_file) {
-                $test_file_path = \Webmozart\PathUtil\Path::join(
-                                                                    $this->get_file_system()->getAdapter()->applyPathPrefix($dir),
-                                                                    $this->get_secretary()->get_log_file_name()
-                                                                );
-
-                if ($test_file_path === $log_file_abs) {
-                    $this->get_logger()->debug('Skipping log directory', [ 'path' => $dir, 'is_dir' => is_dir($absolute_path) ]);
-                    $found_log_file = true;
-                    continue;
-                }
-            }
-
-            $result = $this->get_file_system()->deleteDir($dir);
-            if (! $result) {
-                $this->get_logger()->error('Could not delete directory', [ 'dir' => $dir ]);
-                return false;
-            }
-
-            $this->get_logger()->debug('Delete directory', [ 'dir' => $dir ]);
-        }
-
-        return true;
     }
 }

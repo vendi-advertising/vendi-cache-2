@@ -62,7 +62,6 @@ class test_CacheMaster extends vendi_cache_test_base
      * @covers \Vendi\Cache\CacheMaster::get_maestro()
      * @covers \Vendi\Cache\CacheMaster::get_logger()
      * @covers \Vendi\Cache\CacheMaster::get_secretary()
-     * @covers \Vendi\Cache\CacheMaster::get_file_system()
      * @param mixed $method
      * @param mixed $type
      */
@@ -105,51 +104,51 @@ class test_CacheMaster extends vendi_cache_test_base
      * @covers \Vendi\Cache\CacheMaster::write_file()
      * @covers \Vendi\Cache\CacheMaster::delete_file()
      */
-    public function test__file_io()
-    {
-        $dir = $this->create_temp_dir();
-        $this->assertTrue(is_dir($dir));
+    // public function test__file_io()
+    // {
+    //     $dir = $this->create_temp_dir();
+    //     $this->assertTrue(is_dir($dir));
 
-        $obj = $this->_get_obj_with_custom_filesystem($dir);
+    //     $obj = $this->_get_obj_with_custom_filesystem($dir);
 
-        $file = 'test/more-test';
-        $contents = 'cheese';
+    //     $file = 'test/more-test';
+    //     $contents = 'cheese';
 
-        $abs_path = \Webmozart\PathUtil\Path::join($dir, $file);
+    //     $abs_path = \Webmozart\PathUtil\Path::join($dir, $file);
 
-        $this->assertFalse($obj->file_exists($file));
-        $this->assertTrue($obj->write_file($file, $contents));
-        $this->assertTrue($obj->file_exists($file));
-        $this->assertFileExists($abs_path);
-        $this->assertTrue($obj->delete_file($file));
-        $this->assertTrue($obj->delete_dir('test/'));
-    }
+    //     $this->assertFalse($obj->file_exists($file));
+    //     $this->assertTrue($obj->write_file($file, $contents));
+    //     $this->assertTrue($obj->file_exists($file));
+    //     $this->assertFileExists($abs_path);
+    //     $this->assertTrue($obj->delete_file($file));
+    //     $this->assertTrue($obj->delete_dir('test/'));
+    // }
 
     /**
      * @covers \Vendi\Cache\CacheMaster::delete_cache_dir_contents()
      * @covers \Vendi\Cache\CacheMaster::write_file()
      */
-    public function test__delete_cache_dir_contents()
-    {
-        $dir = $this->create_temp_dir();
-        $this->assertTrue(is_dir($dir));
+    // public function test__delete_cache_dir_contents()
+    // {
+    //     $dir = $this->create_temp_dir();
+    //     $this->assertTrue(is_dir($dir));
 
-        $obj = $this->_get_obj_with_custom_filesystem($dir);
+    //     $obj = $this->_get_obj_with_custom_filesystem($dir);
 
-        $files = [
-                    'test/alpha/beta.txt',
-                    'test/cheese/example.txt',
-                ];
+    //     $files = [
+    //                 'test/alpha/beta.txt',
+    //                 'test/cheese/example.txt',
+    //             ];
 
-        $contents = 'cheese';
+    //     $contents = 'cheese';
 
-        foreach ($files as $file) {
-            $this->assertTrue($obj->write_file($file, $contents));
-            $this->_files[] = \Webmozart\PathUtil\Path::join($dir, $file);
-        }
+    //     foreach ($files as $file) {
+    //         $this->assertTrue($obj->write_file($file, $contents));
+    //         $this->_files[] = \Webmozart\PathUtil\Path::join($dir, $file);
+    //     }
 
-        $this->assertTrue($obj->delete_cache_dir_contents($dir));
-    }
+    //     $this->assertTrue($obj->delete_cache_dir_contents($dir));
+    // }
 
     public function provider_for_test__get_XYZ__passthrough()
     {
@@ -157,7 +156,6 @@ class test_CacheMaster extends vendi_cache_test_base
                     [ 'get_maestro',     '\\Vendi\\Cache\\Maestro' ],
                     [ 'get_logger',      '\\Psr\Log\LoggerInterface' ],
                     [ 'get_secretary',   '\\Vendi\\Cache\\Secretary' ],
-                    [ 'get_file_system', '\\League\Flysystem\Filesystem' ],
             ];
     }
 
