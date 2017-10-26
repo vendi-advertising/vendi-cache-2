@@ -179,6 +179,9 @@ final class FileSystem extends AbstractFileSystem
 
     public function get_directory_contents_abs($abs_path)
     {
+        if (!is_dir($abs_path)) {
+            return [];
+        }
         return new \RecursiveIteratorIterator(
                                                     new \RecursiveDirectoryIterator(
                                                                                         $abs_path,
