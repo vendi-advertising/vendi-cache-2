@@ -30,6 +30,7 @@ final class CacheBypassTester
         Assertion::isInstanceOf($logger, 'Psr\Log\LoggerInterface');
 
         $tests = [
+                    'XmlRpcMode',
                     'MaintenanceMode',
                     'LoggedInUser',
                     'LegacyConstants',

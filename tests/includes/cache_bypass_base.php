@@ -15,14 +15,16 @@ class cache_bypass_base extends vendi_cache_test_base
         $obj = "\\Vendi\\Cache\\CacheBypasses\\$class_to_test";
         $test = new $obj($maestro);
         $this->assertFalse($test->is_resource_not_cacheable_because_constant_is_true());
+        $this->assertFalse($test->is_resource_not_cacheable());
 
         $cache_settings->set_constant($name, true);
 
         $obj = "\\Vendi\\Cache\\CacheBypasses\\$class_to_test";
         $test = new $obj($maestro);
         $this->assertTrue($test->is_resource_not_cacheable_because_constant_is_true());
+        $this->assertTrue($test->is_resource_not_cacheable());
 
-        //Constant is define but weirdly set to false. This me
+        //Constant is define but weirdly set to false.
         $cache_settings->set_constant($name, false);
 
         $obj = "\\Vendi\\Cache\\CacheBypasses\\$class_to_test";
