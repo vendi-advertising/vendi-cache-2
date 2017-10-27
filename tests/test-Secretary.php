@@ -94,7 +94,8 @@ class test_Secretary extends vendi_cache_test_base
         $secretary = $this->__get_new_maestro()->get_secretary();
 
         $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_LOG_FILE_ABS'));
-        $this->assertSame(Path::join($secretary->get_constant_value('WP_CONTENT_DIR'), 'vendi_cache', '__log__', 'vendi_cache.log'), $secretary->get_log_file_abs());
+        update_option('vendi-cache-log-file-name', 'cheese.log');
+        $this->assertSame(Path::join($secretary->get_constant_value('WP_CONTENT_DIR'), 'vendi_cache', '__log__', 'cheese.log'), $secretary->get_log_file_abs());
     }
 
     /**
@@ -162,7 +163,8 @@ class test_Secretary extends vendi_cache_test_base
         $secretary = $this->__get_new_maestro()->get_secretary();
         $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_LOG_FILE_ABS'));
         $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_LOG_FILE_NAME'));
-        $this->assertSame('vendi_cache.log', $secretary->get_log_file_name());
+        update_option('vendi-cache-log-file-name', 'cheese.log');
+        $this->assertSame('cheese.log', $secretary->get_log_file_name());
     }
 
     /**

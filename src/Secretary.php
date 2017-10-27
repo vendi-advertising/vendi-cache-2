@@ -3,6 +3,7 @@ namespace Vendi\Cache;
 
 use Assert\Assertion;
 use Psr\Log\LogLevel;
+use Ramsey\Uuid\Uuid;
 use Vendi\Cache\CacheOptions\CacheOptionInterface;
 
 class Secretary
@@ -95,7 +96,13 @@ class Secretary
             return $this->get_constant_value('VENDI_CACHE_LOG_FILE_NAME');
         }
 
-        return 'vendi_cache.log';
+        $log_file_name = get_option('vendi-cache-log-file-name');
+        if (!$log_file_name) {
+            $log_file_name = Uuid::uuid4()->toString() . '.log';
+            update_option('vendi-cache-log-file-name', $log_file_name, true);
+        }
+
+        return $log_file_name;
     }
 
     /**
