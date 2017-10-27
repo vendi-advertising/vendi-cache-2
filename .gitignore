@@ -1,3 +1,4 @@
 /vendor/
 /tests/logs/
 humbuglog.txt
+.php_cs.cache

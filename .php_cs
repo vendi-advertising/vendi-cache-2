@@ -49,6 +49,6 @@ return PhpCsFixer\Config::create()
         'strict_comparison' => true,
     ])
     ->setFinder($finder)
-    ->setUsingCache(false)
+    ->setUsingCache(true)
     ->setRiskyAllowed(true)
 ;
