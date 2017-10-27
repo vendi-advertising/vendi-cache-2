@@ -13,7 +13,6 @@ This version will have a minimum PHP version of probably 5.5. Because of this we
  * [PSR-3](http://www.php-fig.org/psr/psr-3/) Logging via [Monolog](https://github.com/Seldaek/monolog)
  * [PSR-4](http://www.php-fig.org/psr/psr-4/) Autoloading.
  * [PSR-7](http://www.php-fig.org/psr/psr-7/) HTTP Request interpretation via [Guzzle Psr7](https://github.com/guzzle/psr7)
- * Better file system abstraction via [Flysystem](http://flysystem.thephpleague.com/) and [File Path Utility](https://github.com/webmozart/path-util)
  * Unit Tests! Unit Tests! Unit Tests! Unit Tests!
 
 ## Goals
