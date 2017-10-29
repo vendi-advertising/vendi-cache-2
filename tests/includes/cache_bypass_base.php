@@ -3,42 +3,10 @@ namespace Vendi\Cache\Tests;
 
 class cache_bypass_base extends vendi_cache_test_base
 {
-    public $_logs = [];
-
-    public function assertSameLastMessage($expected, $do_not_purge_logs = false)
-    {
-        if (0===count($this->_logs)) {
-            throw new \Exception('No last message received');
-        }
-
-        $last_message = end($this->_logs);
-
-        if (!$do_not_purge_logs) {
-            $this->_purge_logs();
-        }
-
-        $this->assertArrayHasKey('message', $last_message);
-
-        $this->assertSame($expected, $last_message['message']);
-    }
-
-    public function _purge_logs()
-    {
-        $this->_logs = [];
-    }
-
-    public function _handle_logger(array $record)
-    {
-        $this->_logs[] = $record;
-    }
-
     public function _test_is_cacheable_because_fatal_constant_not_defined($class_to_test, $name)
     {
         $logger = [];
-        $maestro = $this->__get_new_maestro(
-                                                null,
-                                                [$this, '_handle_logger']
-                                        );
+        $maestro = $this->__get_new_maestro();
         $cache_settings = $maestro->get_secretary();
 
         //The supplied constant should not exist by default

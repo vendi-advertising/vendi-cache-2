@@ -18,6 +18,35 @@ class vendi_cache_test_base extends \WP_UnitTestCase
     //This is an instance of the Virtual File System
     private $_root;
 
+    private $_logs = [];
+
+    public function assertSameLastMessage($expected, $do_not_purge_logs = false)
+    {
+        if (0===count($this->_logs)) {
+            throw new \Exception('No last message received');
+        }
+
+        $last_message = end($this->_logs);
+
+        if (!$do_not_purge_logs) {
+            $this->_purge_logs();
+        }
+
+        $this->assertArrayHasKey('message', $last_message);
+
+        $this->assertSame($expected, $last_message['message']);
+    }
+
+    public function _purge_logs()
+    {
+        $this->_logs = [];
+    }
+
+    public function _handle_logger(array $record)
+    {
+        $this->_logs[] = $record;
+    }
+
     public function get_vfs_root()
     {
         return $this->_root;
@@ -82,6 +111,10 @@ class vendi_cache_test_base extends \WP_UnitTestCase
             //WordPress requires the trailing slash on it, too.
             $secretary->set_constant('ABSPATH', vfsStream::url($this->get_root_dir_name_no_trailing_slash() . '/'));
             $secretary->set_constant('WP_CONTENT_DIR', vfsStream::url($this->get_root_dir_name_no_trailing_slash() . '/wp-content/'));
+        }
+
+        if (!$handle_function) {
+            $handle_function = [$this, '_handle_logger'];
         }
 
         return $maestro
