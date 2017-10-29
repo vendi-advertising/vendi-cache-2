@@ -23,11 +23,6 @@ class test_CacheMaster extends vendi_cache_test_base
         return new CacheMaster($this->__get_new_maestro());
     }
 
-    private function _get_obj_with_custom_filesystem($dir)
-    {
-        return $this->_get_obj($this->__get_new_maestro(null, null, $dir));
-    }
-
     /**
      * @covers \Vendi\Cache\CacheMaster::__construct
      */
@@ -98,57 +93,6 @@ class test_CacheMaster extends vendi_cache_test_base
         $cache_master = $this->_get_obj();
         $this->assertTrue($cache_master->is_user_logged_in());
     }
-
-    /**
-     * @covers \Vendi\Cache\CacheMaster::file_exists()
-     * @covers \Vendi\Cache\CacheMaster::write_file()
-     * @covers \Vendi\Cache\CacheMaster::delete_file()
-     */
-    // public function test__file_io()
-    // {
-    //     $dir = $this->create_temp_dir();
-    //     $this->assertTrue(is_dir($dir));
-
-    //     $obj = $this->_get_obj_with_custom_filesystem($dir);
-
-    //     $file = 'test/more-test';
-    //     $contents = 'cheese';
-
-    //     $abs_path = \Webmozart\PathUtil\Path::join($dir, $file);
-
-    //     $this->assertFalse($obj->file_exists($file));
-    //     $this->assertTrue($obj->write_file($file, $contents));
-    //     $this->assertTrue($obj->file_exists($file));
-    //     $this->assertFileExists($abs_path);
-    //     $this->assertTrue($obj->delete_file($file));
-    //     $this->assertTrue($obj->delete_dir('test/'));
-    // }
-
-    /**
-     * @covers \Vendi\Cache\CacheMaster::delete_cache_dir_contents()
-     * @covers \Vendi\Cache\CacheMaster::write_file()
-     */
-    // public function test__delete_cache_dir_contents()
-    // {
-    //     $dir = $this->create_temp_dir();
-    //     $this->assertTrue(is_dir($dir));
-
-    //     $obj = $this->_get_obj_with_custom_filesystem($dir);
-
-    //     $files = [
-    //                 'test/alpha/beta.txt',
-    //                 'test/cheese/example.txt',
-    //             ];
-
-    //     $contents = 'cheese';
-
-    //     foreach ($files as $file) {
-    //         $this->assertTrue($obj->write_file($file, $contents));
-    //         $this->_files[] = \Webmozart\PathUtil\Path::join($dir, $file);
-    //     }
-
-    //     $this->assertTrue($obj->delete_cache_dir_contents($dir));
-    // }
 
     public function provider_for_test__get_XYZ__passthrough()
     {

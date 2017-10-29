@@ -12,13 +12,10 @@ use Webmozart\PathUtil\Path;
  */
 class vendi_cache_test_base extends \WP_UnitTestCase
 {
+    //This is name of our FS root for testing
     private $_test_root_name = 'vendi-cache-test';
-    // //Array of directories that this test should cleanup when done
-    // public $_dirs = [];
 
-    // //Array of files that this test should cleanup when done
-    // public $_files = [];
-
+    //This is an instance of the Virtual File System
     private $_root;
 
     public function get_vfs_root()
@@ -59,29 +56,17 @@ class vendi_cache_test_base extends \WP_UnitTestCase
 
     /**
      * Create a new maestro for all tests with optional parameters.
-     * @param  ServerRequest|null $request         a specific Guzzle Request or null
+     * @param  ServerRequest|null $request         A specific Guzzle Request or null
      *                                             for the default Request
-     * @param  callable|null      $handle_function the function to invoke for each
+     * @param  callable|null      $handle_function The function to invoke for each
      *                                             log call or null for none
-     * @param  string|null        $dir             the directory to bind the file
-     *                                             system adapter to or null for the
-     *                                             default
+     * @param  Secretary|null     $secretary       A customized secretary to use. Never use unless you are actually
+     *                                             testing a specific Secretary.
      * @return Maestro
      */
-    public function __get_new_maestro(ServerRequest $request = null, callable $handle_function = null, $dir = null, Secretary $secretary = null)
+    public function __get_new_maestro(ServerRequest $request = null, callable $handle_function = null, Secretary $secretary = null)
     {
-        if (null!==$dir) {
-            throw new \Exception('Custom dir no longer supported because of virtual file system');
-        }
-
         $maestro = new Maestro();
-
-        //If we weren't given an actual directory (and I can't remember which
-        //test case needs this anymore) then just create a new one.
-        // if (!$dir) {
-        // $dir = $this->create_temp_dir();
-
-        // }
 
         $maestro->with_file_system(new file_system_for_tests($maestro, vfsStream::url($this->get_root_dir_name_no_trailing_slash())));
 

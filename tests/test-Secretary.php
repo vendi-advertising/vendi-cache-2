@@ -31,7 +31,7 @@ class test_Secretary extends vendi_cache_test_base
     public function test_constants()
     {
         //We're testing actual constants here so we need the default Secretary
-        $maestro = $this->__get_new_maestro(null, null, null, Maestro::get_default_secretary());
+        $maestro = $this->__get_new_maestro(null, null, Maestro::get_default_secretary());
         $secretary = $maestro->get_secretary();
 
         $this->assertFalse($secretary->is_constant_defined('CHEESE'));
