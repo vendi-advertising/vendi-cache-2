@@ -110,8 +110,17 @@ class test_CacheStats extends vendi_cache_test_base
      */
     public function test_NOTHING()
     {
-        \Vendi\Cache\CacheStats::generate_from_file_system($this->__get_new_maestro());
-        $this->assertTrue(true);
+        $maestro = $this->__get_new_maestro();
+
+        $cache_folder = $maestro->get_secretary()->get_cache_folder_abs();
+
+        // $files = [
+        //             $this->create_file_in_dir($cache_folder, 'a/b/c.html'),
+        // ];
+
+        // dump($maestro->get_file_system());
+        // \Vendi\Cache\CacheStats::generate_from_file_system();
+        // $this->assertTrue(true);
     }
 
     public function provider_get_all_increments()
