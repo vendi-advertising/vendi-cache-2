@@ -57,6 +57,17 @@ class test_Maestro extends vendi_cache_test_base
     }
 
     /**
+     * @covers \Vendi\Cache\Maestro::with_file_system()
+     * @covers \Vendi\Cache\Maestro::get_default_file_system()
+     */
+    public function test_with_file_system()
+    {
+        $maestro = $this->__get_new_maestro();
+
+        $this->assertInstanceOf('Vendi\\Cache\\Maestro', $maestro->with_file_system(Maestro::get_default_file_system($maestro)));
+    }
+
+    /**
      * @covers \Vendi\Cache\Maestro::get_default_admin_ui()
      */
     public function test_get_default_admin_ui()
