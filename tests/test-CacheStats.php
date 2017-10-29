@@ -2,7 +2,6 @@
 namespace Vendi\Cache\Tests;
 
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\content\LargeFileContent;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -113,52 +112,65 @@ class test_CacheStats extends vendi_cache_test_base
      * @covers \Vendi\Cache\CacheStats::get_files
      * @covers \Vendi\Cache\CacheStats::get_compressed_files
      * @covers \Vendi\Cache\CacheStats::get_uncompressed_files
+     * @covers \Vendi\Cache\CacheStats::get_uncompressed_bytes
+     * @covers \Vendi\Cache\CacheStats::get_compressed_bytes
      * @covers \Vendi\Cache\CacheStats::get_oldest_file
      * @covers \Vendi\Cache\CacheStats::get_newest_file
      * @covers \Vendi\Cache\CacheStats::get_largest_file
+     * @covers \Vendi\Cache\CacheStats::get_data
      */
     public function test_generate_from_file_system()
     {
         $maestro = $this->__get_new_maestro();
 
-        $cache_folder = $maestro->get_secretary()->get_cache_folder_abs();
-
         $local_folder = 'wp-content/vendi_cache/cheese';
 
-        //https://github.com/mikey179/vfsStream/issues/50#issuecomment-14804611
-        // vfsStream::useDotFiles(true); // force off
-
+        //Create the full path to this directory in the VFS
         vfsStream::newDirectory($local_folder)
             ->at($this->get_vfs_root())
         ;
 
+        //Files for testing, path => bytes
+        //Makes sure to update assert's below if you change these
         $files = [
-                    'large.html' => 1234,
-                    'large.html.gz' => 50,
+                    'small.html' => 1234,
+                    'small.html.gz' => 50,
+
+                    'large.html' => 12344567,
+                    'large.html.gz' => 5056,
+
+                    'what_the_heck.pdf' => 5678,
             ];
 
-        foreach($files as $file => $byte_count){
-            $abs = Path::join( vfsStream::url($this->get_root_dir_name_no_trailing_slash()), $local_folder, $file );
-            $this->assertFalse(file_exists($abs));
-            $this->_create_file_with_bytes($abs, $byte_count);
+        //Create the files above and sanity check that they actually exist before
+        //passing them onto the stat generator
+        foreach ($files as $file => $byte_count) {
+            //We're joining multiple paths and since WebMozart supports this just us it
+            $abs = Path::join(vfsStream::url($this->get_root_dir_name_no_trailing_slash()), $local_folder, $file);
+
+            //The file shouldn't exist by default
+            $this->assertFileNotExists($abs);
+
+            //Create the file, filling it with whatever we want
+            file_put_contents($abs, str_repeat('z', $byte_count));
+
+            //Make sure that it exists before moving up
             $this->assertFileExists($abs);
         }
 
         $stats = \Vendi\Cache\CacheStats::generate_from_file_system($maestro);
 
-        $this->assertSame(1234, $stats->get_uncompressed_bytes());
-        $this->assertSame(50, $stats->get_compressed_bytes());
-        $this->assertSame(1, $stats->get_uncompressed_files());
-        $this->assertSame(1, $stats->get_compressed_files());
+        $this->assertSame(1234 + 12344567, $stats->get_uncompressed_bytes());
+        $this->assertSame(50 + 5056, $stats->get_compressed_bytes());
+        $this->assertSame(2, $stats->get_uncompressed_files());
+        $this->assertSame(2, $stats->get_compressed_files());
 
-    }
+        $this->assertSame(5, $stats->get_files());
+        $this->assertSame(1, $stats->get_dirs());
 
-    private function _create_file_with_bytes($abs, $byte_count)
-    {
-        file_put_contents(
-                            $abs,
-                            str_repeat('z', $byte_count)
-                        );
+
+
+        $this->assertSame(array_sum($files), $stats->get_data());
     }
 
     public function provider_get_all_increments()
