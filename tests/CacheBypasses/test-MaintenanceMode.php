@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\Tests\CacheBypasses;
 
+use org\bovigo\vfs\vfsStream;
 use Vendi\Cache\CacheBypasses\MaintenanceMode;
 use Vendi\Cache\Tests\cache_bypass_base;
-use Webmozart\PathUtil\Path;
 
 class test_MaintenanceMode extends cache_bypass_base
 {
@@ -16,20 +16,12 @@ class test_MaintenanceMode extends cache_bypass_base
         $maestro = $this->__get_new_maestro();
         $cache_settings = $maestro->get_secretary();
 
-        //Create a temporary folder to simulate ABSPATH and set global constant
-        $dir = $this->create_temp_dir();
-        $cache_settings->set_constant('ABSPATH', $dir);
-
         $test = new MaintenanceMode($maestro);
 
-        //Magic WP file path
-        $path = Path::join($dir, '.maintenance');
-
-        //Create the maintenance file
-        $this->touch_file($path);
+        touch(vfsStream::url($this->get_root_dir_name_no_trailing_slash() . '/.maintenance'));
 
         //Make sure it exists
-        $this->assertFileExists($path);
+        $this->assertFileExists(vfsStream::url($this->get_root_dir_name_no_trailing_slash() . '/.maintenance'));
 
         //Caching should be disabled
         $this->assertTrue($test->is_resource_not_cacheable());
@@ -45,10 +37,6 @@ class test_MaintenanceMode extends cache_bypass_base
         $cache_settings = $maestro->get_secretary();
 
         $test = new MaintenanceMode($maestro);
-
-        //Create a temporary folder to simulate ABSPATH and set global constant
-        $dir = $this->create_temp_dir();
-        $cache_settings->set_constant('ABSPATH', $dir);
 
         $this->assertFalse($test->is_resource_not_cacheable());
 
