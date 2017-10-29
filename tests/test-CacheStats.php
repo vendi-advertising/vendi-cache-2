@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\Tests;
 
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\content\LargeFileContent;
+use Webmozart\PathUtil\Path;
+
 /**
  * @group CacheStats
  */
@@ -35,9 +39,6 @@ class test_CacheStats extends vendi_cache_test_base
      * @covers \Vendi\Cache\CacheStats::add_size_to_data
      * @covers \Vendi\Cache\CacheStats::add_bytes_to_compressed_file_size
      * @covers \Vendi\Cache\CacheStats::add_bytes_to_uncompressed_file_size
-     * @covers \Vendi\Cache\CacheStats::get_data
-     * @covers \Vendi\Cache\CacheStats::get_compressed_bytes
-     * @covers \Vendi\Cache\CacheStats::get_uncompressed_bytes
      * @param mixed $property
      * @param mixed $method
      */
@@ -106,21 +107,58 @@ class test_CacheStats extends vendi_cache_test_base
     }
 
     /**
-     * @coversNothing
+     * @group  CacheStats__generate_from_file_system
+     * @covers \Vendi\Cache\CacheStats::generate_from_file_system
+     * @covers \Vendi\Cache\CacheStats::get_dirs
+     * @covers \Vendi\Cache\CacheStats::get_files
+     * @covers \Vendi\Cache\CacheStats::get_compressed_files
+     * @covers \Vendi\Cache\CacheStats::get_uncompressed_files
+     * @covers \Vendi\Cache\CacheStats::get_oldest_file
+     * @covers \Vendi\Cache\CacheStats::get_newest_file
+     * @covers \Vendi\Cache\CacheStats::get_largest_file
      */
-    public function test_NOTHING()
+    public function test_generate_from_file_system()
     {
         $maestro = $this->__get_new_maestro();
 
         $cache_folder = $maestro->get_secretary()->get_cache_folder_abs();
 
-        // $files = [
-        //             $this->create_file_in_dir($cache_folder, 'a/b/c.html'),
-        // ];
+        $local_folder = 'wp-content/vendi_cache/cheese';
 
-        // dump($maestro->get_file_system());
-        // \Vendi\Cache\CacheStats::generate_from_file_system();
-        // $this->assertTrue(true);
+        //https://github.com/mikey179/vfsStream/issues/50#issuecomment-14804611
+        // vfsStream::useDotFiles(true); // force off
+
+        vfsStream::newDirectory($local_folder)
+            ->at($this->get_vfs_root())
+        ;
+
+        $files = [
+                    'large.html' => 1234,
+                    'large.html.gz' => 50,
+            ];
+
+        foreach($files as $file => $byte_count){
+            $abs = Path::join( vfsStream::url($this->get_root_dir_name_no_trailing_slash()), $local_folder, $file );
+            $this->assertFalse(file_exists($abs));
+            $this->_create_file_with_bytes($abs, $byte_count);
+            $this->assertFileExists($abs);
+        }
+
+        $stats = \Vendi\Cache\CacheStats::generate_from_file_system($maestro);
+
+        $this->assertSame(1234, $stats->get_uncompressed_bytes());
+        $this->assertSame(50, $stats->get_compressed_bytes());
+        $this->assertSame(1, $stats->get_uncompressed_files());
+        $this->assertSame(1, $stats->get_compressed_files());
+
+    }
+
+    private function _create_file_with_bytes($abs, $byte_count)
+    {
+        file_put_contents(
+                            $abs,
+                            str_repeat('z', $byte_count)
+                        );
     }
 
     public function provider_get_all_increments()
