@@ -3,16 +3,13 @@ namespace Vendi\Cache;
 
 use Webmozart\PathUtil\Path;
 
-final class FileSystem extends AbstractFileSystem
+class FileSystem extends AbstractFileSystem
 {
-    private $_root;
-
     private $_last_error;
 
     public function __construct(Maestro $maestro)
     {
-        parent::__construct($maestro);
-        $this->_root = $maestro->get_secretary()->get_cache_folder_abs();
+        parent::__construct($maestro, $maestro->get_secretary()->get_cache_folder_abs());
     }
 
     public function handle_error($errno, $errstr, $errfile, $errline)
@@ -22,12 +19,12 @@ final class FileSystem extends AbstractFileSystem
 
     public function file_exists($relative_path)
     {
-        return $this->file_exists(Path::join($this->_root, $relative_path));
+        return $this->file_exists(Path::join($this->get_root(), $relative_path));
     }
 
     public function delete_file($relative_path)
     {
-        return $this->delete_file_abs(Path::join($this->_root, $relative_path));
+        return $this->delete_file_abs(Path::join($this->get_root(), $relative_path));
     }
 
     public function file_exists_abs($abs_path)
@@ -92,7 +89,7 @@ final class FileSystem extends AbstractFileSystem
 
     public function delete_dir($relative_path, array $except_files = [])
     {
-        return $this->delete_dir(Path::join($this->_root, $relative_path));
+        return $this->delete_dir(Path::join($this->get_root(), $relative_path));
     }
 
     public function delete_dir_abs($abs_path, array $except_files = [])
@@ -174,7 +171,7 @@ final class FileSystem extends AbstractFileSystem
 
     public function get_directory_contents($relative_path)
     {
-        return $this->get_directory_contents_abs(Path::join($this->_root, $relative_path));
+        return $this->get_directory_contents_abs(Path::join($this->get_root(), $relative_path));
     }
 
     public function get_directory_contents_abs($abs_path)
