@@ -157,7 +157,10 @@ class CacheStats
                 $obj->add_size_to_data($item->getSize());
                 $obj->maybe_set_largest_file_size($item->getSize());
 
-                switch (MimeType::getType($item->getRealPath())) {
+                //Use getPathname because Mikey VFS doesn't support getRealPath
+                //because PHP doesn't support it. See:
+                //https://github.com/mikey179/vfsStream/wiki/Known-Issues
+                switch (MimeType::getType($item->getPathname())) {
                     case 'application/x-gzip':
                         $obj->add_bytes_to_compressed_file_size($item->getSize());
                         $obj->increment_compressed_file_count();
