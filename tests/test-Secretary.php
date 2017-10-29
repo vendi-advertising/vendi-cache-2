@@ -158,13 +158,26 @@ class test_Secretary extends vendi_cache_test_base
     /**
      * @covers \Vendi\Cache\Secretary::get_log_file_name
      */
-    public function test_get_log_file_name__no_constant_set()
+    public function test_get_log_file_name__from_options()
     {
         $secretary = $this->__get_new_maestro()->get_secretary();
         $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_LOG_FILE_ABS'));
         $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_LOG_FILE_NAME'));
         update_option('vendi-cache-log-file-name', 'cheese.log');
         $this->assertSame('cheese.log', $secretary->get_log_file_name());
+    }
+
+    /**
+     * @covers \Vendi\Cache\Secretary::get_log_file_name
+     */
+    public function test_get_log_file_name__not_set()
+    {
+        //We need a blank secretary here because otherwise the logger boots too earlt
+        $secretary = new non_global_constant_secretary();
+        $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_LOG_FILE_ABS'));
+        $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_LOG_FILE_NAME'));
+        $value = $secretary->get_log_file_name();
+        $this->assertSame($value, get_option('vendi-cache-log-file-name'));
     }
 
     /**
