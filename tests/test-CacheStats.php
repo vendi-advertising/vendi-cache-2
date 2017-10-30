@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\Tests;
 
-use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\content\LargeFileContent;
+use org\bovigo\vfs\vfsStream;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -129,7 +129,8 @@ class test_CacheStats extends vendi_cache_test_base
         //Create the full path to this directory in the VFS
         $this
             ->get_vfs_root()
-            ->addChild(vfsStream::newDirectory($local_folder)
+            ->addChild(
+                vfsStream::newDirectory($local_folder)
         );
 
         //Files for testing, path => bytes
