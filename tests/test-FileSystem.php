@@ -185,7 +185,7 @@ class test_FileSystem extends vendi_cache_test_base
         //The absolute path to our new file
         $abs = vfsStream::url($this->get_root_dir_name_no_trailing_slash() . "/$the_folder/");
 
-        $this->assertDirectoryExists($abs);
+        $this->assertFileExists($abs);
         $this->assertTrue($obj->delete_dir("$the_folder"));
         $this->assertFileNotExists($abs);
     }
