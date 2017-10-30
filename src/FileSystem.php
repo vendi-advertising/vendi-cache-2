@@ -124,7 +124,7 @@ class FileSystem
     public function delete_dir_abs($abs_path, array $except_files = [])
     {
         //If we don't have an actual folder, skip it
-        if (! is_dir($absolute_path)) {
+        if (! is_dir($abs_path)) {
             $this->get_maestro()->get_logger()->debug(
                                                         __('Delete directory request', 'vendi-cache'),
                                                         [
@@ -136,22 +136,30 @@ class FileSystem
         }
 
         $result = $this->perform_trapped_function(
-                                                    function () {
-                                                        // Delete all children.
-                                                        $files = new \RecursiveIteratorIterator(
-                                                                                                    new \RecursiveDirectoryIterator(
-                                                                                                                                        $abs_path,
-                                                                                                                                        \RecursiveDirectoryIterator::SKIP_DOTS
-                                                                                                                                ),
-                                                                                                    \RecursiveIteratorIterator::CHILD_FIRST
-                                                        );
-                                                        foreach ($files as $fileinfo) {
-                                                            $action = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
-                                                            if (!$action($fileinfo->getRealPath())) {
-                                                                return false; // Abort due to the failure.
-                                                            }
+                                                    function () use ($abs_path) {
+                                                        //This actually might error if we don't have enough permissions
+                                                        //to even see inside of the directory
+                                                        $files = $this->get_directory_contents_abs($abs_path);
+
+                                                        if ($this->get_last_error()) {
+                                                            return;
                                                         }
-                                                        return true;
+
+                                                        try {
+                                                            // Delete all children.
+                                                            foreach ($files as $fileinfo) {
+                                                                $action = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
+                                                                if (!$action($fileinfo->getPathname())) {
+                                                                    $this->_last_error = new \Exception("$action() on object failed");
+                                                                    return; // Abort due to the failure.
+                                                                }
+                                                            }
+                                                        } catch (\Exception $e) {
+                                                            $this->_last_error = $e;
+                                                            return;
+                                                        }
+
+                                                        return;
                                                     }
         );
 
@@ -205,15 +213,17 @@ class FileSystem
 
     public function get_directory_contents_abs($abs_path)
     {
-        if (!is_dir($abs_path)) {
-            return [];
+        try {
+            return new \RecursiveIteratorIterator(
+                                                        new \RecursiveDirectoryIterator(
+                                                                                            $abs_path,
+                                                                                            \RecursiveDirectoryIterator::SKIP_DOTS
+                                                                                    ),
+                                                        \RecursiveIteratorIterator::CHILD_FIRST
+            );
+        } catch (\Exception $e) {
+            $this->_last_error = $e;
+            return null;
         }
-        return new \RecursiveIteratorIterator(
-                                                    new \RecursiveDirectoryIterator(
-                                                                                        $abs_path,
-                                                                                        \RecursiveDirectoryIterator::SKIP_DOTS
-                                                                                ),
-                                                    \RecursiveIteratorIterator::CHILD_FIRST
-        );
     }
 }
