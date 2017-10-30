@@ -32,6 +32,11 @@ class FileSystem
         $this->_root = $root;
     }
 
+    final public function get_last_error()
+    {
+        return $this->_last_error;
+    }
+
     public function handle_error($errno, $errstr, $errfile, $errline)
     {
         $this->_last_error = new \ErrorException($errstr, 0, $errno, $errfile, $errline);
@@ -39,7 +44,7 @@ class FileSystem
 
     public function file_exists($relative_path)
     {
-        return $this->file_exists(Path::join($this->get_root(), $relative_path));
+        return $this->file_exists_abs(Path::join($this->get_root(), $relative_path));
     }
 
     public function delete_file($relative_path)
@@ -64,7 +69,7 @@ class FileSystem
     {
         //The file doesn't exist which is the outcome that we're actually looking
         //for so we consider this a success.
-        if (!$this->file_exists($abs_path)) {
+        if (!$this->file_exists_abs($abs_path)) {
             $this->get_maestro()->get_logger()->debug(
                                                         __('Delete file request', 'vendi-cache'),
                                                         [
@@ -109,7 +114,7 @@ class FileSystem
 
     public function delete_dir($relative_path, array $except_files = [])
     {
-        return $this->delete_dir(Path::join($this->get_root(), $relative_path));
+        return $this->delete_dir_abs(Path::join($this->get_root(), $relative_path));
     }
 
     public function delete_dir_abs($abs_path, array $except_files = [])
@@ -181,7 +186,7 @@ class FileSystem
 
     public function write_file($relative_path, $contents)
     {
-        return $this->get_league_fs()->write($relative_path, $contents);
+        return $this->write_file_abs(Path::join($this->get_root(), $relative_path), $contents);
     }
 
     public function write_file_abs($abs_path, $contents)
