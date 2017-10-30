@@ -109,6 +109,10 @@ class test_CacheStats extends vendi_cache_test_base
     /**
      * @group  CacheStats__generate_from_file_system
      * @covers \Vendi\Cache\CacheStats::generate_from_file_system
+     * @covers \Vendi\Cache\CacheStats::increment_dir_count
+     * @covers \Vendi\Cache\CacheStats::increment_file_count
+     * @covers \Vendi\Cache\CacheStats::increment_compressed_file_count
+     * @covers \Vendi\Cache\CacheStats::increment_uncompressed_file_count
      * @covers \Vendi\Cache\CacheStats::get_dirs
      * @covers \Vendi\Cache\CacheStats::get_files
      * @covers \Vendi\Cache\CacheStats::get_compressed_files
