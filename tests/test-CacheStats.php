@@ -2,6 +2,7 @@
 namespace Vendi\Cache\Tests;
 
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\content\LargeFileContent;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -126,9 +127,10 @@ class test_CacheStats extends vendi_cache_test_base
         $local_folder = 'wp-content/vendi_cache/cheese';
 
         //Create the full path to this directory in the VFS
-        vfsStream::newDirectory($local_folder)
-            ->at($this->get_vfs_root())
-        ;
+        $this
+            ->get_vfs_root()
+            ->addChild(vfsStream::newDirectory($local_folder)
+        );
 
         //Files for testing, path => bytes
         //Makes sure to update assert's below if you change these
@@ -145,14 +147,23 @@ class test_CacheStats extends vendi_cache_test_base
         //Create the files above and sanity check that they actually exist before
         //passing them onto the stat generator
         foreach ($files as $file => $byte_count) {
+
             //We're joining multiple paths and since WebMozart supports this just us it
             $abs = Path::join(vfsStream::url($this->get_root_dir_name_no_trailing_slash()), $local_folder, $file);
 
             //The file shouldn't exist by default
             $this->assertFileNotExists($abs);
 
-            //Create the file, filling it with whatever we want
-            file_put_contents($abs, str_repeat('z', $byte_count));
+            //Here's how to create a file in a specific folder:
+            //@see: https://github.com/mikey179/vfsStream/issues/127#issuecomment-169308533
+            vfsStream::newFile($file)
+                ->at(
+                        $this
+                            ->get_vfs_root()
+                            ->getChild($local_folder)
+                    )
+                ->withContent(new LargeFileContent($byte_count))
+            ;
 
             //Make sure that it exists before moving up
             $this->assertFileExists($abs);
@@ -167,8 +178,6 @@ class test_CacheStats extends vendi_cache_test_base
 
         $this->assertSame(5, $stats->get_files());
         $this->assertSame(1, $stats->get_dirs());
-
-
 
         $this->assertSame(array_sum($files), $stats->get_data());
     }
