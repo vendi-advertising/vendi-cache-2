@@ -28,5 +28,16 @@
         </blacklist>
     </filter>
 
+    <listeners>
+        <listener class="SpeedTrapListener" file="tests/includes/speed-trap-listener.php">
+            <arguments>
+                <array>
+                    <element key="slowThreshold">
+                        <integer>5</integer>
+                    </element>
+                </array>
+            </arguments>
+        </listener>
+    </listeners>
 
 </phpunit>
