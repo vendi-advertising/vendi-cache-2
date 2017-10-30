@@ -153,7 +153,7 @@ class test_Maestro extends vendi_cache_test_base
                     [ '_request',      'get_request',      'Psr\\Http\\Message\\ServerRequestInterface' ],
                     [ '_logger',       'get_logger',       'Psr\\Log\\LoggerInterface' ],
                     [ '_secretary',    'get_secretary',    'Vendi\\Cache\\Secretary' ],
-                    [ '_file_system',  'get_file_system',  'Vendi\\Cache\\AbstractFilesystem' ],
+                    [ '_file_system',  'get_file_system',  'Vendi\\Cache\\Filesystem' ],
                     [ '_cache_master', 'get_cache_master', 'Vendi\\Cache\\CacheMaster' ],
             ];
     }

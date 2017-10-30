@@ -3,13 +3,33 @@ namespace Vendi\Cache;
 
 use Webmozart\PathUtil\Path;
 
-class FileSystem extends AbstractFileSystem
+class FileSystem
 {
     private $_last_error;
 
+    private $_root;
+
+    private $_maestro;
+
     public function __construct(Maestro $maestro)
     {
-        parent::__construct($maestro, $maestro->get_secretary()->get_cache_folder_abs());
+        $this->_maestro = $maestro;
+        $this->_root = $maestro->get_secretary()->get_cache_folder_abs();
+    }
+
+    final public function get_maestro()
+    {
+        return $this->_maestro;
+    }
+
+    final public function get_root()
+    {
+        return $this->_root;
+    }
+
+    final public function set_root($root)
+    {
+        $this->_root = $root;
     }
 
     public function handle_error($errno, $errstr, $errfile, $errline)

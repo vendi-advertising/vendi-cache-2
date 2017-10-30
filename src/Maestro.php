@@ -74,7 +74,7 @@ final class Maestro
         return $this;
     }
 
-    public function with_file_system(AbstractFileSystem $file_system)
+    public function with_file_system(FileSystem $file_system)
     {
         $this->_file_system = $file_system;
         return $this;
@@ -167,7 +167,7 @@ final class Maestro
     public function get_file_system($do_not_create_new = false)
     {
         //Already setup, just return
-        if (! $this->_file_system instanceof AbstractFileSystem) {
+        if (! $this->_file_system instanceof FileSystem) {
             if ($do_not_create_new) {
                 throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_file_system', 'get_file_system'));
             }
