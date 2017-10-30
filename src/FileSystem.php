@@ -85,7 +85,11 @@ class FileSystem
         //going to trap the unlink function.
         $result = $this->perform_trapped_function(
                                                     function () use ($abs_path) {
-                                                        return unlink($abs_file);
+                                                        $result = unlink($abs_path);
+                                                        if (!$result) {
+                                                            $this->_last_error = new \Exception('unlink() on file failed');
+                                                        }
+                                                        return $result;
                                                     }
                                                 );
 
