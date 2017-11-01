@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache;
 
+use Assert\Assertion;
 use Webmozart\PathUtil\Path;
 
 class FileSystem
@@ -57,12 +58,11 @@ class FileSystem
         return is_file($abs_path);
     }
 
-    public function perform_trapped_function(callable $func, $error_types = \E_WARNING)
+    public function perform_trapped_function(callable $func, array $args = [], $error_types = \E_WARNING)
     {
         set_error_handler([$this, 'handle_error'], $error_types);
-        $result = @$func();
+        $result = @$func($args);
         restore_error_handler();
-        return $result;
     }
 
     public function delete_file_abs($abs_path)
@@ -83,23 +83,15 @@ class FileSystem
         //We are very deep in the backend and permissions can get a little weird.
         //Also, rouge system admins like to delete things willy-nilly. So we're
         //going to trap the unlink function.
-        $result = $this->perform_trapped_function(
-                                                    function () use ($abs_path) {
-                                                        $result = unlink($abs_path);
-                                                        if (!$result) {
-                                                            $this->_last_error = new \Exception('unlink() on file failed');
-                                                        }
-                                                        return $result;
-                                                    }
-                                                );
+        $this->perform_trapped_function([$this,'_do_delete_file_abs'], [$abs_path]);
 
-        if ($this->_last_error) {
+        if ($this->get_last_error()) {
             $this->get_maestro()->get_logger()->error(
                                                         __('Delete file request', 'vendi-cache'),
                                                         [
                                                             'file' => $abs_path,
                                                             'status' => __('Error', 'vendi-cache'),
-                                                            'error' => $this->_last_error,
+                                                            'error' => $this->get_last_error(),
                                                         ]
                                                     );
             return false;
@@ -113,15 +105,25 @@ class FileSystem
                                                     ]
                                                 );
 
-        return $result;
+        return true;
     }
 
-    public function delete_dir($relative_path, array $except_files = [])
+    public function _do_delete_file_abs(array $params)
+    {
+        Assertion::count($params, 1);
+        $abs_path = array_shift($params);
+
+        if (!unlink($abs_path)) {
+            $this->_last_error = new \Exception('unlink() on file failed');
+        }
+    }
+
+    public function delete_dir($relative_path)
     {
         return $this->delete_dir_abs(Path::join($this->get_root(), $relative_path));
     }
 
-    public function delete_dir_abs($abs_path, array $except_files = [])
+    public function delete_dir_abs($abs_path)
     {
         //If we don't have an actual folder, skip it
         if (! is_dir($abs_path)) {
@@ -135,65 +137,73 @@ class FileSystem
             return true;
         }
 
-        $result = $this->perform_trapped_function(
-                                                    function () use ($abs_path) {
-                                                        //This actually might error if we don't have enough permissions
-                                                        //to even see inside of the directory
-                                                        $files = $this->get_directory_contents_abs($abs_path);
+        $this->perform_trapped_function([$this, '_do_delete_dir_abs'], [$abs_path]);
 
-                                                        if ($this->get_last_error()) {
-                                                            return;
-                                                        }
-
-                                                        try {
-                                                            // Delete all children.
-                                                            foreach ($files as $fileinfo) {
-                                                                $action = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
-                                                                if (!$action($fileinfo->getPathname())) {
-                                                                    $this->_last_error = new \Exception("$action() on object failed");
-                                                                    return; // Abort due to the failure.
-                                                                }
-                                                            }
-                                                        } catch (\Exception $e) {
-                                                            $this->_last_error = $e;
-                                                            return;
-                                                        }
-
-                                                        return;
-                                                    }
-        );
-
-        if ($this->_last_error) {
+        if ($this->get_last_error()) {
             $this->get_maestro()->get_logger()->error(
                                                         __('Delete directory request', 'vendi-cache'),
                                                         [
                                                             'directory' => $abs_path,
                                                             'status' => __('Error', 'vendi-cache'),
-                                                            'error' => $this->_last_error,
+                                                            'error' => $this->get_last_error(),
                                                         ]
                                                     );
             return false;
         }
 
-        $result = $this->perform_trapped_function(
-                                                    function () use ($abs_path) {
-                                                        return rmdir($abs_path);
-                                                    }
-        );
+        $this->perform_trapped_function([$this, '_do_delete_dir_abs__root_dir'], [$abs_path]);
 
-        if ($this->_last_error) {
+        if ($this->get_last_error()) {
             $this->get_maestro()->get_logger()->error(
                                                         __('Delete directory request', 'vendi-cache'),
                                                         [
                                                             'directory' => $abs_path,
                                                             'status' => __('Error', 'vendi-cache'),
-                                                            'error' => $this->_last_error,
+                                                            'error' => $this->get_last_error(),
                                                         ]
                                                     );
             return false;
         }
 
-        return $result;
+        return true;
+    }
+
+    public function _do_delete_dir_abs__root_dir(array $params)
+    {
+        Assertion::count($params, 1);
+        $abs_path = array_shift($params);
+
+        rmdir($abs_path);
+    }
+
+    public function _do_delete_dir_abs(array $params)
+    {
+        Assertion::count($params, 1);
+        $abs_path = array_shift($params);
+
+        //This actually might error if we don't have enough permissions
+        //to even see inside of the directory
+        $files = $this->get_directory_contents_abs($abs_path);
+
+        if ($this->get_last_error()) {
+            return;
+        }
+
+        try {
+            // Delete all children.
+            foreach ($files as $fileinfo) {
+                $action = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
+                if (!$action($fileinfo->getPathname())) {
+                    $this->_last_error = new \Exception("$action() on object failed");
+                    return; // Abort due to the failure.
+                }
+            }
+        } catch (\Exception $e) {
+            $this->_last_error = $e;
+            return;
+        }
+
+        return;
     }
 
     public function write_file($relative_path, $contents)
