@@ -99,6 +99,7 @@ class test_FileSystem extends vendi_cache_test_base
     /**
      * @covers \Vendi\Cache\FileSystem::delete_file
      * @covers \Vendi\Cache\FileSystem::delete_file_abs
+     * @covers \Vendi\Cache\FileSystem::_do_delete_file_abs
      * @group  FileSystemDeleteException
      */
     public function test_delete_file__with_exception()
@@ -149,6 +150,8 @@ class test_FileSystem extends vendi_cache_test_base
     /**
      * @covers \Vendi\Cache\FileSystem::delete_dir
      * @covers \Vendi\Cache\FileSystem::delete_dir_abs
+     * @covers \Vendi\Cache\FileSystem::_do_delete_dir_abs
+     * @covers \Vendi\Cache\FileSystem::_do_delete_dir_abs__root_dir
      * @group  FileSystemDeleteDir
      */
     public function test_delete_dir()
@@ -193,6 +196,7 @@ class test_FileSystem extends vendi_cache_test_base
     /**
      * @covers \Vendi\Cache\FileSystem::delete_dir
      * @covers \Vendi\Cache\FileSystem::delete_dir_abs
+     * @covers \Vendi\Cache\FileSystem::_do_delete_dir_abs
      */
     public function test_delete_dir__not_a_dir()
     {
@@ -217,6 +221,7 @@ class test_FileSystem extends vendi_cache_test_base
      * @covers \Vendi\Cache\FileSystem::delete_dir
      * @covers \Vendi\Cache\FileSystem::delete_dir_abs
      * @covers \Vendi\Cache\FileSystem::get_directory_contents_abs
+     * @covers \Vendi\Cache\FileSystem::_do_delete_dir_abs
      * @group  FileSystemDeleteException
      * This test creates a directory with zero permissions and attempts to remove it. This will cause
      * the \RecursiveDirectoryIterator to fail because it cannot be opened.
