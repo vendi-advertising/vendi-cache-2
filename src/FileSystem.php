@@ -181,11 +181,11 @@ class FileSystem
         Assertion::count($params, 1);
         $abs_path = array_shift($params);
 
-        //This actually might error if we don't have enough permissions
-        //to even see inside of the directory
+        //This actually might error if we don't have enough permissions to even
+        //see inside of the directory.
         $files = $this->get_directory_contents_abs($abs_path);
 
-        if ($this->get_last_error()) {
+        if (!$files) {
             return;
         }
 
