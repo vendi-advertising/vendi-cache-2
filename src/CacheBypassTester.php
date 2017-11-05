@@ -48,22 +48,16 @@ final class CacheBypassTester
                     'WpCookies',
             ];
 
-        $logger->debug('Starting tests');
+        $logger->debug('Starting bypass tests');
 
         $root_namespace = __NAMESPACE__;
         $test_namespace = 'CacheBypasses';
-
-        $debug = defined('GERP') && GERP && ! defined('TERP');
 
         foreach ($tests as $test) {
             $class = "$root_namespace\\$test_namespace\\$test";
 
             $t = new $class($maestro);
             $result = $t->is_resource_not_cacheable();
-
-            if ($debug && $result) {
-                dump($class);
-            }
 
             $logger->debug(
                                 'Single test run',
