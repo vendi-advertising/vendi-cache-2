@@ -232,7 +232,7 @@ final class CacheMaster
         $cache_file = $this->get_cache_key_generator()->local_cache_filename_from_url();
 
 
-        if (! $this->file_exists($cache_file)) {
+        if (! $this->get_maestro()->get_file_system()->file_exists($cache_file)) {
             $this->get_logger()->debug('Cache file not found', [ 'cache_file' => $cache_file ]);
             return;
         }
