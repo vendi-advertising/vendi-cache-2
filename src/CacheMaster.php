@@ -183,7 +183,7 @@ final class CacheMaster
 
         $cache_file = $this->get_cache_key_generator()->local_cache_filename_from_url();
 
-        if ($this->file_exists($cache_file)) {
+        if ($this->get_maestro()->get_file_system()->file_exists($cache_file)) {
             $this->get_logger()->info(
                                         'Non-GET request received, evicting cache file',
                                         [
@@ -454,7 +454,7 @@ final class CacheMaster
 
         $this->get_logger()->debug('Permalink resolved to cache file', [ 'cache_file' => $cache_file ]);
 
-        if ($this->file_exists($cache_file)) {
+        if ($this->get_maestro()->get_file_system()->file_exists($cache_file)) {
             $this->get_logger()->debug('Cache file found, deleting', [ 'cache_file' => $cache_file ]);
             $this->get_maestro()->get_file_system()->delete_file($cache_file);
         } else {
