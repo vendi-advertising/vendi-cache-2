@@ -24,7 +24,8 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/vendi-advertising/PHP-Parallel-Lint"
+            "url": "https://github.com/vendi-advertising/PHP-Parallel-Lint",
+            "no-api": true
         }
     ],
     "require": {

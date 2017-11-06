@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "001d38cc5fd733b0ca97866bb4f8d2fd",
+    "content-hash": "e0171e01c03754e47853634a020ee9c7",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1617,7 +1617,7 @@
             "support": {
                 "source": "https://github.com/vendi-advertising/PHP-Parallel-Lint/tree/master"
             },
-            "time": "2017-11-06T21:58:47+00:00"
+            "time": "2017-11-06 21:58:47"
         },
         {
             "name": "justinrainbow/json-schema",
