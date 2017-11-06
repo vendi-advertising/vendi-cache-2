@@ -8,8 +8,6 @@ use Vendi\Cache\CacheOptions\CacheOptionInterface;
 
 class Secretary
 {
-    private static $_log_folder_name = '__log__';
-
     private $_constant_helper;
 
     public function get_network_option($name)
@@ -83,7 +81,7 @@ class Secretary
             return $this->get_constant_value('VENDI_CACHE_LOG_FOLDER_ABS');
         }
 
-        return \Webmozart\PathUtil\Path::join($this->get_cache_folder_abs(), self::$_log_folder_name);
+        return $this->get_constant_value('WP_CONTENT_DIR');
     }
 
     public function get_log_file_name()
@@ -96,10 +94,10 @@ class Secretary
             return $this->get_constant_value('VENDI_CACHE_LOG_FILE_NAME');
         }
 
-        $log_file_name = get_option('vendi-cache-log-file-name');
+        $log_file_name = get_option('vendi-cache-log-file-name-2');
         if (!$log_file_name) {
-            $log_file_name = Uuid::uuid4()->toString() . '.log';
-            update_option('vendi-cache-log-file-name', $log_file_name, true);
+            $log_file_name = 'vendi-cache-' . Uuid::uuid4()->toString() . '.log';
+            update_option('vendi-cache-log-file-name-2', $log_file_name, true);
         }
 
         return $log_file_name;
