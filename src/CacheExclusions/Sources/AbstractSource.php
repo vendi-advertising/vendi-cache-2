@@ -16,7 +16,7 @@ abstract class AbstractSource extends AbstractCacheExclusion
         $this->_maestro = $maestro;
     }
 
-    final public function get_maestro() : Maestro
+    final public function get_maestro()
     {
         return $this->_maestro;
     }
