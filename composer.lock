@@ -1574,13 +1574,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/vendi-advertising/PHP-Parallel-Lint.git",
-                "reference": "83b8b77d693655c5b8e988802a317c280b4d56da"
+                "url": "https://github.com/vendi-advertising/PHP-Parallel-Lint",
+                "reference": "a7eb2f4151e8c827e2e4c8b808c49aced452678c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vendi-advertising/PHP-Parallel-Lint/zipball/83b8b77d693655c5b8e988802a317c280b4d56da",
-                "reference": "83b8b77d693655c5b8e988802a317c280b4d56da",
+                "url": "https://api.github.com/repos/vendi-advertising/PHP-Parallel-Lint/zipball/a7eb2f4151e8c827e2e4c8b808c49aced452678c",
+                "reference": "a7eb2f4151e8c827e2e4c8b808c49aced452678c",
                 "shasum": ""
             },
             "require": {
@@ -1614,10 +1614,7 @@
             ],
             "description": "This tool check syntax of PHP files about 20x faster than serial check.",
             "homepage": "https://github.com/JakubOnderka/PHP-Parallel-Lint",
-            "support": {
-                "source": "https://github.com/vendi-advertising/PHP-Parallel-Lint/tree/master"
-            },
-            "time": "2017-11-06 21:58:47"
+            "time": "2017-11-06T22:20:41+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
