@@ -200,10 +200,7 @@ class FileSystem
             }
         } catch (\Exception $e) {
             $this->_last_error = $e;
-            return;
         }
-
-        return;
     }
 
     public function write_file($relative_path, $contents)
@@ -211,9 +208,56 @@ class FileSystem
         return $this->write_file_abs(Path::join($this->get_root(), $relative_path), $contents);
     }
 
+    public function _do_mkdir_abs(array $params)
+    {
+        Assertion::count($params, 1);
+        $abs_path = array_shift($params);
+        $result = mkdir($params);
+        if (!$result || !is_dir($abs_path)) {
+            $this->_last_error = new \Exception("mkdir() on $abs_path failed");
+        }
+    }
+
+    public function _do_write_file_abs(array $params)
+    {
+        Assertion::count($params, 2);
+        $abs_path = array_shift($params);
+        $contents = array_shift($params);
+        file_put_contents($abs_path, $contents);
+    }
+
     public function write_file_abs($abs_path, $contents)
     {
-        file_put_contents($abs_path, $contents);
+        $dir = dirname($abs_path);
+        if (!is_dir($dir)) {
+            $this->perform_trapped_function([$this,'_do_mkdir_abs'], [$dir]);
+            if ($this->get_last_error()) {
+                $this->get_maestro()->get_logger()->error(
+                                                            __('Create directory request', 'vendi-cache'),
+                                                            [
+                                                                'path' => $dir,
+                                                                'status' => __('Error', 'vendi-cache'),
+                                                                'error' => $this->get_last_error(),
+                                                            ]
+                                                        );
+                return false;
+            }
+        }
+
+        $this->perform_trapped_function([$this,'_do_write_file_abs'], [$abs_path, $contents]);
+        if ($this->get_last_error()) {
+            $this->get_maestro()->get_logger()->error(
+                                                        __('Write file request', 'vendi-cache'),
+                                                        [
+                                                            'path' => $abs_path,
+                                                            'status' => __('Error', 'vendi-cache'),
+                                                            'error' => $this->get_last_error(),
+                                                        ]
+                                                    );
+            return false;
+        }
+
+        return true;
     }
 
     public function get_directory_contents($relative_path)
