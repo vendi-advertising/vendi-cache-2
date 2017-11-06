@@ -466,7 +466,19 @@ final class CacheMaster
     {
         $this->get_logger()->info('Starting clearing of page cache');
 
-        if (! $this->get_maestro()->get_file_system()->delete_dir()) {
+        $cache_folder = $this
+                            ->get_maestro()
+                            ->get_secretary()
+                            ->get_cache_folder_abs()
+                        ;
+
+        $result = $this
+                    ->get_maestro()
+                    ->get_file_system()
+                    ->delete_dir_abs($cache_folder)
+                ;
+
+        if (! $result) {
             $this->get_logger()->error('Unable to clear page cache');
             return;
         }
