@@ -77,10 +77,6 @@ class Secretary
             return dirname($this->get_constant_value('VENDI_CACHE_LOG_FILE_ABS'));
         }
 
-        if ($this->is_constant_defined('VENDI_CACHE_LOG_FOLDER_ABS')) {
-            return $this->get_constant_value('VENDI_CACHE_LOG_FOLDER_ABS');
-        }
-
         return $this->get_constant_value('WP_CONTENT_DIR');
     }
 

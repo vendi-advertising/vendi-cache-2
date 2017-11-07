@@ -112,23 +112,10 @@ class test_Secretary extends vendi_cache_test_base
     /**
      * @covers \Vendi\Cache\Secretary::get_log_folder_abs
      */
-    public function test_get_log_folder_abs__VENDI_CACHE_LOG_FOLDER_ABS_set()
-    {
-        $secretary = $this->__get_new_maestro()->get_secretary();
-        $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_LOG_FILE_ABS'));
-        $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_LOG_FOLDER_ABS'));
-        $secretary->set_constant('VENDI_CACHE_LOG_FOLDER_ABS', '/tmp');
-        $this->assertSame('/tmp', $secretary->get_log_folder_abs());
-    }
-
-    /**
-     * @covers \Vendi\Cache\Secretary::get_log_folder_abs
-     */
     public function test_get_log_folder_abs__no_constant_set()
     {
         $secretary = $this->__get_new_maestro()->get_secretary();
         $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_LOG_FILE_ABS'));
-        $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_LOG_FOLDER_ABS'));
         $this->assertSame($secretary->get_constant_value('WP_CONTENT_DIR'), $secretary->get_log_folder_abs());
     }
 
