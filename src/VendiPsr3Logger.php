@@ -16,11 +16,14 @@ final class VendiPsr3Logger extends Logger
      */
     private $_request_id;
 
-    public function __construct(Secretary $cache_settings)
+    public function _generate_new_request_id()
     {
         //This is used to trace a specific request through the pipeline
         $this->_request_id = Uuid::uuid4()->toString();
+    }
 
+    public function _maybe_create_log_dir(Secretary $cache_settings)
+    {
         $log_file_abs = $cache_settings->get_log_file_abs();
         $log_dir_abs = dirname($log_file_abs);
 
@@ -33,6 +36,12 @@ final class VendiPsr3Logger extends Logger
                 throw new \Exception('Could not create directory for logging');
             }
         }
+    }
+
+    public function _create_and_push_stream_handler(Secretary $cache_settings)
+    {
+        $log_file_abs = $cache_settings->get_log_file_abs();
+        $log_dir_abs = dirname($log_file_abs);
 
         //Bind to log file
         $stream = new StreamHandler(
@@ -51,9 +60,17 @@ final class VendiPsr3Logger extends Logger
         $formatter = new LineFormatter($output, null, false, true);
         $stream->setFormatter($formatter);
 
-        //
-        parent::__construct('vendi-cache');
         $this->pushHandler($stream);
+    }
+
+    public function __construct(Secretary $cache_settings)
+    {
+        parent::__construct('vendi-cache');
+
+        $this->_generate_new_request_id();
+        $this->_maybe_create_log_dir($cache_settings);
+
+        $this->_create_and_push_stream_handler($cache_settings);
 
         global $wpdb;
 
@@ -61,13 +78,10 @@ final class VendiPsr3Logger extends Logger
         $mySQLHandler = new MySQLHandler($pdo, $wpdb->get_blog_prefix() . 'vendi_cache_log', ['request_id']);
         $this->pushHandler($mySQLHandler);
 
-        //Copy to local so that we can close over it in the anonymous func
-        $request_id = $this->_request_id;
-
         //We want to always append the current request's ID for tracing
         $this->pushProcessor(
-                                function ($record) use ($request_id) {
-                                    $record['context']['request_id'] = $request_id;
+                                function ($record) {
+                                    $record['context']['request_id'] = $this->_request_id;
                                     return $record;
                                 }
                             );
