@@ -4,7 +4,6 @@ namespace Vendi\Cache;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use MySQLHandler\MySQLHandler;
 
 use Ramsey\Uuid\Uuid;
 
@@ -71,12 +70,6 @@ final class VendiPsr3Logger extends Logger
         $this->_maybe_create_log_dir($cache_settings);
 
         $this->_create_and_push_stream_handler($cache_settings);
-
-        global $wpdb;
-
-        $pdo = new \PDO(sprintf('mysql:host=%2$s;dbname=%1$s', DB_NAME, DB_HOST), DB_USER, DB_PASSWORD);
-        $mySQLHandler = new MySQLHandler($pdo, $wpdb->get_blog_prefix() . 'vendi_cache_log', ['request_id']);
-        $this->pushHandler($mySQLHandler);
 
         //We want to always append the current request's ID for tracing
         $this->pushProcessor(
