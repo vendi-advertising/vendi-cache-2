@@ -31,9 +31,11 @@ final class CacheBypassTester
 
         $tests = [
                     //Simple constants
+                    'ShortInit',
                     'XmlRpcMode',
                     'RestRequestMode',
                     'LegacyConstants',
+                    'WpRepairing',
 
                     'MaintenanceMode',
                     'LoggedInUser',

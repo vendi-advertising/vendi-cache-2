@@ -17,6 +17,9 @@ class test_2 extends AbstractCacheBypassWithConstantAndFunction
 
     public function is_resource_not_cacheable_because_function_says_so()
     {
+        if ($this->_value_to_return) {
+            $this->log_request_as_not_cacheable_because_function_returned_value('fake', $this->_value_to_return);
+        }
         return $this->_value_to_return;
     }
 }
@@ -41,6 +44,16 @@ class test_AbstractCacheBypassWithConstantAndFunction extends vendi_cache_test_b
         $this->assertSame($constant_value, $mock->is_resource_not_cacheable_because_constant_is_true());
         $this->assertSame($function_return_value, $mock->is_resource_not_cacheable_because_function_says_so());
         $this->assertSame($is_resource_not_cacheable, $mock->is_resource_not_cacheable());
+    }
+
+    /**
+     * @covers \Vendi\Cache\CacheBypasses\AbstractCacheBypassWithConstantAndFunction::log_request_as_not_cacheable_because_function_returned_value
+     */
+    public function test__log_request_as_not_cacheable_because_function_returned_value()
+    {
+        $mock = new test_2($this->__get_new_maestro(), 'TEST_DO_NOT_CACHE_CHEESE', true);
+        $this->assertTrue($mock->is_resource_not_cacheable_because_function_says_so());
+        $this->assertSameLastMessage('Request not cacheable');
     }
 
     public function provider_for_test___all()
