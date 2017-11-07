@@ -4,6 +4,7 @@ namespace Vendi\Cache;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use MySQLHandler\MySQLHandler;
 
 use Ramsey\Uuid\Uuid;
 
@@ -62,6 +63,28 @@ final class VendiPsr3Logger extends Logger
         $this->pushHandler($stream);
     }
 
+    public function _create_and_push_mysql_handler(\wpdb $wpdb = null)
+    {
+        if(!$wpdb){
+            global $wpdb;
+        }
+
+        $pdo = new \PDO(sprintf('mysql:host=%2$s;dbname=%1$s', DB_NAME, DB_HOST), DB_USER, DB_PASSWORD);
+        $mySQLHandler = new MySQLHandler($pdo, $wpdb->get_blog_prefix() . 'vendi_cache_log', ['request_id']);
+        $this->pushHandler($mySQLHandler);
+    }
+
+    public function _setup_processor()
+    {
+        //We want to always append the current request's ID for tracing
+        $this->pushProcessor(
+                                function ($record) {
+                                    $record['context']['request_id'] = $this->_request_id;
+                                    return $record;
+                                }
+                            );
+    }
+
     public function __construct(Secretary $cache_settings)
     {
         parent::__construct('vendi-cache');
@@ -70,13 +93,7 @@ final class VendiPsr3Logger extends Logger
         $this->_maybe_create_log_dir($cache_settings);
 
         $this->_create_and_push_stream_handler($cache_settings);
-
-        //We want to always append the current request's ID for tracing
-        $this->pushProcessor(
-                                function ($record) {
-                                    $record['context']['request_id'] = $this->_request_id;
-                                    return $record;
-                                }
-                            );
+        $this->_create_and_push_mysql_handler();
+        $this->_setup_processor();
     }
 }
