@@ -3,27 +3,11 @@ namespace Vendi\Cache;
 
 use Assert\Assertion;
 
-class CacheKeyGenerator
+class CacheKeyGenerator extends AbstractMaestroEnabledBase
 {
     private $_urls_to_files = [];
 
     private $_urls_to_files_cache_lookups = [];
-
-    private $_maestro;
-
-    public function __construct(Maestro $maestro)
-    {
-        $this->_maestro = $maestro;
-    }
-
-    /**
-     * [get_maestro description].
-     * @return Maestro
-     */
-    public function get_maestro()
-    {
-        return $this->_maestro;
-    }
 
     /**
      * [get_mapping_of_urls_to_files description].

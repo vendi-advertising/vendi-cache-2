@@ -1,32 +1,16 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\CacheBypasses;
 
-use Vendi\Cache\Maestro;
+use Vendi\Cache\AbstractMaestroEnabledBase;
 use Vendi\Cache\Secretary;
 
-abstract class AbstractCacheBypass
+abstract class AbstractCacheBypass extends AbstractMaestroEnabledBase
 {
     private $_request;
 
     private $_logger;
 
-    private $_maestro;
-
     abstract public function is_resource_not_cacheable();
-
-    public function __construct(Maestro $maestro)
-    {
-        $this->_maestro = $maestro;
-    }
-
-    /**
-     * Get the Maestro associated with the current request.
-     * @return Maestro
-     */
-    final public function get_maestro()
-    {
-        return $this->_maestro;
-    }
 
     /**
      * Get the cache settings associated with the current request.

@@ -3,7 +3,7 @@ namespace Vendi\Cache;
 
 use Psr\Log\LoggerInterface;
 
-final class CacheMaster
+final class CacheMaster extends AbstractMaestroEnabledBase
 {
     //Set to true after all hooks are setup
     private $_caching_hooks_setup = false;
@@ -16,16 +16,9 @@ final class CacheMaster
 
     private $_is_resource_not_cacheable = null;
 
-    private $_maestro = null;
-
     private $_cache_key_generator = null;
 
     private $_updater = null;
-
-    public function __construct(Maestro $maestro)
-    {
-        $this->_maestro = $maestro;
-    }
 
     /**
      * [get_updater description].
@@ -54,15 +47,6 @@ final class CacheMaster
         }
 
         return $this->_cache_key_generator;
-    }
-
-    /**
-     * [get_maestro description].
-     * @return Maestro
-     */
-    public function get_maestro()
-    {
-        return $this->_maestro;
     }
 
     /**

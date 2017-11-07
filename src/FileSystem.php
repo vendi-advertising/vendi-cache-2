@@ -4,23 +4,16 @@ namespace Vendi\Cache;
 use Assert\Assertion;
 use Webmozart\PathUtil\Path;
 
-class FileSystem
+class FileSystem extends AbstractMaestroEnabledBase
 {
     private $_last_error;
 
     private $_root;
 
-    private $_maestro;
-
     public function __construct(Maestro $maestro)
     {
-        $this->_maestro = $maestro;
+        parent::__construct($maestro);
         $this->_root = $maestro->get_secretary()->get_cache_folder_abs();
-    }
-
-    final public function get_maestro()
-    {
-        return $this->_maestro;
     }
 
     final public function get_root()

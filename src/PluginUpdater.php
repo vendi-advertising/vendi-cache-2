@@ -7,24 +7,8 @@ use Naneau\SemVer\Parser;
 use Naneau\SemVer\Version\Versionable;
 use SGH\Comparable\SortFunctions;
 
-class PluginUpdater
+class PluginUpdater extends AbstractMaestroEnabledBase
 {
-    private $_maestro = null;
-
-    public function __construct(Maestro $maestro)
-    {
-        $this->_maestro = $maestro;
-    }
-
-    /**
-     * [get_maestro description].
-     * @return Maestro
-     */
-    public function get_maestro()
-    {
-        return $this->_maestro;
-    }
-
     public function is_update_required()
     {
         $updates = $this->get_all_updates();

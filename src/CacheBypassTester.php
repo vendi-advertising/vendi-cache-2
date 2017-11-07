@@ -3,24 +3,8 @@ namespace Vendi\Cache;
 
 use Assert\Assertion;
 
-final class CacheBypassTester
+final class CacheBypassTester extends AbstractMaestroEnabledBase
 {
-    private $_maestro = null;
-
-    public function __construct(Maestro $maestro)
-    {
-        $this->_maestro = $maestro;
-    }
-
-    /**
-     * [get_maestro description].
-     * @return Maestro
-     */
-    public function get_maestro()
-    {
-        return $this->_maestro;
-    }
-
     public function is_resource_not_cacheable()
     {
         $maestro  = $this->get_maestro();

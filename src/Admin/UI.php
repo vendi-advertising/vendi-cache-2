@@ -1,27 +1,11 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\Admin;
 
-use Vendi\Cache\Maestro;
+use Vendi\Cache\AbstractMaestroEnabledBase;
 
-class UI
+class UI extends AbstractMaestroEnabledBase
 {
     const URL_SLUG = 'vendi-cache-2-settings';
-
-    private $_maestro;
-
-    public function __construct(Maestro $maestro)
-    {
-        $this->_maestro = $maestro;
-    }
-
-    /**
-     * [get_maestro description].
-     * @return Maestro
-     */
-    public function get_maestro()
-    {
-        return $this->_maestro;
-    }
 
     public function get_current_tab()
     {
