@@ -36,6 +36,7 @@ final class CacheBypassTester
                     'RestRequestMode',
                     'LegacyConstants',
                     'WpRepairing',
+                    'WpInstallingNetwork',
 
                     'MaintenanceMode',
                     'LoggedInUser',
