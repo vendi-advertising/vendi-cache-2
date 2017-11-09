@@ -10,13 +10,17 @@ final class UrlSource extends AbstractSource
         return 'url';
     }
 
-    final public function get_url()
+    final public function get_url_path()
     {
-        return $this->get_maestro()->get_request()->getUri()->__toString();
+        $path = $this->get_maestro()->get_request()->getUri()->getPath();
+        if(!$path){
+            $path = '/';
+        }
+        return $path;
     }
 
     final public function should_request_be_excluded_from_caching(AbstractComparator $comparator, $string_to_test)
     {
-        return $comparator->does_source_string_match_rule_for_test_string($this->get_url(), $string_to_test);
+        return $comparator->does_source_string_match_rule_for_test_string($this->get_url_path(), $string_to_test);
     }
 }

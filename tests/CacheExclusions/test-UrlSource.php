@@ -16,7 +16,7 @@ class test_all_sources extends vendi_cache_test_base
 
         $url_source = new UrlSource($this->__get_new_maestro($request));
         $this->assertInstanceOf('Vendi\Cache\Maestro', $url_source->get_maestro());
-        $this->assertTrue($url_source->should_request_be_excluded_from_caching(new MatchesExactly(), 'http://www.example.net/cheese'));
+        $this->assertTrue($url_source->should_request_be_excluded_from_caching(new MatchesExactly(), '/cheese'));
 
         // $possible_sources = [
         //                         'url'               => 'UrlSource',
@@ -44,5 +44,22 @@ class test_all_sources extends vendi_cache_test_base
         //     $this->assertSame($source_key, $obj->get_storage_name());
         //     $this->assertSame('cheese', $obj->get_value());
         // }
+    }
+
+    /**
+     * @covers \Vendi\Cache\CacheExclusions\Sources\UrlSource::get_url_path
+     */
+    public function test__get_url_path()
+    {
+        $request = $this->__create_server_request_from_url('http://www.example.net/cheese');
+        $this->assertSame('/cheese', (new UrlSource($this->__get_new_maestro($request)))->get_url_path());
+    }
+
+    /**
+     * @covers \Vendi\Cache\CacheExclusions\Sources\UrlSource::get_storage_name
+     */
+    public function test__get_storage_name()
+    {
+        $this->assertSame('url', (new UrlSource($this->__get_new_maestro()))->get_storage_name());
     }
 }
