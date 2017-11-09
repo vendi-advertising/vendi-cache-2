@@ -35,8 +35,6 @@ final class CacheExclusionTester
         $source_namespace     = "$exclusion_namespace\\Sources";
         $comparator_namespace = "$exclusion_namespace\\Comparators";
 
-        $debug = defined('GERP') && GERP && ! defined('TERP');
-
         // foreach ($tests as $test) {
         //     $class = "$root_namespace\\$test_namespace\\$test";
 
