@@ -5,9 +5,9 @@ use Vendi\Cache\CacheExclusions\Comparators\MatchesExactly;
 use Vendi\Cache\CacheExclusions\Sources\UrlSource;
 
 /**
- * @group CacheExclusionUrlSource
+ * @group CacheExclusions
  */
-class test_all_sources extends vendi_cache_test_base
+class test_UrlSource extends vendi_cache_test_base
 {
     /**
      * @covers \Vendi\Cache\CacheExclusions\Sources\UrlSource::get_storage_name
@@ -23,6 +23,10 @@ class test_all_sources extends vendi_cache_test_base
      * @covers \Vendi\Cache\CacheExclusions\Sources\UrlSource::__construct
      * @covers \Vendi\Cache\CacheExclusions\Sources\UrlSource::get_maestro
      * @dataProvider provider_for__test__should_request_be_excluded_from_caching
+     * @param mixed $expected
+     * @param mixed $class_name_base
+     * @param mixed $url
+     * @param mixed $string_to_test
      */
     public function test__should_request_be_excluded_from_caching($expected, $class_name_base, $url, $string_to_test)
     {
@@ -55,7 +59,7 @@ class test_all_sources extends vendi_cache_test_base
                     [ true,  'StartsWith',     'http://www.example.net/cheese', '/cheese' ],
                     [ true,  'StartsWith',     'http://www.example.net/cheese', '/chee' ],
                     [ true,  'StartsWith',     'http://www.example.net/cheese', '/' ],
-                    [ false,  'StartsWith',     'http://www.example.net/cheese', 'cheese' ],
+                    [ false, 'StartsWith',     'http://www.example.net/cheese', 'cheese' ],
 
                     [ true,  'EndsWith',       'http://www.example.net/cheese', '/cheese' ],
                     [ true,  'EndsWith',       'http://www.example.net/cheese', 'ese' ],

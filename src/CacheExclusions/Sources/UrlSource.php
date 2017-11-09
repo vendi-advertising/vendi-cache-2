@@ -13,7 +13,7 @@ final class UrlSource extends AbstractSource
     final public function get_url_path()
     {
         $path = $this->get_maestro()->get_request()->getUri()->getPath();
-        if(!$path){
+        if (!$path) {
             $path = '/';
         }
         return $path;
