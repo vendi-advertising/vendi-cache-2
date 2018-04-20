@@ -70,7 +70,8 @@ class vendi_cache_test_base extends \WP_UnitTestCase
 
     public function __create_server_request_with_custom_headers(array $headers = [])
     {
-        return ( new ServerRequest('GET', 'http://www.example.net', [], null, '1.1', $_SERVER) );
+        $merged = array_merge($_SERVER, $headers);
+        return ( new ServerRequest('GET', 'http://www.example.net', [], null, '1.1', $merged) );
     }
 
     public function __create_server_request_from_url($url, $method = 'GET', array $cookies = [])
