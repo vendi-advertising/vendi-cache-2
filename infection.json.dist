@@ -6,6 +6,8 @@
     },
     "timeout": 10,
     "logs": {
-        "text": "humbuglog.txt"
+        "text": "tests/logs/infection-log.txt",
+        "summary": "tests/logs/infection-summary-log.txt",
+        "debug": "tests/logs/infection-debug-log.txt"
     }
 }
