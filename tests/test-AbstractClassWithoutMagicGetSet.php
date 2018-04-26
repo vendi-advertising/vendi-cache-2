@@ -10,7 +10,7 @@ class test_3 extends AbstractClassWithoutMagicGetSet
 {
 }
 
-class test_AbstractClassWithoutMagicGetSet extends vendi_cache_test_base
+class test_AbstractClassWithoutMagicGetSet extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\AbstractClassWithoutMagicGetSet::__get()

@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\Tests\CacheOptions;
 
-use Vendi\Cache\Tests\vendi_cache_test_base;
+use Vendi\Cache\Tests\vendi_cache_test_base_no_wordpress;
 
 require_once VENDI_CACHE_DIR . '/tests/includes/classes-for-cache-options.php';
 
 /**
  * @group CacheOptions
  */
-class test_AbstractCacheOption extends vendi_cache_test_base
+class test_AbstractCacheOption extends vendi_cache_test_base_no_wordpress
 {
     private function _get_mock_radio()
     {

@@ -3,12 +3,12 @@ namespace Vendi\Cache\Tests\CacheOptions;
 
 use Vendi\Cache\CacheOptions\CacheMode;
 use Vendi\Cache\CacheOptions\CacheOptionInterface;
-use Vendi\Cache\Tests\vendi_cache_test_base;
+use Vendi\Cache\Tests\vendi_cache_test_base_no_wordpress;
 
 /**
  * @group CacheOptions
  */
-class test_CacheMode extends vendi_cache_test_base
+class test_CacheMode extends vendi_cache_test_base_no_wordpress
 {
     private function _get_test_object()
     {

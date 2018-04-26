@@ -7,7 +7,7 @@ use Vendi\Cache\FileSystem;
 /**
  * @group FileSystem
  */
-class test_FileSystem extends vendi_cache_test_base
+class test_FileSystem extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\FileSystem::__construct

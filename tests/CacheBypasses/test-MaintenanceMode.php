@@ -12,6 +12,9 @@ class test_MaintenanceMode extends cache_bypass_base
      */
     public function test_is_resource_not_cacheable__magic_file()
     {
+        //Required to init VFS root which is lazy-loaded
+        $this->get_vfs_root();
+
         //Common bootstrap
         $maestro = $this->__get_new_maestro();
         $cache_settings = $maestro->get_secretary();
@@ -32,6 +35,9 @@ class test_MaintenanceMode extends cache_bypass_base
      */
     public function test_is_resource_not_cacheable__filters()
     {
+        //Required to init VFS root which is lazy-loaded
+        $this->get_vfs_root();
+
         //Common bootstrap
         $maestro = $this->__get_new_maestro();
         $cache_settings = $maestro->get_secretary();

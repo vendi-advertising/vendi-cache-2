@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace Vendi\Cache\Tests;
 
-class cache_bypass_base extends vendi_cache_test_base
+class cache_bypass_base extends vendi_cache_test_base_no_wordpress
 {
     public function _test_is_cacheable_because_fatal_constant_not_defined($class_to_test, $name)
     {

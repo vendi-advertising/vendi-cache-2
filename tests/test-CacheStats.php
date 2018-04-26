@@ -8,7 +8,7 @@ use Webmozart\PathUtil\Path;
 /**
  * @group CacheStats
  */
-class test_CacheStats extends vendi_cache_test_base
+class test_CacheStats extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @dataProvider provider_get_all_increments

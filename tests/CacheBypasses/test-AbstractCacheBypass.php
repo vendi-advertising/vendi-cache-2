@@ -3,7 +3,7 @@ namespace Vendi\Cache\Tests\CacheBypasses;
 
 use Vendi\Cache\CacheBypasses\AbstractCacheBypass;
 use Vendi\Cache\Maestro;
-use Vendi\Cache\Tests\vendi_cache_test_base;
+use Vendi\Cache\Tests\vendi_cache_test_base_no_wordpress;
 
 class test_1 extends AbstractCacheBypass
 {
@@ -28,7 +28,7 @@ class abstractcachebypass_for_test_log_request_as_not_cacheable extends Abstract
     }
 }
 
-class test_AbstractCacheBypass extends vendi_cache_test_base
+class test_AbstractCacheBypass extends vendi_cache_test_base_no_wordpress
 {
     private $_url = 'http://www.example.com/cheese?a=b';
 

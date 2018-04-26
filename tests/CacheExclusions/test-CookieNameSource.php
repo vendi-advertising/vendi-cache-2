@@ -7,7 +7,7 @@ use Vendi\Cache\CacheExclusions\Sources\CookieNameSource;
 /**
  * @group CacheExclusions
  */
-class test_CookieNameSource extends vendi_cache_test_base
+class test_CookieNameSource extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\CacheExclusions\Sources\CookieNameSource::get_storage_name

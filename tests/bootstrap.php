@@ -11,6 +11,8 @@ require dirname(dirname(__FILE__)) . '/vendi-cache.php';
 
 require dirname(dirname(__FILE__)) . '/tests/includes/nullhandler_log_handler.php';
 require dirname(dirname(__FILE__)) . '/tests/includes/file_system_for_tests.php';
+require dirname(dirname(__FILE__)) . '/tests/includes/vendi_cache_test_base_interface.php';
+require dirname(dirname(__FILE__)) . '/tests/includes/trait_test_logging.php';
 require dirname(dirname(__FILE__)) . '/tests/includes/vendi_cache_test_base.php';
 require dirname(dirname(__FILE__)) . '/tests/includes/vendi_cache_test_base_no_wordpress.php';
 require dirname(dirname(__FILE__)) . '/tests/includes/non_global_constant_secretary.php';

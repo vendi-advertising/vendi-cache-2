@@ -3,7 +3,7 @@ namespace Vendi\Cache\Tests;
 
 use Vendi\Cache\CacheBypassTester;
 
-class test_CacheBypassTester extends vendi_cache_test_base
+class test_CacheBypassTester extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\CacheBypassTester::is_resource_not_cacheable

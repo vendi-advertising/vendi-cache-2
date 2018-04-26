@@ -3,7 +3,7 @@ namespace Vendi\Cache\Tests;
 
 use Vendi\Cache\Admin\UI;
 
-class test_UI extends vendi_cache_test_base
+class test_UI extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\Admin\UI::__construct
