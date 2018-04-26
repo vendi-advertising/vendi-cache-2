@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Vendi\Cache\Tests;
 
 use GuzzleHttp\Psr7\ServerRequest;
-use org\bovigo\vfs\vfsStream;
-use Vendi\Cache\Maestro;
 use Vendi\Cache\Secretary;
-use Webmozart\PathUtil\Path;
 
 /**
  * @coversNothing

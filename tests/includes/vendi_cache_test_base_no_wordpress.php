@@ -18,18 +18,19 @@ class vendi_cache_test_base_no_wordpress extends \PHPUnit_Framework_TestCase imp
      * @param string     $message
      * @param int|string $code
      */
-    public function setExpectedException( $exception, $message = '', $code = null ) {
-            if ( method_exists( 'PHPUnit_Framework_TestCase', 'setExpectedException' ) ) {
-                    parent::setExpectedException( $exception, $message, $code );
-            } else {
-                    $this->expectException( $exception );
-                    if ( '' !== $message ) {
-                            $this->expectExceptionMessage( $message );
-                    }
-                    if ( null !== $code ) {
-                            $this->expectExceptionCode( $code );
-                    }
+    public function setExpectedException($exception, $message = '', $code = null)
+    {
+        if (method_exists('PHPUnit_Framework_TestCase', 'setExpectedException')) {
+            parent::setExpectedException($exception, $message, $code);
+        } else {
+            $this->expectException($exception);
+            if ('' !== $message) {
+                $this->expectExceptionMessage($message);
             }
+            if (null !== $code) {
+                $this->expectExceptionCode($code);
+            }
+        }
     }
 
     /**
@@ -37,12 +38,13 @@ class vendi_cache_test_base_no_wordpress extends \PHPUnit_Framework_TestCase imp
      *
      * @since 3.5.0
      *
-     * @param array $expected Expected array.
-     * @param array $actual   Array to check.
+     * @param array $expected expected array
+     * @param array $actual   array to check
      */
-    public function assertEqualSets( $expected, $actual ) {
-            sort( $expected );
-            sort( $actual );
-            $this->assertEquals( $expected, $actual );
+    public function assertEqualSets($expected, $actual)
+    {
+        sort($expected);
+        sort($actual);
+        $this->assertSame($expected, $actual);
     }
 }
