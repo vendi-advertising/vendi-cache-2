@@ -3,7 +3,7 @@ namespace Vendi\Cache\Tests;
 
 use Vendi\Cache\VendiPsr7RequestMaker;
 
-class test_VendiPsr7RequestMaker extends vendi_cache_test_base
+class test_VendiPsr7RequestMaker extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\VendiPsr7RequestMaker::create_default_request

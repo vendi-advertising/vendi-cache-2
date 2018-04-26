@@ -3,7 +3,7 @@ namespace Vendi\Cache\Tests\CacheBypasses;
 
 use Vendi\Cache\CacheBypasses\AbstractCacheBypassWithConstantAndFunction;
 use Vendi\Cache\Maestro;
-use Vendi\Cache\Tests\vendi_cache_test_base;
+use Vendi\Cache\Tests\vendi_cache_test_base_no_wordpress;
 
 class test_2 extends AbstractCacheBypassWithConstantAndFunction
 {
@@ -24,7 +24,7 @@ class test_2 extends AbstractCacheBypassWithConstantAndFunction
     }
 }
 
-class test_AbstractCacheBypassWithConstantAndFunction extends vendi_cache_test_base
+class test_AbstractCacheBypassWithConstantAndFunction extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\CacheBypasses\AbstractCacheBypassWithConstantAndFunction::__construct

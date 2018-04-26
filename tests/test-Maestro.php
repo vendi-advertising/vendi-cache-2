@@ -3,7 +3,7 @@ namespace Vendi\Cache\Tests;
 
 use Vendi\Cache\Maestro;
 
-class test_Maestro extends vendi_cache_test_base
+class test_Maestro extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\Maestro::__construct()

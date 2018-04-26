@@ -3,7 +3,7 @@ namespace Vendi\Cache\Tests;
 
 use Vendi\Cache\CacheKeyGenerator;
 
-class test_CacheKeyGenerator extends vendi_cache_test_base
+class test_CacheKeyGenerator extends vendi_cache_test_base_no_wordpress
 {
     private function _get_cache_key_generator_from_server_vars($server = [])
     {

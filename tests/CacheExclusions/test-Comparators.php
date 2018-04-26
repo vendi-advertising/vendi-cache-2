@@ -9,7 +9,7 @@ use Vendi\Cache\CacheExclusions\Comparators\StartsWith;
 /**
  * @group CacheExclusions
  */
-class test_Comparators extends vendi_cache_test_base
+class test_Comparators extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\CacheExclusions\Comparators\MatchesExactly::does_source_string_match_rule_for_test_string

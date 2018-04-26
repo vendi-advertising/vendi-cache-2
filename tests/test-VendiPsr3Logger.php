@@ -7,7 +7,7 @@ use Vendi\Cache\VendiPsr3Logger;
 /**
  * @group Logger
  */
-class test_VendiPsr3Logger extends vendi_cache_test_base
+class test_VendiPsr3Logger extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\VendiPsr3Logger::get_request_id
@@ -55,6 +55,9 @@ class test_VendiPsr3Logger extends vendi_cache_test_base
      */
     public function test__maybe_create_log_dir()
     {
+        //Required to init VFS root which is lazy-loaded
+        $this->get_vfs_root();
+
         $maestro = $this->__get_new_maestro();
         $secretary = $maestro->get_secretary();
 

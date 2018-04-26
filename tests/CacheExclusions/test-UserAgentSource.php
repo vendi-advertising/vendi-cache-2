@@ -7,7 +7,7 @@ use Vendi\Cache\CacheExclusions\Sources\UserAgentSource;
 /**
  * @group CacheExclusions
  */
-class test_UserAgentSource extends vendi_cache_test_base
+class test_UserAgentSource extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\CacheExclusions\Sources\UserAgentSource::get_storage_name

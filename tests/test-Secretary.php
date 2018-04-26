@@ -9,7 +9,7 @@ use Webmozart\PathUtil\Path;
 /**
  * @group Secretary
  */
-class test_Secretary extends vendi_cache_test_base
+class test_Secretary extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\Secretary::get_network_option

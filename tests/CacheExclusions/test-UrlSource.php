@@ -7,7 +7,7 @@ use Vendi\Cache\CacheExclusions\Sources\UrlSource;
 /**
  * @group CacheExclusions
  */
-class test_UrlSource extends vendi_cache_test_base
+class test_UrlSource extends vendi_cache_test_base_no_wordpress
 {
     /**
      * @covers \Vendi\Cache\CacheExclusions\Sources\UrlSource::get_storage_name
