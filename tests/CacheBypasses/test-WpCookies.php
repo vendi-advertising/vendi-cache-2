@@ -24,6 +24,20 @@ class test_WpCookies extends cache_bypass_base
         $this->assertSame($is_resource_not_cacheable, $test->is_resource_not_cacheable());
     }
 
+    /**
+     * @covers \Vendi\Cache\CacheBypasses\WpCookies::is_resource_not_cacheable
+     */
+    public function test_is_resource_not_cacheable__no_cookies()
+    {
+        //Common bootstrap
+        $request = $this->__create_server_request_from_url('', 'GET', [ ]);
+        $maestro = $this->__get_new_maestro($request);
+
+        $test = new WpCookies($maestro);
+
+        $this->assertFalse($test->is_resource_not_cacheable());
+    }
+
     public function provider_for_test_is_resource_not_cacheable()
     {
         return [
