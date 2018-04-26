@@ -5,7 +5,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Vendi\Cache\Admin\UI;
 
-final class Maestro
+final class Maestro extends AbstractClassWithoutMagicGetSet
 {
     private static $_default_instance = null;
 
@@ -236,24 +236,5 @@ final class Maestro
     public static function get_default_logger(Secretary $cache_settings)
     {
         return new VendiPsr3Logger($cache_settings);
-    }
-
-    /**
-     * Override magic method so that we don't use incorrect property names.
-     * @param mixed $name
-     * @param mixed $value
-     */
-    public function __set($name, $value)
-    {
-        throw new \Exception(sprintf(__('Attempt at setting undeclared property %1$s.', 'vendi-cache'), esc_html($name)));
-    }
-
-    /**
-     * Override magic method so that we don't use incorrect property names.
-     * @param mixed $name
-     */
-    public function __get($name)
-    {
-        throw new \Exception(sprintf(__('Attempt at getting undeclared property %1$s.', 'vendi-cache'), esc_html($name)));
     }
 }
