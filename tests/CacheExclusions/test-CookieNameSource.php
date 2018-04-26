@@ -37,6 +37,10 @@ class test_CookieNameSource extends vendi_cache_test_base
      * @covers \Vendi\Cache\CacheExclusions\Sources\CookieNameSource::__construct
      * @covers \Vendi\Cache\CacheExclusions\Sources\CookieNameSource::get_maestro
      * @dataProvider provider_for__test__should_request_be_excluded_from_caching
+     * @param mixed $expected
+     * @param mixed $class_name_base
+     * @param mixed $cookie_name
+     * @param mixed $string_to_test
      */
     public function test__should_request_be_excluded_from_caching($expected, $class_name_base, $cookie_name, $string_to_test)
     {

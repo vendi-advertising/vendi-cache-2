@@ -8,7 +8,6 @@ use Vendi\Cache\AbstractClassWithoutMagicGetSet;
 
 class test_3 extends AbstractClassWithoutMagicGetSet
 {
-
 }
 
 class test_AbstractClassWithoutMagicGetSet extends vendi_cache_test_base
