@@ -8,6 +8,9 @@ use Vendi\Cache\Maestro;
  * We need to extend from \WP_UnitTestCase because we're calling WP core
  * functions and we need cleanup of stuff.
  */
+/**
+ * @group WordPress
+ */
 class test_CacheMaster extends vendi_cache_test_base
 {
     private function _get_obj(Maestro $maestro = null)
