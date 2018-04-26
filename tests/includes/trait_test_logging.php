@@ -49,7 +49,7 @@ trait trait_test_logging
 
     public function get_vfs_root()
     {
-        if (!$this->_root) {
+        if(!$this->_root){
             $this->_root = vfsStream::setup(
                                             $this->get_root_dir_name_no_trailing_slash(),
                                             null,
@@ -65,6 +65,7 @@ trait trait_test_logging
     {
         return $this->_test_root_name;
     }
+
 
     public function __create_server_request_with_custom_headers(array $headers = [])
     {
@@ -134,6 +135,7 @@ trait trait_test_logging
                  )
             ;
     }
+
 
     /**
      * Determine if two associative arrays are similar.
