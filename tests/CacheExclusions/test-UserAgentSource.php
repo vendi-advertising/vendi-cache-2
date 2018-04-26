@@ -31,6 +31,21 @@ class test_UserAgentSource extends vendi_cache_test_base
 
     /**
      * @covers \Vendi\Cache\CacheExclusions\Sources\UserAgentSource::should_request_be_excluded_from_caching
+     */
+    public function test__should_request_be_excluded_from_caching__null_ua()
+    {
+        $request = $this->__create_server_request_with_custom_headers(['HTTP_USER_AGENT' => '']);
+
+        $source = new UserAgentSource($this->__get_new_maestro($request));
+
+        $this->assertInstanceOf('Vendi\Cache\Maestro', $source->get_maestro());
+
+        $comparator = new \Vendi\Cache\CacheExclusions\Comparators\MatchesExactly();
+        $this->assertFalse($source->should_request_be_excluded_from_caching($comparator, 'Doesn\'t Matter'));
+    }
+
+    /**
+     * @covers \Vendi\Cache\CacheExclusions\Sources\UserAgentSource::should_request_be_excluded_from_caching
      * @covers \Vendi\Cache\CacheExclusions\Sources\UserAgentSource::get_user_agent
      * @covers \Vendi\Cache\CacheExclusions\Sources\UserAgentSource::__construct
      * @covers \Vendi\Cache\CacheExclusions\Sources\UserAgentSource::get_maestro
