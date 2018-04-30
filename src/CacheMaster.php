@@ -293,7 +293,9 @@ final class CacheMaster extends AbstractMaestroEnabledBase
 
     public function handle_ob_complete($buffer = '')
     {
-        if (function_exists('is_404') && is_404()) {
+        $secretary = $this->get_maestro()->get_secretary();
+
+        if ($secretary->does_function_exist('\is_404') && $secretary->invoke_function('\is_404')) {
             $this->log_request_as_not_cacheable([ 'reason' => '404 detected' ]);
             return false;
         }

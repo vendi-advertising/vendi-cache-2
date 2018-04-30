@@ -7,9 +7,12 @@ final class non_global_constant_secretary extends Secretary
 {
     private $_CONSTANTS = [];
 
+    private $_FUNCTIONS = [];
+
     public function reset_all()
     {
         $this->_CONSTANTS = [];
+        $this->_FUNCTIONS = [];
     }
 
     public function set_constant($name, $value)
@@ -33,5 +36,23 @@ final class non_global_constant_secretary extends Secretary
             throw new \Exception(sprintf(__('Attempt at using constant %1$s before checking for definition', 'vendi-cache'), $name));
         }
         return $this->_CONSTANTS[ $name ];
+    }
+
+    public function set_function($name, callable $callback)
+    {
+        $this->_FUNCTIONS[ $name ] = $callback;
+    }
+
+    public function does_function_exist($name)
+    {
+        return array_key_exists($name, $this->_FUNCTIONS);
+    }
+
+    public function invoke_function($name, array $args = [])
+    {
+        if (!$this->does_function_exist($name)) {
+            throw new \Exception(sprintf(__('Attempt at invoking function %1$s before checking for definition', 'vendi-cache'), $name));
+        }
+        return call_user_func_array($this->_FUNCTIONS[$name], $args);
     }
 }

@@ -33,6 +33,17 @@ class Secretary
         return constant($name);
     }
 
+    public function does_function_exist($name)
+    {
+        return \function_exists($name);
+    }
+
+    public function invoke_function($name, array $args = [])
+    {
+        Assertion::isCallable($name);
+        return call_user_func_array($name, $args);
+    }
+
     public function get_cache_folder_abs()
     {
         //If this is defined, use it directly
@@ -74,7 +85,7 @@ class Secretary
         //If the ABS for the file is provided then just return the parent
         //folder of that.
         if ($this->is_constant_defined('VENDI_CACHE_LOG_FILE_ABS')) {
-            return dirname($this->get_constant_value('VENDI_CACHE_LOG_FILE_ABS'));
+            return \dirname($this->get_constant_value('VENDI_CACHE_LOG_FILE_ABS'));
         }
 
         return $this->get_constant_value('WP_CONTENT_DIR');
@@ -83,7 +94,7 @@ class Secretary
     public function get_log_file_name()
     {
         if ($this->is_constant_defined('VENDI_CACHE_LOG_FILE_ABS')) {
-            return basename($this->get_constant_value('VENDI_CACHE_LOG_FILE_ABS'));
+            return \basename($this->get_constant_value('VENDI_CACHE_LOG_FILE_ABS'));
         }
 
         if ($this->is_constant_defined('VENDI_CACHE_LOG_FILE_NAME')) {

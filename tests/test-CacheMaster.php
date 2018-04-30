@@ -97,6 +97,21 @@ class test_CacheMaster extends vendi_cache_test_base
         $this->assertTrue($cache_master->is_user_logged_in());
     }
 
+    /**
+     * @covers \Vendi\Cache\CacheMaster::handle_ob_complete()
+     */
+    public function test_handle_ob_complete()
+    {
+        $cache_master = $this->_get_obj();
+        $this->assertFalse($cache_master->get_secretary()->does_function_exist('\is_404'));
+        $cache_master->get_secretary()->set_function('\is_404', function () {
+            return true;
+        });
+        $this->assertTrue($cache_master->get_secretary()->does_function_exist('\is_404'));
+
+        $this->assertFalse($cache_master->handle_ob_complete());
+    }
+
     public function provider_for_test__get_XYZ__passthrough()
     {
         return [
