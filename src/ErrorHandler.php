@@ -15,7 +15,7 @@ final class ErrorHandler extends AbstractMaestroEnabledBase
      *
      * @param \Exception $exception the exception that occurred
      */
-    public function handle_exception($exception)
+    public function handle_exception(\Exception $exception)
     {
         $this
             ->get_maestro()
