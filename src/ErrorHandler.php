@@ -28,8 +28,10 @@ final class ErrorHandler extends AbstractMaestroEnabledBase
                     )
             ;
 
-        if (! defined('VENDI_CACHE_PHP_ERROR')) {
-            define('VENDI_CACHE_PHP_ERROR', true);
+        $settings = $this->get_maestro()->get_secretary();
+
+        if(!$settings->is_constant_defined('VENDI_CACHE_PHP_ERROR')) {
+            $settings->set_constant('VENDI_CACHE_PHP_ERROR', true);
         }
 
         //Pass this exception back to the default handler
@@ -75,8 +77,10 @@ final class ErrorHandler extends AbstractMaestroEnabledBase
         // {
         //     return true;
         // }
-        if (! defined('VENDI_CACHE_PHP_ERROR')) {
-            define('VENDI_CACHE_PHP_ERROR', true);
+        $settings = $this->get_maestro()->get_secretary();
+
+        if(!$settings->is_constant_defined('VENDI_CACHE_PHP_ERROR')) {
+            $settings->set_constant('VENDI_CACHE_PHP_ERROR', true);
         }
         // if( false )
         // {
