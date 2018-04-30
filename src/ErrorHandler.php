@@ -3,10 +3,6 @@ namespace Vendi\Cache;
 
 final class ErrorHandler extends AbstractMaestroEnabledBase
 {
-    public function __construct(Maestro $maestro)
-    {
-        $this->_maestro = $maestro;
-    }
 
     /**
      * Set a global constant if an exception occurs and return exception handling
