@@ -6,7 +6,6 @@ namespace Vendi\Cache;
 
 final class ErrorHandler extends AbstractMaestroEnabledBase
 {
-
     /**
      * Set a global constant if an exception occurs and return exception handling
      * back to original handler.
@@ -30,7 +29,7 @@ final class ErrorHandler extends AbstractMaestroEnabledBase
 
         $settings = $this->get_maestro()->get_secretary();
 
-        if(!$settings->is_constant_defined('VENDI_CACHE_PHP_ERROR')) {
+        if (!$settings->is_constant_defined('VENDI_CACHE_PHP_ERROR')) {
             $settings->set_constant('VENDI_CACHE_PHP_ERROR', true);
         }
 
@@ -79,7 +78,7 @@ final class ErrorHandler extends AbstractMaestroEnabledBase
         // }
         $settings = $this->get_maestro()->get_secretary();
 
-        if(!$settings->is_constant_defined('VENDI_CACHE_PHP_ERROR')) {
+        if (!$settings->is_constant_defined('VENDI_CACHE_PHP_ERROR')) {
             $settings->set_constant('VENDI_CACHE_PHP_ERROR', true);
         }
         // if( false )

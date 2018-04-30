@@ -8,7 +8,6 @@ use Vendi\Cache\ErrorHandler;
 
 class test_ErrorHandler extends vendi_cache_test_base_no_wordpress
 {
-
     /**
      * @covers \Vendi\Cache\ErrorHandler::handle_exception
      */
@@ -22,7 +21,9 @@ class test_ErrorHandler extends vendi_cache_test_base_no_wordpress
         //This is the magic global function, check to see if it is invoked
         $is_called = false;
         global $vendi_cache_old_exception_handler;
-        $vendi_cache_old_exception_handler = function() use (&$is_called){$is_called = true;};
+        $vendi_cache_old_exception_handler = function () use (&$is_called) {
+            $is_called = true;
+        };
 
         //The constant shouldn't be set yet
         $this->assertFalse($secretary->is_constant_defined('VENDI_CACHE_PHP_ERROR'));
