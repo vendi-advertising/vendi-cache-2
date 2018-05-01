@@ -37,6 +37,16 @@ trait trait_test_logging
         $this->assertSame($expected, $last_message['message']);
     }
 
+    public function _get_last_log()
+    {
+        return end($this->_logs);
+    }
+
+    public function _get_logs()
+    {
+        return $this->_logs;
+    }
+
     public function _purge_logs()
     {
         $this->_logs = [];
