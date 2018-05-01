@@ -15,7 +15,7 @@ class PluginUpdater extends AbstractMaestroEnabledBase
 
         Assertion::isArray($updates);
 
-        if (count($updates) > 0) {
+        if (\count($updates) > 0) {
             foreach ($updates as $update) {
                 Assertion::isInstanceOf($update, 'Vendi\Cache\SingleUpdateInterface');
 

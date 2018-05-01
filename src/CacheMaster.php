@@ -29,7 +29,7 @@ final class CacheMaster extends AbstractMaestroEnabledBase
     {
         if (! $this->_updater instanceof PluginUpdater) {
             if ($do_not_create_new) {
-                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_updater', 'get_updater'));
+                throw new \Exception(\sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_updater', 'get_updater'));
             }
             $this->_updater = new PluginUpdater($this->get_maestro());
         }
@@ -41,7 +41,7 @@ final class CacheMaster extends AbstractMaestroEnabledBase
     {
         if (! $this->_cache_key_generator instanceof CacheKeyGenerator) {
             if ($do_not_create_new) {
-                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_cache_key_generator', 'get_cache_key_generator'));
+                throw new \Exception(\sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_cache_key_generator', 'get_cache_key_generator'));
             }
             $this->_cache_key_generator = new CacheKeyGenerator($this->get_maestro());
         }

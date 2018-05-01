@@ -101,17 +101,17 @@ class CacheStats
 
     public function maybe_set_largest_file_size($size)
     {
-        $this->_largestFile = max($this->_largestFile, $size);
+        $this->_largestFile = \max($this->_largestFile, $size);
     }
 
     public function maybe_set_oldest_file($ctime)
     {
-        $this->_oldestFile = min($this->_oldestFile, $ctime);
+        $this->_oldestFile = \min($this->_oldestFile, $ctime);
     }
 
     public function maybe_set_newest_file($ctime)
     {
-        $this->_newestFile = max($this->_newestFile, $ctime);
+        $this->_newestFile = \max($this->_newestFile, $ctime);
     }
 
     public function maybe_set_oldest_newest_file($ctime)

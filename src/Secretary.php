@@ -13,12 +13,14 @@ class Secretary
 {
     private $_constant_helper;
 
-    public function get_wordpress_option($name){
+    public function get_wordpress_option($name)
+    {
         Assertion::isCallable('\get_option');
         return \get_option($name);
     }
 
-    public function set_wordpress_option($name, $value, $autoload = null){
+    public function set_wordpress_option($name, $value, $autoload = null)
+    {
         Assertion::isCallable('\update_option');
         return \update_option($name, $value, $autoload);
     }

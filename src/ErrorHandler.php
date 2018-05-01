@@ -35,7 +35,7 @@ final class ErrorHandler extends AbstractMaestroEnabledBase
 
         //Pass this exception back to the default handler
         global $vendi_cache_old_exception_handler;
-        if ($vendi_cache_old_exception_handler && is_callable($vendi_cache_old_exception_handler)) {
+        if ($vendi_cache_old_exception_handler && \is_callable($vendi_cache_old_exception_handler)) {
             $vendi_cache_old_exception_handler($exception);
         }
     }

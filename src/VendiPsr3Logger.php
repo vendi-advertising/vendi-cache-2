@@ -30,12 +30,12 @@ final class VendiPsr3Logger extends Logger
     {
         $log_dir_abs = $cache_settings->get_log_folder_abs();
 
-        if (! is_dir($log_dir_abs)) {
-            $umask = umask(0);
-            $status = @mkdir($log_dir_abs, $cache_settings->get_fs_permission_for_log_dir(), true);
-            umask($umask);
+        if (! \is_dir($log_dir_abs)) {
+            $umask = \umask(0);
+            $status = @\mkdir($log_dir_abs, $cache_settings->get_fs_permission_for_log_dir(), true);
+            \umask($umask);
 
-            if (! is_dir($log_dir_abs)) {
+            if (! \is_dir($log_dir_abs)) {
                 throw new \Exception('Could not create directory for logging');
             }
         }

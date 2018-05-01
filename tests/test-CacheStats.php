@@ -184,7 +184,7 @@ class test_CacheStats extends vendi_cache_test_base_no_wordpress
         $this->assertSame(5, $stats->get_files());
         $this->assertSame(1, $stats->get_dirs());
 
-        $this->assertSame(array_sum($files), $stats->get_data());
+        $this->assertSame(\array_sum($files), $stats->get_data());
     }
 
     public function provider_get_all_increments()

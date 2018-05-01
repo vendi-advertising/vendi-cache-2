@@ -59,13 +59,13 @@ class test_CacheKeyGenerator extends vendi_cache_test_base_no_wordpress
 
     private function __get_test_url()
     {
-        $this->assertTrue(defined('PLUGINDIR'));
-        $this->assertTrue(defined('WP_PLUGIN_URL'));
+        $this->assertTrue(\defined('PLUGINDIR'));
+        $this->assertTrue(\defined('WP_PLUGIN_URL'));
 
         //This is kinda hacky but works.
         //Technically I could get rid of the "-1" and concatenation but I think
         //this is more proper.
-        return mb_substr(WP_PLUGIN_URL, 0, mb_strpos(WP_PLUGIN_URL, PLUGINDIR) - 1) . '/';
+        return \mb_substr(WP_PLUGIN_URL, 0, \mb_strpos(WP_PLUGIN_URL, PLUGINDIR) - 1) . '/';
     }
 
     /**

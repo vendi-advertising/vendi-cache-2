@@ -49,7 +49,7 @@ class CacheKeyGenerator extends AbstractMaestroEnabledBase
         Assertion::string($url);
         Assertion::notEmpty($url);
 
-        if (! array_key_exists($url, $this->_urls_to_files_cache_lookups)) {
+        if (! \array_key_exists($url, $this->_urls_to_files_cache_lookups)) {
             return -1;
         }
 
@@ -70,7 +70,7 @@ class CacheKeyGenerator extends AbstractMaestroEnabledBase
         Assertion::string($host);
         Assertion::notEmpty($host);
 
-        $ret = preg_replace('/[^a-zA-Z0-9\-\.]+/', '', $host);
+        $ret = \preg_replace('/[^a-zA-Z0-9\-\.]+/', '', $host);
 
         //The replacement must give us something to work with
         Assertion::notEmpty($host);
@@ -92,7 +92,7 @@ class CacheKeyGenerator extends AbstractMaestroEnabledBase
         Assertion::notEmpty($url);
 
         //See if we've previously determined the file for this URL
-        if (array_key_exists($url, $this->_urls_to_files)) {
+        if (\array_key_exists($url, $this->_urls_to_files)) {
             //Increment a shared global counter, used for testing
             $this->_urls_to_files_cache_lookups[ $url ] += 1;
 
@@ -104,16 +104,16 @@ class CacheKeyGenerator extends AbstractMaestroEnabledBase
             return $ret;
         }
 
-        $parts = parse_url($url);
+        $parts = \parse_url($url);
 
         $host = $this->sanitize_host_for_cache_filename();
         $path = $this->sanitize_path_for_cache_filename();
         $ext = '';
-        if ('HTTPS' === mb_strtoupper($this->get_maestro()->get_request()->getUri()->getScheme())) {
+        if ('HTTPS' === \mb_strtoupper($this->get_maestro()->get_request()->getUri()->getScheme())) {
             $ext = '_https';
         }
 
-        $file = sprintf(
+        $file = \sprintf(
                             '%1$s_%2$s_%3$s%4$s.html',
                             $host,
                             $path,
@@ -142,12 +142,12 @@ class CacheKeyGenerator extends AbstractMaestroEnabledBase
         Assertion::notEmpty($path);
 
         //Strip out bad chars and multiple dots
-        $path = preg_replace('/(?:[^a-zA-Z0-9\-\_\.\~\/]+|\.{2,})/', '', $path);
+        $path = \preg_replace('/(?:[^a-zA-Z0-9\-\_\.\~\/]+|\.{2,})/', '', $path);
 
-        if (preg_match('/\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)(.*)$/', $path, $matches)) {
+        if (\preg_match('/\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)(.*)$/', $path, $matches)) {
             $path = $matches[ 1 ] . '/';
             for ($i = 2; $i <= 6; $i++) {
-                $path .= mb_strlen($matches[ $i ]) > 0 ? $matches[ $i ] : '';
+                $path .= \mb_strlen($matches[ $i ]) > 0 ? $matches[ $i ] : '';
                 $path .= $i < 6 ? '~' : '';
             }
         }

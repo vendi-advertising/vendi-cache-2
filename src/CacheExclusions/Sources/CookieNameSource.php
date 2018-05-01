@@ -18,7 +18,7 @@ final class CookieNameSource extends AbstractSource
     final public function should_request_be_excluded_from_caching(AbstractComparator $comparator, $string_to_test)
     {
         $cookies = $this->get_cookies();
-        if (! $cookies || ! is_array($cookies) || 0 === count($cookies)) {
+        if (! $cookies || ! \is_array($cookies) || 0 === \count($cookies)) {
             return false;
         }
 

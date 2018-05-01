@@ -65,7 +65,7 @@ class test_Secretary extends vendi_cache_test_base
         $secretary = $maestro->get_secretary();
 
         $this->assertFalse($secretary->is_constant_defined('CHEESE'));
-        define('CHEESE', 'GLORP');
+        \define('CHEESE', 'GLORP');
         $this->assertTrue($secretary->is_constant_defined('CHEESE'));
         $this->assertSame('GLORP', $secretary->get_constant_value('CHEESE'));
     }

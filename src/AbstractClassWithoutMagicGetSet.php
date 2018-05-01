@@ -13,7 +13,7 @@ abstract class AbstractClassWithoutMagicGetSet
      */
     public function __set($name, $value)
     {
-        throw new \Exception(sprintf(__('Attempt at setting undeclared property %1$s.', 'vendi-cache'), esc_html($name)));
+        throw new \Exception(\sprintf(__('Attempt at setting undeclared property %1$s.', 'vendi-cache'), esc_html($name)));
     }
 
     /**
@@ -22,6 +22,6 @@ abstract class AbstractClassWithoutMagicGetSet
      */
     public function __get($name)
     {
-        throw new \Exception(sprintf(__('Attempt at getting undeclared property %1$s.', 'vendi-cache'), esc_html($name)));
+        throw new \Exception(\sprintf(__('Attempt at getting undeclared property %1$s.', 'vendi-cache'), esc_html($name)));
     }
 }

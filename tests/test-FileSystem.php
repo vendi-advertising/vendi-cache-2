@@ -45,7 +45,7 @@ class test_FileSystem extends vendi_cache_test_base_no_wordpress
         //mkdir should throw an E_WARNING because this folder should always exist
         $this->assertFileExists('/');
         $obj->perform_trapped_function(function () {
-            mkdir('/');
+            \mkdir('/');
         });
 
         $last_error = $obj->get_last_error();

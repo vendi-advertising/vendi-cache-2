@@ -8,7 +8,7 @@ final class WpCookies extends AbstractCacheBypass
         $client_cookies = $this->get_cookies();
 
         //Return early for Humbug mutant testing.
-        if (0===count($client_cookies)) {
+        if (0===\count($client_cookies)) {
             return false;
         }
 
@@ -24,7 +24,7 @@ final class WpCookies extends AbstractCacheBypass
         foreach ($client_cookies as $client_cookie => $value) {
             foreach ($cookies_to_test as $cookie_to_test) {
                 //contains a cookie which indicates user must not be cached
-                if (mb_strpos($client_cookie, $cookie_to_test) !== false) {
+                if (\mb_strpos($client_cookie, $cookie_to_test) !== false) {
                     $this->log_request_as_not_cacheable(
                                                             [
                                                                 'reason' => 'Found special cookie',

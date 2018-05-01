@@ -12,7 +12,7 @@ final class MaintenanceMode extends AbstractCacheBypass
         $abs = $settings->get_constant_value('ABSPATH');
         $test_file = Path::join($abs, '.maintenance');
 
-        if (file_exists($test_file)) {
+        if (\file_exists($test_file)) {
             $this->log_request_as_not_cacheable(
                                                     [
                                                         'reason' => 'Maintenance mode',

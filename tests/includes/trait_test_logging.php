@@ -22,11 +22,11 @@ trait trait_test_logging
 
     public function assertSameLastMessage($expected, $do_not_purge_logs = false)
     {
-        if (0===count($this->_logs)) {
+        if (0===\count($this->_logs)) {
             throw new \Exception('No last message received');
         }
 
-        $last_message = end($this->_logs);
+        $last_message = \end($this->_logs);
 
         if (!$do_not_purge_logs) {
             $this->_purge_logs();
@@ -39,7 +39,7 @@ trait trait_test_logging
 
     public function _get_last_log()
     {
-        return end($this->_logs);
+        return \end($this->_logs);
     }
 
     public function _get_logs()
@@ -78,7 +78,7 @@ trait trait_test_logging
 
     public function __create_server_request_with_custom_headers(array $headers = [])
     {
-        $merged = array_merge($_SERVER, $headers);
+        $merged = \array_merge($_SERVER, $headers);
         return ( new ServerRequest('GET', 'http://www.example.net', [], null, '1.1', $merged) );
     }
 
@@ -86,10 +86,10 @@ trait trait_test_logging
     {
         //This is dumb but whatever. As far as I can tell, Guzzle ignores the query string
         //for ServerRequest when manually creating an instance.
-        $query_as_string = parse_url($url, PHP_URL_QUERY);
+        $query_as_string = \parse_url($url, PHP_URL_QUERY);
         $query_as_array = [];
         if ($query_as_string) {
-            parse_str($query_as_string, $query_as_array);
+            \parse_str($query_as_string, $query_as_array);
         }
         return ( new ServerRequest($method, $url) )
                 ->withCookieParams($cookies)
@@ -160,7 +160,7 @@ trait trait_test_logging
     public function arrays_are_similar($a, $b)
     {
         // if the indexes don't match, return immediately
-        if (count(array_diff_assoc($a, $b))) {
+        if (\count(\array_diff_assoc($a, $b))) {
             return false;
         }
 

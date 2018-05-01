@@ -48,14 +48,14 @@ class FileSystem extends AbstractMaestroEnabledBase
 
     public function file_exists_abs($abs_path)
     {
-        return is_file($abs_path);
+        return \is_file($abs_path);
     }
 
     public function perform_trapped_function(callable $func, array $args = [], $error_types = \E_WARNING)
     {
-        set_error_handler([$this, 'handle_error'], $error_types);
+        \set_error_handler([$this, 'handle_error'], $error_types);
         $result = @$func($args);
-        restore_error_handler();
+        \restore_error_handler();
     }
 
     public function delete_file_abs($abs_path)
@@ -104,9 +104,9 @@ class FileSystem extends AbstractMaestroEnabledBase
     public function _do_delete_file_abs(array $params)
     {
         Assertion::count($params, 1);
-        $abs_path = array_shift($params);
+        $abs_path = \array_shift($params);
 
-        if (!unlink($abs_path)) {
+        if (!\unlink($abs_path)) {
             $this->_last_error = new \Exception('unlink() on file failed');
         }
     }
@@ -119,7 +119,7 @@ class FileSystem extends AbstractMaestroEnabledBase
     public function delete_dir_abs($abs_path)
     {
         //If we don't have an actual folder, skip it
-        if (! is_dir($abs_path)) {
+        if (! \is_dir($abs_path)) {
             $this->get_maestro()->get_logger()->debug(
                                                         __('Delete directory request', 'vendi-cache'),
                                                         [
@@ -164,15 +164,15 @@ class FileSystem extends AbstractMaestroEnabledBase
     public function _do_delete_dir_abs__root_dir(array $params)
     {
         Assertion::count($params, 1);
-        $abs_path = array_shift($params);
+        $abs_path = \array_shift($params);
 
-        rmdir($abs_path);
+        \rmdir($abs_path);
     }
 
     public function _do_delete_dir_abs(array $params)
     {
         Assertion::count($params, 1);
-        $abs_path = array_shift($params);
+        $abs_path = \array_shift($params);
 
         //This actually might error if we don't have enough permissions to even
         //see inside of the directory.
@@ -204,9 +204,9 @@ class FileSystem extends AbstractMaestroEnabledBase
     public function _do_mkdir_abs(array $params)
     {
         Assertion::count($params, 1);
-        $abs_path = array_shift($params);
-        $result = mkdir($params);
-        if (!$result || !is_dir($abs_path)) {
+        $abs_path = \array_shift($params);
+        $result = \mkdir($params);
+        if (!$result || !\is_dir($abs_path)) {
             $this->_last_error = new \Exception("mkdir() on $abs_path failed");
         }
     }
@@ -214,15 +214,15 @@ class FileSystem extends AbstractMaestroEnabledBase
     public function _do_write_file_abs(array $params)
     {
         Assertion::count($params, 2);
-        $abs_path = array_shift($params);
-        $contents = array_shift($params);
-        file_put_contents($abs_path, $contents);
+        $abs_path = \array_shift($params);
+        $contents = \array_shift($params);
+        \file_put_contents($abs_path, $contents);
     }
 
     public function write_file_abs($abs_path, $contents)
     {
-        $dir = dirname($abs_path);
-        if (!is_dir($dir)) {
+        $dir = \dirname($abs_path);
+        if (!\is_dir($dir)) {
             $this->perform_trapped_function([$this,'_do_mkdir_abs'], [$dir]);
             if ($this->get_last_error()) {
                 $this->get_maestro()->get_logger()->error(

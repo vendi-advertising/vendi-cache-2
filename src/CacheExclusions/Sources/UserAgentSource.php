@@ -13,7 +13,7 @@ final class UserAgentSource extends AbstractSource
     final public function get_user_agent()
     {
         $server = $this->get_maestro()->get_request()->getServerParams();
-        if (! array_key_exists('HTTP_USER_AGENT', $server)) {
+        if (! \array_key_exists('HTTP_USER_AGENT', $server)) {
             return null;
         }
 

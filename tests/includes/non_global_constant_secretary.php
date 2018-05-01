@@ -27,13 +27,13 @@ final class non_global_constant_secretary extends Secretary
 
     public function is_constant_defined($name)
     {
-        return array_key_exists($name, $this->_CONSTANTS);
+        return \array_key_exists($name, $this->_CONSTANTS);
     }
 
     public function get_constant_value($name)
     {
         if (! $this->is_constant_defined($name)) {
-            throw new \Exception(sprintf(__('Attempt at using constant %1$s before checking for definition', 'vendi-cache'), $name));
+            throw new \Exception(\sprintf(__('Attempt at using constant %1$s before checking for definition', 'vendi-cache'), $name));
         }
         return $this->_CONSTANTS[ $name ];
     }
@@ -45,14 +45,14 @@ final class non_global_constant_secretary extends Secretary
 
     public function does_function_exist($name)
     {
-        return array_key_exists($name, $this->_FUNCTIONS);
+        return \array_key_exists($name, $this->_FUNCTIONS);
     }
 
     public function invoke_function($name, array $args = [])
     {
         if (!$this->does_function_exist($name)) {
-            throw new \Exception(sprintf(__('Attempt at invoking function %1$s before checking for definition', 'vendi-cache'), $name));
+            throw new \Exception(\sprintf(__('Attempt at invoking function %1$s before checking for definition', 'vendi-cache'), $name));
         }
-        return call_user_func_array($this->_FUNCTIONS[$name], $args);
+        return \call_user_func_array($this->_FUNCTIONS[$name], $args);
     }
 }

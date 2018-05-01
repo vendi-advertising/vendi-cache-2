@@ -14,7 +14,7 @@ class UI extends AbstractMaestroEnabledBase
                 ->get_request()
                 ->getQueryParams()
             ;
-        if (array_key_exists('tab', $params)) {
+        if (\array_key_exists('tab', $params)) {
             return $params[ 'tab' ];
         }
 
@@ -58,7 +58,7 @@ class UI extends AbstractMaestroEnabledBase
                 $selected = ' class="selected"';
             }
 
-            $ret .= sprintf(
+            $ret .= \sprintf(
                                 '<li%3$s><a href="%1$s">%2$s</a></li>',
                                 esc_url($this->get_tab_url($tab_key)),
                                 esc_html($tab_name),
@@ -81,9 +81,9 @@ class UI extends AbstractMaestroEnabledBase
 
         $all_tabs = $this->get_all_tabs_associative();
 
-        if (! array_key_exists($current_tab, $all_tabs)) {
-            $keys = array_keys($all_tabs);
-            $current_tab = reset($keys);
+        if (! \array_key_exists($current_tab, $all_tabs)) {
+            $keys = \array_keys($all_tabs);
+            $current_tab = \reset($keys);
         }
 
         if ('POST' === $this->get_maestro()->get_request()->getMethod()) {
@@ -124,7 +124,7 @@ class UI extends AbstractMaestroEnabledBase
         }
 
         $ret .= '<div class="wrap">';
-        $ret .= sprintf(
+        $ret .= \sprintf(
                         '<h1>%1$s</h1>',
                         esc_html(__('Vendi Cache Settings', 'vendi-cache'))
                 );
@@ -136,7 +136,7 @@ class UI extends AbstractMaestroEnabledBase
 
         $ret .= wp_nonce_field("vendi-cache-$current_tab", '_wpnonce', true, false);
 
-        if (count($template_options) > 0) {
+        if (\count($template_options) > 0) {
             $ret .= '<div class="fields outer-box">';
 
             foreach ($template_options as $template_option) {
@@ -149,9 +149,9 @@ class UI extends AbstractMaestroEnabledBase
             $ret .= '</div>';
         }
 
-        ob_start();
+        \ob_start();
         require VENDI_CACHE_DIR . "/templates/$current_tab.php";
-        $ret .= ob_get_clean();
+        $ret .= \ob_get_clean();
 
         $ret .= '</form>';
         $ret .= '</div>';

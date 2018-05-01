@@ -21,7 +21,7 @@ class test_MaintenanceMode extends cache_bypass_base
 
         $test = new MaintenanceMode($maestro);
 
-        touch(vfsStream::url($this->get_root_dir_name_no_trailing_slash() . '/.maintenance'));
+        \touch(vfsStream::url($this->get_root_dir_name_no_trailing_slash() . '/.maintenance'));
 
         //Make sure it exists
         $this->assertFileExists(vfsStream::url($this->get_root_dir_name_no_trailing_slash() . '/.maintenance'));

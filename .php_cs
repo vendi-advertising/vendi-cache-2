@@ -16,6 +16,7 @@ return PhpCsFixer\Config::create()
         'lowercase_cast' => true,
         'mb_str_functions' => true,
         'method_separation' => true,
+        'native_function_invocation' => true,
         'no_empty_statement' => true,
         'no_homoglyph_names' => true,
         'no_leading_import_slash' => true,

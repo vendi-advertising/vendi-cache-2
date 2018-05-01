@@ -20,7 +20,7 @@ class vendi_cache_test_base_no_wordpress extends \PHPUnit_Framework_TestCase imp
      */
     public function setExpectedException($exception, $message = '', $code = null)
     {
-        if (method_exists('PHPUnit_Framework_TestCase', 'setExpectedException')) {
+        if (\method_exists('PHPUnit_Framework_TestCase', 'setExpectedException')) {
             parent::setExpectedException($exception, $message, $code);
         } else {
             $this->expectException($exception);
@@ -43,8 +43,8 @@ class vendi_cache_test_base_no_wordpress extends \PHPUnit_Framework_TestCase imp
      */
     public function assertEqualSets($expected, $actual)
     {
-        sort($expected);
-        sort($actual);
+        \sort($expected);
+        \sort($actual);
         $this->assertSame($expected, $actual);
     }
 }

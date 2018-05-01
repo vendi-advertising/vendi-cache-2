@@ -17,13 +17,13 @@ final class EndsWith extends AbstractComparator
      */
     final public function does_source_string_match_rule_for_test_string($source_string, $test_string)
     {
-        $strlen = mb_strlen($source_string);
-        $testlen = mb_strlen($test_string);
+        $strlen = \mb_strlen($source_string);
+        $testlen = \mb_strlen($test_string);
         if ($testlen > $strlen) {
             return false;
         }
 
-        if (substr_compare($source_string, $test_string, $strlen - $testlen, $testlen) === 0) {
+        if (\substr_compare($source_string, $test_string, $strlen - $testlen, $testlen) === 0) {
             return true;
         }
 

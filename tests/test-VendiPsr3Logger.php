@@ -62,9 +62,9 @@ class test_VendiPsr3Logger extends vendi_cache_test_base_no_wordpress
         $secretary = $maestro->get_secretary();
 
         $logger = new VendiPsr3Logger();
-        $this->assertFileNotExists(dirname($secretary->get_log_file_abs()));
+        $this->assertFileNotExists(\dirname($secretary->get_log_file_abs()));
         $logger->_maybe_create_log_dir($maestro->get_secretary());
-        $this->assertFileExists(dirname($secretary->get_log_file_abs()));
+        $this->assertFileExists(\dirname($secretary->get_log_file_abs()));
     }
 
     public function test__init()
@@ -79,13 +79,13 @@ class test_VendiPsr3Logger extends vendi_cache_test_base_no_wordpress
         $secretary->set_constant('VENDI_CACHE_LOG_FILE_ABS', $abs);
         $logger = new VendiPsr3Logger();
 
-        $this->assertFileNotExists(dirname($secretary->get_log_file_abs()));
+        $this->assertFileNotExists(\dirname($secretary->get_log_file_abs()));
         $this->assertNull($logger->get_request_id());
 
         $logger->_init($secretary);
 
         $this->assertNotNull($logger->get_request_id());
-        $this->assertFileExists(dirname($secretary->get_log_file_abs()));
+        $this->assertFileExists(\dirname($secretary->get_log_file_abs()));
     }
 
     /**
@@ -150,16 +150,16 @@ class test_VendiPsr3Logger extends vendi_cache_test_base_no_wordpress
         //[DATE TIME] [] [DEBUG] [CHEESE]
         //Break into chunks at the whitespace, note the whitespace between
         //DATE and TIME
-        $text_parts = explode(' ', trim(file_get_contents($abs)));
+        $text_parts = \explode(' ', \trim(\file_get_contents($abs)));
         $this->assertCount(5, $text_parts);
 
         //Don't test DATE and TIME
-        array_shift($text_parts);
-        array_shift($text_parts);
+        \array_shift($text_parts);
+        \array_shift($text_parts);
 
         //These should be fixed values
-        $this->assertSame('[]', array_shift($text_parts));
-        $this->assertSame('[DEBUG]:', array_shift($text_parts));
-        $this->assertSame('cheese', array_shift($text_parts));
+        $this->assertSame('[]', \array_shift($text_parts));
+        $this->assertSame('[DEBUG]:', \array_shift($text_parts));
+        $this->assertSame('cheese', \array_shift($text_parts));
     }
 }

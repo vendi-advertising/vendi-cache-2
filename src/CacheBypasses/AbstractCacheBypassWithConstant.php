@@ -66,7 +66,7 @@ abstract class AbstractCacheBypassWithConstant extends AbstractCacheBypass
 
         $this->log_request_as_not_cacheable(
                                                 [
-                                                    'reason' => sprintf(__('The constant %1$s is set and true', 'vendi-cache'), $this->_constant),
+                                                    'reason' => \sprintf(__('The constant %1$s is set and true', 'vendi-cache'), $this->_constant),
                                                     'extra'  => "Constant $name is false",
                                                 ]
                                         );

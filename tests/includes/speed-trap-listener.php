@@ -164,7 +164,7 @@ class SpeedTrapListener implements PHPUnit_Framework_TestListener
         $this->suites--;
 
         if (0 === $this->suites && $this->hasSlowTests()) {
-            arsort($this->slow); // Sort longest running tests to the top
+            \arsort($this->slow); // Sort longest running tests to the top
 
             $this->renderHeader();
             $this->renderBody();
@@ -215,7 +215,7 @@ class SpeedTrapListener implements PHPUnit_Framework_TestListener
      */
     protected function toMilliseconds($time)
     {
-        return (int) round($time * 1000);
+        return (int) \round($time * 1000);
     }
 
     /**
@@ -226,7 +226,7 @@ class SpeedTrapListener implements PHPUnit_Framework_TestListener
      */
     protected function makeLabel(PHPUnit_Framework_TestCase $test)
     {
-        return sprintf('%s:%s', get_class($test), $test->getName());
+        return \sprintf('%s:%s', \get_class($test), $test->getName());
     }
 
     /**
@@ -236,7 +236,7 @@ class SpeedTrapListener implements PHPUnit_Framework_TestListener
      */
     protected function getReportLength()
     {
-        return min(count($this->slow), $this->reportLength);
+        return \min(\count($this->slow), $this->reportLength);
     }
 
     /**
@@ -246,7 +246,7 @@ class SpeedTrapListener implements PHPUnit_Framework_TestListener
      */
     protected function getHiddenCount()
     {
-        $total = count($this->slow);
+        $total = \count($this->slow);
         $showing = $this->getReportLength($this->slow);
 
         $hidden = 0;
@@ -262,7 +262,7 @@ class SpeedTrapListener implements PHPUnit_Framework_TestListener
      */
     protected function renderHeader()
     {
-        echo sprintf("\n\nYou should really fix these slow tests (>%sms)...\n", $this->slowThreshold);
+        echo \sprintf("\n\nYou should really fix these slow tests (>%sms)...\n", $this->slowThreshold);
     }
 
     /**
@@ -274,10 +274,10 @@ class SpeedTrapListener implements PHPUnit_Framework_TestListener
 
         $length = $this->getReportLength($slowTests);
         for ($i = 1; $i <= $length; ++$i) {
-            $label = key($slowTests);
-            $time = array_shift($slowTests);
+            $label = \key($slowTests);
+            $time = \array_shift($slowTests);
 
-            echo sprintf(" %s. %sms to run %s\n", $i, $time, $label);
+            echo \sprintf(" %s. %sms to run %s\n", $i, $time, $label);
         }
     }
 
@@ -287,7 +287,7 @@ class SpeedTrapListener implements PHPUnit_Framework_TestListener
     protected function renderFooter()
     {
         if ($hidden = $this->getHiddenCount($this->slow)) {
-            echo sprintf('...and there %s %s more above your threshold hidden from view', $hidden === 1 ? 'is' : 'are', $hidden);
+            echo \sprintf('...and there %s %s more above your threshold hidden from view', $hidden === 1 ? 'is' : 'are', $hidden);
         }
     }
 

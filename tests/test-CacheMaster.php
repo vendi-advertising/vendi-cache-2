@@ -91,8 +91,8 @@ class test_CacheMaster extends vendi_cache_test_base
         $cache_master = $this->_get_obj_with_custom_secretary();
         $cache_master->log_request_as_not_cacheable(['CHEESE' => 'GLORP']);
         $this->assertSameLastMessage('Request not cacheable', true);
-        $this->assertCount(1,$this->_get_last_log()['context']);
-        $this->assertSame('GLORP',$this->_get_last_log()['context']['CHEESE']);
+        $this->assertCount(1, $this->_get_last_log()['context']);
+        $this->assertSame('GLORP', $this->_get_last_log()['context']['CHEESE']);
     }
 
     /**

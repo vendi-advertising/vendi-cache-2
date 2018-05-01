@@ -84,7 +84,7 @@ final class Maestro extends AbstractClassWithoutMagicGetSet
     {
         if (! $this->_admin_ui instanceof UI) {
             if ($do_not_create_new) {
-                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_admin_ui', 'get_admin_ui'));
+                throw new \Exception(\sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_admin_ui', 'get_admin_ui'));
             }
             $this->_admin_ui = self::get_default_admin_ui($this);
         }
@@ -101,7 +101,7 @@ final class Maestro extends AbstractClassWithoutMagicGetSet
     {
         if (! $this->_request instanceof ServerRequestInterface) {
             if ($do_not_create_new) {
-                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_request', 'get_request'));
+                throw new \Exception(\sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_request', 'get_request'));
             }
             $this->_request = self::get_default_request();
         }
@@ -119,7 +119,7 @@ final class Maestro extends AbstractClassWithoutMagicGetSet
     {
         if (! $this->_logger instanceof LoggerInterface) {
             if ($do_not_create_new) {
-                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_logger', 'get_logger'));
+                throw new \Exception(\sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_logger', 'get_logger'));
             }
             $this->_logger = self::get_default_logger($this->get_secretary());
         }
@@ -137,7 +137,7 @@ final class Maestro extends AbstractClassWithoutMagicGetSet
     {
         if (! $this->_secretary instanceof Secretary) {
             if ($do_not_create_new) {
-                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_secretary', 'get_secretary'));
+                throw new \Exception(\sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_secretary', 'get_secretary'));
             }
             $this->_secretary = self::get_default_secretary();
         }
@@ -156,7 +156,7 @@ final class Maestro extends AbstractClassWithoutMagicGetSet
         //Already setup, just return
         if (! $this->_cache_master instanceof CacheMaster) {
             if ($do_not_create_new) {
-                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_cache_master', 'get_cache_master'));
+                throw new \Exception(\sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_cache_master', 'get_cache_master'));
             }
             $this->_cache_master = new CacheMaster($this);
         }
@@ -169,7 +169,7 @@ final class Maestro extends AbstractClassWithoutMagicGetSet
         //Already setup, just return
         if (! $this->_file_system instanceof FileSystem) {
             if ($do_not_create_new) {
-                throw new \Exception(sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_file_system', 'get_file_system'));
+                throw new \Exception(\sprintf(__('The property %1$s is null and the getter %2$s was requested to not generate a new one.', 'vendi-cache'), '_file_system', 'get_file_system'));
             }
             $this->_file_system = self::get_default_file_system($this);
         }
