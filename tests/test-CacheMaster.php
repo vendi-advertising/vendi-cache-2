@@ -83,6 +83,19 @@ class test_CacheMaster extends vendi_cache_test_base
     }
 
     /**
+     * @covers \Vendi\Cache\CacheMaster::log_request_as_not_cacheable()
+     */
+    public function test_log_request_as_not_cacheable()
+    {
+        //No one should be logged in by default
+        $cache_master = $this->_get_obj_with_custom_secretary();
+        $cache_master->log_request_as_not_cacheable(['CHEESE' => 'GLORP']);
+        $this->assertSameLastMessage('Request not cacheable', true);
+        $this->assertCount(1,$this->_get_last_log()['context']);
+        $this->assertSame('GLORP',$this->_get_last_log()['context']['CHEESE']);
+    }
+
+    /**
      * @covers \Vendi\Cache\CacheMaster::is_user_logged_in()
      */
     public function test_is_user_logged_in()
