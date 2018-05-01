@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace Vendi\Cache;
 
 use Assert\Assertion;
@@ -10,27 +13,37 @@ class Secretary
 {
     private $_constant_helper;
 
+    public function get_wordpress_option($name){
+        Assertion::isCallable('\get_option');
+        return \get_option($name);
+    }
+
+    public function set_wordpress_option($name, $value, $autoload = null){
+        Assertion::isCallable('\update_option');
+        return \update_option($name, $value, $autoload);
+    }
+
     public function get_network_option($name)
     {
         Assertion::isCallable('\get_site_option');
-        return get_site_option($name);
+        return \get_site_option($name);
     }
 
     public function set_network_option($name, $value)
     {
         Assertion::isCallable('\update_site_option');
-        update_site_option($name, $value);
+        \update_site_option($name, $value);
     }
 
     public function is_constant_defined($name)
     {
-        return defined($name);
+        return \defined($name);
     }
 
     public function get_constant_value($name)
     {
         Assertion::defined($name);
-        return constant($name);
+        return \constant($name);
     }
 
     public function does_function_exist($name)
@@ -41,7 +54,7 @@ class Secretary
     public function invoke_function($name, array $args = [])
     {
         Assertion::isCallable($name);
-        return call_user_func_array($name, $args);
+        return \call_user_func_array($name, $args);
     }
 
     public function get_cache_folder_abs()
@@ -101,10 +114,10 @@ class Secretary
             return $this->get_constant_value('VENDI_CACHE_LOG_FILE_NAME');
         }
 
-        $log_file_name = get_option('vendi-cache-log-file-name-2');
+        $log_file_name = $this->get_wordpress_option('vendi-cache-log-file-name-2');
         if (!$log_file_name) {
             $log_file_name = 'vendi-cache-' . Uuid::uuid4()->toString() . '.log';
-            update_option('vendi-cache-log-file-name-2', $log_file_name, true);
+            $this->set_wordpress_option('vendi-cache-log-file-name-2', $log_file_name, true);
         }
 
         return $log_file_name;
@@ -221,7 +234,7 @@ class Secretary
 
     public function get_option_value(CacheOptionInterface $option)
     {
-        $value = get_option($option->get_storage_name(), false);
+        $value = $this->get_wordpress_option($option->get_storage_name(), false);
 
         if (false === $value) {
             return $option->get_default_value();

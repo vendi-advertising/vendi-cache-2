@@ -8,9 +8,23 @@ use Webmozart\PathUtil\Path;
 
 /**
  * @group Secretary
+ *
+ * NOTE: Some of these tests require WP so we can't use the simple test subclass
  */
-class test_Secretary extends vendi_cache_test_base_no_wordpress
+class test_Secretary extends vendi_cache_test_base
 {
+    /**
+     * @covers \Vendi\Cache\Secretary::get_wordpress_option
+     * @covers \Vendi\Cache\Secretary::set_wordpress_option
+     */
+    public function test_wordpress_options()
+    {
+        $secretary = $this->__get_new_maestro()->get_secretary();
+        $this->assertFalse($secretary->get_wordpress_option('CHEESE'));
+        $secretary->set_wordpress_option('CHEESE', 'GLORP');
+        $this->assertSame('GLORP', $secretary->get_wordpress_option('CHEESE'));
+    }
+
     /**
      * @covers \Vendi\Cache\Secretary::get_network_option
      * @covers \Vendi\Cache\Secretary::set_network_option
@@ -22,6 +36,22 @@ class test_Secretary extends vendi_cache_test_base_no_wordpress
         $this->assertFalse($secretary->get_network_option('CHEESE'));
         $secretary->set_network_option('CHEESE', 'GLORP');
         $this->assertSame('GLORP', $secretary->get_network_option('CHEESE'));
+    }
+
+    /**
+     * @covers \Vendi\Cache\Secretary::does_function_exist
+     * @covers \Vendi\Cache\Secretary::invoke_function
+     */
+    public function test_functions()
+    {
+        //We're testing actual functions here so we need the default Secretary
+        $maestro = $this->__get_new_maestro(null, null, Maestro::get_default_secretary());
+        $secretary = $maestro->get_secretary();
+        $this->assertFalse($secretary->does_function_exist('\global_function_must_only_ever_be_included_once'));
+
+        require VENDI_CACHE_DIR . '/tests/includes/global_function_must_only_ever_be_included_once.php';
+        $this->assertTrue($secretary->does_function_exist('\global_function_must_only_ever_be_included_once'));
+        $this->assertSame('CHEESE', $secretary->invoke_function('\global_function_must_only_ever_be_included_once'));
     }
 
     /**
