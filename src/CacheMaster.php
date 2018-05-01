@@ -93,7 +93,6 @@ final class CacheMaster extends AbstractMaestroEnabledBase
     {
         $this->get_logger()->debug('AJAX request found, only listening for cache clear');
         add_action(self::ACTION_NAME__CACHE_CLEAR, [ $this, 'clear_entire_page_cache' ]);
-        return;
     }
 
     public function _setup_main_hooks()
@@ -140,7 +139,7 @@ final class CacheMaster extends AbstractMaestroEnabledBase
                             '/wp-admin/options-permalink.php',
                         ];
 
-                $current_page = mb_strtolower($request->getUri()->getPath());
+                $current_page = \mb_strtolower($request->getUri()->getPath());
 
                 foreach ($pages as $page) {
                     if ($page === $current_page) {
@@ -223,13 +222,13 @@ final class CacheMaster extends AbstractMaestroEnabledBase
 
         $this->get_logger()->debug('Cache file found', [ 'cache_file' => $cache_file ]);
 
-        $stat = @stat($cache_file);
+        $stat = @\stat($cache_file);
         if (! $stat) {
             $this->get_logger()->warning('Could not get file stats', [ 'cache_file' => $cache_file ]);
             return;
         }
 
-        $age = time() - $stat[ 'mtime' ];
+        $age = \time() - $stat[ 'mtime' ];
         if ($age >= $this->get_secretary()->get_max_file_age()) {
             //TODO: Should we delete the file?
 
@@ -254,7 +253,7 @@ final class CacheMaster extends AbstractMaestroEnabledBase
                                                     );
 
         //sends file to stdout
-        readfile($cache_file);
+        \readfile($cache_file);
 
         //Terminate the request
         exit ;
@@ -273,7 +272,7 @@ final class CacheMaster extends AbstractMaestroEnabledBase
 
         //Do not cache fatal errors
         global $vendi_cache_old_error_handler;
-        $vendi_cache_old_error_handler = set_error_handler(
+        $vendi_cache_old_error_handler = \set_error_handler(
                                                             function ($errno, $errstr, $errfile, $errline) use ($maestro) {
                                                                 $eh = new ErrorHandler($maestro);
                                                                 $eh->handle_error($errno, $errstr, $errfile, $errline);
@@ -281,14 +280,14 @@ final class CacheMaster extends AbstractMaestroEnabledBase
             );
 
         global $vendi_cache_old_exception_handler;
-        $vendi_cache_old_exception_handler = set_exception_handler(
+        $vendi_cache_old_exception_handler = \set_exception_handler(
                                                             function ($exception) use ($maestro) {
                                                                 $eh = new ErrorHandler($maestro);
                                                                 $eh->handle_exception($exception);
                                                             }
          );
 
-        ob_start([ __CLASS__, 'handle_ob_complete' ]); //Setup routine to store the file
+        \ob_start([ __CLASS__, 'handle_ob_complete' ]); //Setup routine to store the file
     }
 
     public function handle_ob_complete($buffer = '')
@@ -300,20 +299,20 @@ final class CacheMaster extends AbstractMaestroEnabledBase
             return false;
         }
 
-        if (defined('VENDI_CACHE_PHP_ERROR')) {
+        if ($secretary->is_constant_defined('VENDI_CACHE_PHP_ERROR')) {
             $this->log_request_as_not_cacheable([ 'reason' => 'Explicit constant detected', 'constant' => 'VENDI_CACHE_PHP_ERROR' ]);
             return $buffer;
         }
 
-        if (apply_filters(self::LEGACY_FILTER_NAME__NO_CACHE, false, $buffer)) {
+        if (\apply_filters(self::LEGACY_FILTER_NAME__NO_CACHE, false, $buffer)) {
             $this->log_request_as_not_cacheable([ 'reason' => 'Legacy filter return no cache', 'filter' => self::LEGACY_FILTER_NAME__NO_CACHE ]);
             return $buffer;
         }
 
         //The average web page size is 1246,000 bytes. If web page is less than 1000 bytes, don't cache it.
         //TODO: Move to option
-        if (mb_strlen($buffer) < $this->get_secretary()->get_min_page_size()) {
-            $this->log_request_as_not_cacheable([ 'reason' => 'Page too small', 'size' => mb_strlen($buffer), 'min_size' => $this->get_secretary()->get_min_page_size() ]);
+        if (\mb_strlen($buffer) < $this->get_secretary()->get_min_page_size()) {
+            $this->log_request_as_not_cacheable([ 'reason' => 'Page too small', 'size' => \mb_strlen($buffer), 'min_size' => $this->get_secretary()->get_min_page_size() ]);
             return $buffer;
         }
 
@@ -338,14 +337,14 @@ final class CacheMaster extends AbstractMaestroEnabledBase
         //     $append .= 'PHP Caching Engine. ';
         // }
         //
-        $append .= 'Time created on server: ' . date('Y-m-d H:i:s T') . '. ';
+        $append .= 'Time created on server: ' . \date('Y-m-d H:i:s T') . '. ';
         $append .= 'Protocol: ' . ($this->is_https_page() ? 'HTTPS' : 'HTTP') . '. ';
-        $append .= 'Page size: ' . mb_strlen($buffer) . ' bytes. ';
+        $append .= 'Page size: ' . \mb_strlen($buffer) . ' bytes. ';
 
-        $host = wp_kses($uri->getHost(), []);
+        $host = \wp_kses($uri->getHost(), []);
 
         $append .= 'Host: ' . $host . '. ';
-        $append .= 'Request URI: ' . wp_kses($uri->getPath(), []) . ' ';
+        $append .= 'Request URI: ' . \wp_kses($uri->getPath(), []) . ' ';
         $appendGzip = $append . " Encoding: GZEncode -->\n";
         $append .= " Encoding: Uncompressed -->\n";
         // }
@@ -358,7 +357,7 @@ final class CacheMaster extends AbstractMaestroEnabledBase
         //create gzipped files so we can send precompressed files
         $cache_file .= '_gzip';
         $this->get_logger()->info('Caching file gzip', [ 'cache_file' => $cache_file ]);
-        $this->get_maestro()->get_file_system()->write_file($cache_file, gzencode($buffer . $appendGzip, 9));
+        $this->get_maestro()->get_file_system()->write_file($cache_file, \gzencode($buffer . $appendGzip, 9));
         // @file_put_contents( $file, gzencode( $buffer . $appendGzip, 9 ), LOCK_EX );
         // chmod( $file, 0644 );
         // }
@@ -375,12 +374,12 @@ final class CacheMaster extends AbstractMaestroEnabledBase
             return true;
         }
 
-        return 'HTTPS' === mb_strtoupper($this->get_maestro()->get_request()->getUri()->getScheme());
+        return 'HTTPS' === \mb_strtoupper($this->get_maestro()->get_request()->getUri()->getScheme());
     }
 
     public function setup_caching()
     {
-        if (defined('DOING_AJAX') && DOING_AJAX) {
+        if ($this->get_maestro()->get_secretary()->is_constant_defined('DOING_AJAX')) {
             $this->_set_ajax_only_hooks();
             return;
         }
@@ -409,8 +408,8 @@ final class CacheMaster extends AbstractMaestroEnabledBase
     {
         $this->get_logger()->debug('Comment posted, scheduling cache clear', [ 'comment_id' => $comment_id ]);
 
-        $c = get_comment($comment_id, ARRAY_A);
-        $perm = get_permalink($c[ 'comment_post_ID' ]);
+        $c = \get_comment($comment_id, ARRAY_A);
+        $perm = \get_permalink($c[ 'comment_post_ID' ]);
         $this->delete_file_from_permalink($perm);
         $this->schedule_cache_clear();
     }
@@ -419,7 +418,7 @@ final class CacheMaster extends AbstractMaestroEnabledBase
     {
         $this->get_logger()->debug('Redirect happend, flagging request as non-cacheable');
 
-        add_filter('vendi/cache/do_not_cache_request', '__return_true');
+        \add_filter('vendi/cache/do_not_cache_request', '__return_true');
 
         return $status;
     }
@@ -427,7 +426,7 @@ final class CacheMaster extends AbstractMaestroEnabledBase
     public function handle_action_publish_post($post_id)
     {
         $this->get_logger()->debug('Post/page published, scheduling cache clear', [ 'post_id' => $post_id ]);
-        $permalink = get_permalink($post_id);
+        $permalink = \get_permalink($post_id);
         $this->delete_file_from_permalink($permalink);
         $this->schedule_cache_clear();
     }
@@ -486,11 +485,11 @@ final class CacheMaster extends AbstractMaestroEnabledBase
         //rand makes sure this is called every time and isn't subject to the
         //10 minute window where the same event won't be run twice with
         //wp_schedule_single_event
-        wp_schedule_single_event(time() - 15, self::ACTION_NAME__CACHE_CLEAR, [ rand(0, 999999999) ]);
-        $url = admin_url('admin-ajax.php');
+        \wp_schedule_single_event(\time() - 15, self::ACTION_NAME__CACHE_CLEAR, [ \rand(0, 999999999) ]);
+        $url = \admin_url('admin-ajax.php');
 
         $this->get_logger()->debug('Invoking URL to kick-off cron to clear cache');
-        wp_remote_get($url);
+        \wp_remote_get($url);
     }
 
     //Can safely call this as many times as we like because it'll only schedule one clear
