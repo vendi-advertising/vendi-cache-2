@@ -121,7 +121,29 @@ class test_CacheMaster extends vendi_cache_test_base
             return true;
         });
         $this->assertTrue($cache_master->get_secretary()->does_function_exist('\is_404'));
+        $this->assertFalse($cache_master->handle_ob_complete());
 
+
+        $cache_master = $this->_get_obj();
+        $this->assertFalse($cache_master->get_secretary()->is_constant_defined('VENDI_CACHE_PHP_ERROR'));
+        $cache_master->get_secretary()->set_constant('VENDI_CACHE_PHP_ERROR', true);
+        $this->assertTrue($cache_master->get_secretary()->is_constant_defined('VENDI_CACHE_PHP_ERROR'));
+        $this->assertFalse($cache_master->handle_ob_complete());
+
+        $cache_master = $this->_get_obj();
+        //TODO: MAGIC NUMBER!!!!
+        $this->assertFalse($cache_master->handle_ob_complete(\str_repeat('a', 999)));
+    }
+
+    /**
+     * @covers \Vendi\Cache\CacheMaster::handle_ob_complete()
+     */
+    public function test_handle_ob_complete__legacy_filter()
+    {
+        $cache_master = $this->_get_obj();
+        $this->assertFalse(\has_filter(CacheMaster::LEGACY_FILTER_NAME__NO_CACHE));
+        \add_filter(CacheMaster::LEGACY_FILTER_NAME__NO_CACHE, function(){return true;});
+        $this->assertTrue(\has_filter(CacheMaster::LEGACY_FILTER_NAME__NO_CACHE));
         $this->assertFalse($cache_master->handle_ob_complete());
     }
 
