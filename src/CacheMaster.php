@@ -301,19 +301,19 @@ final class CacheMaster extends AbstractMaestroEnabledBase
 
         if ($secretary->is_constant_defined('VENDI_CACHE_PHP_ERROR')) {
             $this->log_request_as_not_cacheable([ 'reason' => 'Explicit constant detected', 'constant' => 'VENDI_CACHE_PHP_ERROR' ]);
-            return $buffer;
+            return false;
         }
 
         if (\apply_filters(self::LEGACY_FILTER_NAME__NO_CACHE, false, $buffer)) {
             $this->log_request_as_not_cacheable([ 'reason' => 'Legacy filter return no cache', 'filter' => self::LEGACY_FILTER_NAME__NO_CACHE ]);
-            return $buffer;
+            return false;
         }
 
         //The average web page size is 1246,000 bytes. If web page is less than 1000 bytes, don't cache it.
         //TODO: Move to option
         if (\mb_strlen($buffer) < $this->get_secretary()->get_min_page_size()) {
             $this->log_request_as_not_cacheable([ 'reason' => 'Page too small', 'size' => \mb_strlen($buffer), 'min_size' => $this->get_secretary()->get_min_page_size() ]);
-            return $buffer;
+            return false;
         }
 
         $uri = $this->get_maestro()->get_request()->getUri();
