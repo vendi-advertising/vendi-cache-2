@@ -133,6 +133,10 @@ class test_CacheMaster extends vendi_cache_test_base
         $cache_master = $this->_get_obj();
         //TODO: MAGIC NUMBER!!!!
         $this->assertFalse($cache_master->_should_output_buffer_handling_continue(\str_repeat('a', 999)));
+
+        $cache_master = $this->_get_obj();
+        //TODO: MAGIC NUMBER!!!!
+        $this->assertTrue($cache_master->_should_output_buffer_handling_continue(\str_repeat('a', 1000)));
     }
 
     /**
@@ -142,9 +146,7 @@ class test_CacheMaster extends vendi_cache_test_base
     {
         $cache_master = $this->_get_obj();
         $this->assertFalse(\has_filter(CacheMaster::LEGACY_FILTER_NAME__NO_CACHE));
-        \add_filter(CacheMaster::LEGACY_FILTER_NAME__NO_CACHE, function () {
-            return true;
-        });
+        \add_filter(CacheMaster::LEGACY_FILTER_NAME__NO_CACHE, function(){return true;});
         $this->assertTrue(\has_filter(CacheMaster::LEGACY_FILTER_NAME__NO_CACHE));
         $this->assertFalse($cache_master->_should_output_buffer_handling_continue());
     }

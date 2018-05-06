@@ -315,11 +315,13 @@ final class CacheMaster extends AbstractMaestroEnabledBase
             $this->log_request_as_not_cacheable([ 'reason' => 'Page too small', 'size' => \mb_strlen($buffer), 'min_size' => $this->get_secretary()->get_min_page_size() ]);
             return false;
         }
+
+        return true;
     }
 
     public function handle_ob_complete($buffer = '')
     {
-        if (!$this->_should_output_buffer_handling_continue($buffer)) {
+        if(!$this->_should_output_buffer_handling_continue($buffer)){
             return false;
         }
 
