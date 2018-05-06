@@ -151,6 +151,36 @@ class test_CacheMaster extends vendi_cache_test_base
         $this->assertFalse($cache_master->_should_output_buffer_handling_continue());
     }
 
+
+    /**
+     * @covers \Vendi\Cache\CacheMaster::_get_output_buffer_debug_messages_as_tuple()
+     */
+    public function test__get_output_buffer_debug_messages_as_tuple()
+    {
+        $cache_master = $this->_get_obj();
+        $result = $cache_master->_get_output_buffer_debug_messages_as_tuple(\str_repeat('a', 5));
+        $this->assertInternalType('array', $result);
+        $this->assertCount(2, $result);
+        $this->assertArrayHasKey('append', $result);
+        $this->assertArrayHasKey('appendGzip', $result);
+
+        //TODO: Look at debug message
+    }
+
+    /**
+     * @covers \Vendi\Cache\CacheMaster::handle_ob_complete()
+     */
+    public function test_handle_ob_complete()
+    {
+        $cache_master = $this->_get_obj();
+
+        //Init VFS
+        $this->get_vfs_root();
+
+        $result = $cache_master->handle_ob_complete(\str_repeat('a', 1000));
+        $this->assertTrue(is_string($result));
+    }
+
     public function provider_for_test__get_XYZ__passthrough()
     {
         return [

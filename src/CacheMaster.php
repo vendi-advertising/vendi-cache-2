@@ -319,44 +319,46 @@ final class CacheMaster extends AbstractMaestroEnabledBase
         return true;
     }
 
-    public function handle_ob_complete($buffer = '')
+    public function _get_output_buffer_debug_messages_as_tuple($buffer)
     {
-        if(!$this->_should_output_buffer_handling_continue($buffer)){
-            return false;
-        }
-
         $uri = $this->get_maestro()->get_request()->getUri();
 
-        // $this->get_logger()->debug( 'Buffer', [ 'buffer' => strlen( $buffer ) ] );
+        $parts = array(
+                        'Time created on server' => \date('Y-m-d H:i:s T'),
+                        'Protocol'               => $this->is_https_page() ? 'HTTPS' : 'HTTP',
+                        'Page size'              => \mb_strlen($buffer),
+                        'Host'                   => \wp_kses($uri->getHost(), []),
+                        'Request URI'            => \wp_kses($uri->getPath(), []),
+        );
 
+        $open_comment = '<!--';
+        $message = ' Cached by Vendi Cache';
+        $close_comment = '-->';
+        $nl = "\n";
+
+        $append = $nl . $open_comment . $message;
+        foreach($parts as $key => $value){
+            $append .= " [$key: $value]";
+        }
+
+        $appendGzip = $append . ' [Encoding: GZEncode]';
+        $append . ' [Encoding: Uncompressed]';
+
+        $append .= $close_comment . $nl;
+        $appendGzip .= $close_comment . $nl;
+
+        return array(
+                    'append' => $append,
+                    'appendGzip' => $appendGzip,
+        );
+    }
+
+    public function _write_output_buffer_to_disk($buffer)
+    {
 
         $cache_file = $this->get_cache_key_generator()->local_cache_filename_from_url();
 
-        $append = "\n";
-        // $appendGzip = "";
-        // if( self::get_vwc_cache_settings()->get_do_append_debug_message() )
-        // {
-        $append = '<!-- Cached by Vendi Cache ';
-        // if( self::get_vwc_cache_settings()->get_cache_mode() == cache_settings::CACHE_MODE_ENHANCED )
-        // {
-        $append .= 'Disk-Based Engine. ';
-        // }
-        // else
-        // {
-        //     $append .= 'PHP Caching Engine. ';
-        // }
-        //
-        $append .= 'Time created on server: ' . \date('Y-m-d H:i:s T') . '. ';
-        $append .= 'Protocol: ' . ($this->is_https_page() ? 'HTTPS' : 'HTTP') . '. ';
-        $append .= 'Page size: ' . \mb_strlen($buffer) . ' bytes. ';
-
-        $host = \wp_kses($uri->getHost(), []);
-
-        $append .= 'Host: ' . $host . '. ';
-        $append .= 'Request URI: ' . \wp_kses($uri->getPath(), []) . ' ';
-        $appendGzip = $append . " Encoding: GZEncode -->\n";
-        $append .= " Encoding: Uncompressed -->\n";
-        // }
+        extract( $this->_get_output_buffer_debug_messages_as_tuple($buffer) ); //append, appendGzip
 
         $this->get_logger()->info('Caching file', [ 'cache_file' => $cache_file ]);
         $this->get_maestro()->get_file_system()->write_file($cache_file, $buffer . $append);
@@ -370,6 +372,18 @@ final class CacheMaster extends AbstractMaestroEnabledBase
         // @file_put_contents( $file, gzencode( $buffer . $appendGzip, 9 ), LOCK_EX );
         // chmod( $file, 0644 );
         // }
+    }
+
+    public function handle_ob_complete($buffer = '')
+    {
+        if(!$this->_should_output_buffer_handling_continue($buffer)){
+            return false;
+        }
+
+        $this->_write_output_buffer_to_disk($buffer);
+
+        // $this->get_logger()->debug( 'Buffer', [ 'buffer' => strlen( $buffer ) ] );
+
         return $buffer;
     }
 
