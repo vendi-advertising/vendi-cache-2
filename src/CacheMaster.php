@@ -290,7 +290,7 @@ final class CacheMaster extends AbstractMaestroEnabledBase
         \ob_start([ __CLASS__, 'handle_ob_complete' ]); //Setup routine to store the file
     }
 
-    public function handle_ob_complete($buffer = '')
+    public function _should_output_buffer_handling_continue($buffer = '')
     {
         $secretary = $this->get_maestro()->get_secretary();
 
@@ -313,6 +313,13 @@ final class CacheMaster extends AbstractMaestroEnabledBase
         //TODO: Move to option
         if (\mb_strlen($buffer) < $this->get_secretary()->get_min_page_size()) {
             $this->log_request_as_not_cacheable([ 'reason' => 'Page too small', 'size' => \mb_strlen($buffer), 'min_size' => $this->get_secretary()->get_min_page_size() ]);
+            return false;
+        }
+    }
+
+    public function handle_ob_complete($buffer = '')
+    {
+        if (!$this->_should_output_buffer_handling_continue($buffer)) {
             return false;
         }
 
