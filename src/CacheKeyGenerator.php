@@ -114,10 +114,10 @@ class CacheKeyGenerator extends AbstractMaestroEnabledBase
         }
 
         $file = \sprintf(
-                            '%1$s_%2$s_%3$s%4$s.html',
+                            '%1$s%2$s%3$s%4$s.html',
                             $host,
                             $path,
-                            'vendi_cache',
+                            'index',
                             $ext
                         );
 
@@ -143,14 +143,6 @@ class CacheKeyGenerator extends AbstractMaestroEnabledBase
 
         //Strip out bad chars and multiple dots
         $path = \preg_replace('/(?:[^a-zA-Z0-9\-\_\.\~\/]+|\.{2,})/', '', $path);
-
-        if (\preg_match('/\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)\/*([^\/]*)(.*)$/', $path, $matches)) {
-            $path = $matches[ 1 ] . '/';
-            for ($i = 2; $i <= 6; $i++) {
-                $path .= \mb_strlen($matches[ $i ]) > 0 ? $matches[ $i ] : '';
-                $path .= $i < 6 ? '~' : '';
-            }
-        }
 
         Assertion::notEmpty($path);
         return $path;

@@ -156,9 +156,12 @@ class test_CacheKeyGenerator extends vendi_cache_test_base_no_wordpress
     public function provider_for_local_cache_filename()
     {
         return [
-                    //expected          value
-                    [ 'www.example.com_cheese/test~~~~_vendi_cache_https.html', 'https://www.example.com/cheese/test/?a=b' ],
-                    [ 'www.example.com_/~~~~_vendi_cache_https.html', 'https://www.example.com/' ],
+                    //expected                                         value
+                    [ 'www.example.com/cheese/test/index_https.html', 'https://www.example.com/cheese/test/?a=b' ],
+                    [ 'www.example.com/cheese/test/index.html',       'http://www.example.com/cheese/test/?a=b' ],
+                    [ 'www.example.com/index.html',                   'http://www.example.com/' ],
+                    [ 'www.example.com/index_https.html',             'https://www.example.com/' ],
+                    [ 'www.example.com/index_https.html',             'https://www.example.com' ],
             ];
     }
 
@@ -166,8 +169,8 @@ class test_CacheKeyGenerator extends vendi_cache_test_base_no_wordpress
     {
         return[
                     //expected                  value
-                    [ 'cheese/test~~~~',        'http://example.com/cheese/test/' ],
-                    [ 'a/b~c~d~e~/f/g/h/i/j/',  'http://example.com/a/b/c/d/e/f/g/h/i/j/' ],
+                    [ '/cheese/test/',         'http://example.com/cheese/test/' ],
+                    [ '/a/b/c/d/e/f/g/h/i/j/', 'http://example.com/a/b/c/d/e/f/g/h/i/j/' ],
             ];
     }
 }
