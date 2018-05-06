@@ -205,7 +205,7 @@ class FileSystem extends AbstractMaestroEnabledBase
     {
         Assertion::count($params, 1);
         $abs_path = \array_shift($params);
-        $result = \mkdir($params);
+        $result = \mkdir($abs_path);
         if (!$result || !\is_dir($abs_path)) {
             $this->_last_error = new \Exception("mkdir() on $abs_path failed");
         }
