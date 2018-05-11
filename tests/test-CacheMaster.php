@@ -146,11 +146,12 @@ class test_CacheMaster extends vendi_cache_test_base
     {
         $cache_master = $this->_get_obj();
         $this->assertFalse(\has_filter(CacheMaster::LEGACY_FILTER_NAME__NO_CACHE));
-        \add_filter(CacheMaster::LEGACY_FILTER_NAME__NO_CACHE, function(){return true;});
+        \add_filter(CacheMaster::LEGACY_FILTER_NAME__NO_CACHE, function () {
+            return true;
+        });
         $this->assertTrue(\has_filter(CacheMaster::LEGACY_FILTER_NAME__NO_CACHE));
         $this->assertFalse($cache_master->_should_output_buffer_handling_continue());
     }
-
 
     /**
      * @covers \Vendi\Cache\CacheMaster::_get_output_buffer_debug_messages_as_tuple()
@@ -178,7 +179,43 @@ class test_CacheMaster extends vendi_cache_test_base
         $this->get_vfs_root();
 
         $result = $cache_master->handle_ob_complete(\str_repeat('a', 1000));
-        $this->assertTrue(is_string($result));
+        $this->assertInternalType('string', $result);
+    }
+
+    /**
+     * @covers \Vendi\Cache\CacheMaster::handle_ob_complete()
+     */
+    public function test_handle_ob_complete__return_false()
+    {
+        $this->assertFalse($this->_get_obj()->handle_ob_complete(''));
+    }
+
+    /**
+     * @covers \Vendi\Cache\CacheMaster::is_https_page()
+     */
+    public function test_is_https_page()
+    {
+        $maestro = $this->__get_new_maestro($this->__create_server_request_from_url('https://www.example.com'));
+        $this->assertTrue($this->_get_obj($maestro)->is_https_page());
+
+        $maestro = $this->__get_new_maestro($this->__create_server_request_from_url('http://www.example.com'));
+        $this->assertFalse($this->_get_obj($maestro)->is_https_page());
+    }
+
+    /**
+     * @covers \Vendi\Cache\CacheMaster::_flag_request_as_cacheable()
+     * @covers \Vendi\Cache\CacheMaster::_flag_request_as_not_cacheable()
+     * @covers \Vendi\Cache\CacheMaster::_get_resource_not_cacheable_flag()
+     */
+    public function test__flag_request_as_cacheable()
+    {
+        $cache_master = $this->_get_obj();
+        $this->assertNull($cache_master->_get_resource_not_cacheable_flag());
+        $cache_master->_flag_request_as_cacheable();
+        $this->assertFalse($cache_master->_get_resource_not_cacheable_flag());
+        $cache_master->_flag_request_as_not_cacheable();
+        $this->assertTrue($cache_master->_get_resource_not_cacheable_flag());
+
     }
 
     public function provider_for_test__get_XYZ__passthrough()

@@ -20,6 +20,11 @@ final class CacheMaster extends AbstractMaestroEnabledBase
 
     private $_updater = null;
 
+    public function _get_resource_not_cacheable_flag()
+    {
+        return $this->_is_resource_not_cacheable;
+    }
+
     /**
      * [get_updater description].
      * @param  mixed            $do_not_create_new
@@ -323,13 +328,13 @@ final class CacheMaster extends AbstractMaestroEnabledBase
     {
         $uri = $this->get_maestro()->get_request()->getUri();
 
-        $parts = array(
+        $parts = [
                         'Time created on server' => \date('Y-m-d H:i:s T'),
                         'Protocol'               => $this->is_https_page() ? 'HTTPS' : 'HTTP',
                         'Page size'              => \mb_strlen($buffer),
                         'Host'                   => \wp_kses($uri->getHost(), []),
                         'Request URI'            => \wp_kses($uri->getPath(), []),
-        );
+        ];
 
         $open_comment = '<!--';
         $message = ' Cached by Vendi Cache';
@@ -337,7 +342,7 @@ final class CacheMaster extends AbstractMaestroEnabledBase
         $nl = "\n";
 
         $append = $nl . $open_comment . $message;
-        foreach($parts as $key => $value){
+        foreach ($parts as $key => $value) {
             $append .= " [$key: $value]";
         }
 
@@ -347,18 +352,17 @@ final class CacheMaster extends AbstractMaestroEnabledBase
         $append .= $close_comment . $nl;
         $appendGzip .= $close_comment . $nl;
 
-        return array(
+        return [
                     'append' => $append,
                     'appendGzip' => $appendGzip,
-        );
+        ];
     }
 
     public function _write_output_buffer_to_disk($buffer)
     {
-
         $cache_file = $this->get_cache_key_generator()->local_cache_filename_from_url();
 
-        extract( $this->_get_output_buffer_debug_messages_as_tuple($buffer) ); //append, appendGzip
+        \extract($this->_get_output_buffer_debug_messages_as_tuple($buffer)); //append, appendGzip
 
         $this->get_logger()->info('Caching file', [ 'cache_file' => $cache_file ]);
         $this->get_maestro()->get_file_system()->write_file($cache_file, $buffer . $append);
@@ -376,7 +380,7 @@ final class CacheMaster extends AbstractMaestroEnabledBase
 
     public function handle_ob_complete($buffer = '')
     {
-        if(!$this->_should_output_buffer_handling_continue($buffer)){
+        if (!$this->_should_output_buffer_handling_continue($buffer)) {
             return false;
         }
 
@@ -392,11 +396,6 @@ final class CacheMaster extends AbstractMaestroEnabledBase
      */
     public function is_https_page()
     {
-        //Prefer a core check since this is in flux right now
-        if (is_ssl()) {
-            return true;
-        }
-
         return 'HTTPS' === \mb_strtoupper($this->get_maestro()->get_request()->getUri()->getScheme());
     }
 
