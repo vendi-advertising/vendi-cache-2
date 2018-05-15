@@ -218,6 +218,101 @@ class test_CacheMaster extends vendi_cache_test_base
 
     }
 
+    /**
+     * @covers \Vendi\Cache\CacheMaster::_set_ajax_only_hooks()
+     */
+    public function test__set_ajax_only_hooks()
+    {
+        $cache_master = $this->_get_obj();
+        $this->assertFalse(\has_action(CacheMaster::ACTION_NAME__CACHE_CLEAR));
+        $cache_master->_set_ajax_only_hooks();
+        $this->assertTrue(\has_action(CacheMaster::ACTION_NAME__CACHE_CLEAR));
+    }
+
+    /**
+     * @covers \Vendi\Cache\CacheMaster::_setup_main_hooks()
+     */
+    public function test__setup_main_hooks()
+    {
+        //Actions and known callbacks declared by base class
+        //TODO: Really, we should either just move this to a non-WP test class
+        //or just remove all actions during this run.
+        $actions = [
+                        'publish_post' => [ [0, '_delete_option_fresh_site'], [5, '_publish_post_hook'] ],
+                        'publish_page' => [ [0, '_delete_option_fresh_site']],
+                        'clean_object_term_cache',
+                        'clean_post_cache',
+                        'clean_term_cache',
+                        'clean_page_cache',
+                        'after_switch_theme' => [ [10, '_wp_menus_changed'], [10, '_wp_sidebars_changed'] ],
+                        'customize_save_after' => [[ 0, '_delete_option_fresh_site']],
+                        'activated_plugin',
+                        'deactivated_plugin',
+                        'update_option_sidebars_widgets',
+                        'comment_post' => [[10, 'wp_new_comment_notify_moderator'], [10, 'wp_new_comment_notify_postauthor']],
+        ];
+        $filters = [
+                        'wp_redirect',
+        ];
+
+        foreach($actions as $hook => $funcs){
+            if(is_array($funcs)){
+                foreach($funcs as $f){
+                    \remove_action($hook, $f[1], $f[0]);
+                }
+            }else{
+                $hook = $funcs;
+            }
+            $this->assertFalse(\has_action($hook));
+        }
+        foreach($filters as $hook){
+            $this->assertFalse(\has_filter($hook));
+        }
+
+        $cache_master = $this->_get_obj();
+        wp_set_current_user(1);
+        $cache_master->_setup_main_hooks();
+
+
+        foreach($actions as $hook => $funcs){
+            if(!is_array($funcs)){
+                $hook = $funcs;
+            }
+            $this->assertTrue(\has_action($hook));
+        }
+        foreach($filters as $hook){
+            $this->assertTrue(\has_filter($hook));
+        }
+    }
+
+    /**
+     * @covers \Vendi\Cache\CacheMaster::_setup_main_hooks()
+     */
+    public function test__setup_main_hooks__called_twice()
+    {
+        $cache_master = $this->_get_obj();
+        $cache_master->_setup_main_hooks();
+        $cache_master->_setup_main_hooks();
+        $this->assertSameLastMessage('Caching hooks already setup');
+    }
+
+    /*
+    TODO:
+    _setup_main_hooks
+    _maybe_purge_cached_file_on_non_GET_method
+    _maybe_serve_cached_file
+    _setup_actual_request_caching
+    _write_output_buffer_to_disk
+    setup_caching
+    handle_action_comment_post
+    handle_filter_redirect_filter
+    handle_action_publish_post
+    delete_file_from_permalink
+    clear_entire_page_cache
+    schedule_cache_clear
+    handle_action_clear_page_cache
+     */
+
     public function provider_for_test__get_XYZ__passthrough()
     {
         return [
